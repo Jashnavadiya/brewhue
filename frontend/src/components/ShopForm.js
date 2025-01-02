@@ -7,7 +7,7 @@ const ShopForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/shops', shop);
+      await axios.post('https://brewhue.onrender.com/api/shops', shop);
       setShop({ name: '', profile: '', menu: [], widgets: [] });
       alert('Shop created successfully!');
     } catch (err) {

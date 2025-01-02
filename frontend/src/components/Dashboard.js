@@ -10,7 +10,7 @@
 //   useEffect(() => {
 //     const fetchShop = async () => {
 //       try {
-//         const res = await axios.get('http://localhost:5000/api/shops/enso');
+//         const res = await axios.get('https://brewhue.onrender.com/api/shops/enso');
 //         setShop(res.data);
 //       } catch (err) {
 //         console.error(err);
@@ -22,7 +22,7 @@
 //   // Add Widget
 //   const handleAddWidget = async () => {
 //     try {
-//       const res = await axios.post(`http://localhost:5000/api/shops/<shopId>/widgets`, newWidget);
+//       const res = await axios.post(`https://brewhue.onrender.com/api/shops/<shopId>/widgets`, newWidget);
 //       setShop({ ...shop, widgets: res.data });
 //       setNewWidget({ name: '', logo: '', link: '' });
 //       alert('Widget added successfully');
@@ -35,7 +35,7 @@
 //   // Edit Widget
 //   const handleEditWidget = async () => {
 //     try {
-//       const res = await axios.put(`http://localhost:5000/api/shops/<shopId>/widgets/${editWidget._id}`, editWidget);
+//       const res = await axios.put(`https://brewhue.onrender.com/api/shops/<shopId>/widgets/${editWidget._id}`, editWidget);
 //       setShop({
 //         ...shop,
 //         widgets: shop.widgets.map((w) => (w._id === editWidget._id ? res.data : w)),
@@ -52,7 +52,7 @@
 //   // Remove Widget
 //   const handleRemoveWidget = async (widgetId) => {
 //     try {
-//       await axios.delete(`http://localhost:5000/api/shops/<shopId>/widgets/${widgetId}`);
+//       await axios.delete(`https://brewhue.onrender.com/api/shops/<shopId>/widgets/${widgetId}`);
 //       setShop({
 //         ...shop,
 //         widgets: shop.widgets.filter((w) => w._id !== widgetId),
@@ -197,11 +197,11 @@ const Dashboard = () => {
     const fetchShopAndWidgets = async () => {
       try {
         // Fetch the shop info
-        const shopRes = await axios.get(`http://localhost:5000/api/${shopName}/shop`);
+        const shopRes = await axios.get(`https://brewhue.onrender.com/api/${shopName}/shop`);
         setShop(shopRes.data);
 
         // Fetch the widgets associated with the shop
-        const widgetsRes = await axios.get(`http://localhost:5000/api/${shopName}/widgets`);
+        const widgetsRes = await axios.get(`https://brewhue.onrender.com/api/${shopName}/widgets`);
         setWidgets(widgetsRes.data); // Store widgets in state
       } catch (err) {
         console.error(err);
@@ -216,7 +216,7 @@ const Dashboard = () => {
   // Add Widget
   const handleAddWidget = async () => {
     try {
-      const res = await axios.post(`http://localhost:5000/api/${shopName}/widgets`, newWidget);
+      const res = await axios.post(`https://brewhue.onrender.com/api/${shopName}/widgets`, newWidget);
       setWidgets([...widgets, res.data]); // Add the new widget to the list
       setNewWidget({ name: '', logo: '', link: '' });
       alert('Widget added successfully');
@@ -229,7 +229,7 @@ const Dashboard = () => {
   // Edit Widget
   const handleEditWidget = async () => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/${shopName}/widgets/${editWidget._id}`, editWidget);
+      const res = await axios.put(`https://brewhue.onrender.com/api/${shopName}/widgets/${editWidget._id}`, editWidget);
       setWidgets(
         widgets.map((w) => (w._id === editWidget._id ? res.data : w)) // Update widget in the list
       );
@@ -245,7 +245,7 @@ const Dashboard = () => {
   // Remove Widget
   const handleRemoveWidget = async (widgetId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/${shopName}/widgets/${widgetId}`);
+      await axios.delete(`https://brewhue.onrender.com/api/${shopName}/widgets/${widgetId}`);
       setWidgets(widgets.filter((w) => w._id !== widgetId)); // Remove widget from the list
       alert('Widget removed successfully');
     } catch (err) {

@@ -9,10 +9,10 @@ export default function ShopPage() {
   const [iconsData,setIconsData] = useState(null);
   useEffect(() => {
     if (shopName) {
-      axios.get(`http://localhost:5000/api/${shopName}/shop`)
+      axios.get(`https://brewhue.onrender.com/api/${shopName}/shop`)
         .then((res) => setShopData(res.data))
         .catch((err) => console.error('Error fetching shop data', err));
-        axios.get(`http://localhost:5000/api/${shopName}/widgets`)
+        axios.get(`https://brewhue.onrender.com/api/${shopName}/widgets`)
         .then((res) => setIconsData(res.data))
         .catch((err) => console.error('Error fetching shop data', err));
         

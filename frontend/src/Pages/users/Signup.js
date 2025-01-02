@@ -11,7 +11,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signup', { email, password });
+      const response = await axios.post('https://brewhue.onrender.com/api/auth/signup', { email, password });
       setMessage('Signup successful! Token: ' );
       // Redirect to the Login page after successful signup
       nav('/login');

@@ -8,7 +8,7 @@ const DatabaseManager = () => {
   // Fetch the list of databases
   const fetchDatabases = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/databases');
+      const response = await fetch('https://brewhue.onrender.com/api/databases');
       const data = await response.json();
       setDatabases(data);
     } catch (err) {
@@ -20,7 +20,7 @@ const DatabaseManager = () => {
   // Create a new database
   const createDatabase = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/create-database/${shopName}`, {
+      const response = await fetch(`https://brewhue.onrender.com/api/create-database/${shopName}`, {
         method: 'POST',
       });
       const text = await response.text();

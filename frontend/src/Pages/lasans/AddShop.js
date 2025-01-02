@@ -19,7 +19,7 @@ const AddShop = () => {
     try {
       // Send the shop data to the backend
       const response = await axios.post(
-        `http://localhost:5000/api/${shopName}/shop`,
+        `https://brewhue.onrender.com/api/${shopName}/shop`,
         { name: shopName, profile, bgPhoto, bgcolor }
       );
       alert('Shop added successfully!');
