@@ -1,48 +1,52 @@
 import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const { shopName } = useParams(); // Get the shopName from the route params
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const nav = useNavigate();
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await axios.post('https://brewhue.onrender.com/api/auth/login', { email, password });
-      setMessage('Login successful! Token: ' + response.data.token);
-      // Redirect to a different page after successful login
-      nav('/');
-    } catch (error) {
-      setMessage('Error: ' + error.response.data.message);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/users/login`, {
+        email,
+        password,
+      });
+
+      // Save the token to localStorage
+      localStorage.setItem('token', response.data.token);
+
+      // Redirect to the dashboard
+      navigate(`/${shopName}/dashboard`);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Login failed');
     }
   };
 
   return (
     <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
+      <h2>Login to {shopName}</h2>
+      {error && <p>{error}</p>}
+      <form onSubmit={handleSubmit}>
         <input
           type="email"
-          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
+          placeholder="Email"
         />
-        <br />
         <input
           type="password"
-          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
+          placeholder="Password"
         />
-        <br />
         <button type="submit">Login</button>
       </form>
-      {message && <p>{message}</p>}
     </div>
   );
 };

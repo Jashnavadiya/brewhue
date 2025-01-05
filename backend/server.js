@@ -3,9 +3,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+
+const userRoutes = require('./routes/userRoutes.js');
+
+
 const Shop = require('./models/Shop');
 const Menu = require('./models/Menu');
 const Widget = require('./models/Widget');
+
 const cors = require('cors');
 const path= require('path');
 const { MongoClient } = require('mongodb');
@@ -38,8 +43,9 @@ app.post('/api/create-database/:shopName', async (req, res) => {
   
     try {
       const shopDb = await connectToDatabase(shopName);
-      const SampleCollection = shopDb.collection('sampleCollection');
-      await SampleCollection.insertOne({ initialized: true });
+      loadModels(shopDb)
+      // const SampleCollection = shopDb.collection('sampleCollection');
+      // await SampleCollection.insertOne({ initialized: true });
   
       res.status(201).send(`Database "${shopName}" created successfully!`);
     } catch (err) {
@@ -53,7 +59,7 @@ app.post('/api/create-database/:shopName', async (req, res) => {
     try {
       const client = new MongoClient(`mongodb+srv://jashnavadiya8:Asdf1234@cluster0.zebzdmi.mongodb.net/`, { useUnifiedTopology: true });
       await client.connect();
-        console.log("hi");
+     
         
       const adminDb = client.db().admin();
       const databases = await adminDb.listDatabases();
@@ -165,6 +171,7 @@ app.post('/api/:shopName/widgets', dbMiddleware, async (req, res) => {
   // Update a Widget by ID
   app.put('/api/:shopName/widgets/:id', dbMiddleware, async (req, res) => {
     try {
+      const WidgetModel = req.db.model('Widget'); // Use the dynamically associated Widget model
       
       const updatedWidget = await WidgetModel.findByIdAndUpdate(
         req.params.id,
@@ -267,6 +274,7 @@ const checkShopExists = async (req, res, next) => {
   });
   
 
+  app.use('/api/:shopName/users', dbMiddleware,userRoutes);
 
 
   app.use(express.static(path.join(__dirname,"../frontend/build")));

@@ -1,48 +1,53 @@
 import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+  const { shopName } = useParams(); // Get the shopName from the route params
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const nav = useNavigate();
+  const [role, setRole] = useState('admin');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await axios.post('https://brewhue.onrender.com/api/auth/signup', { email, password });
-      setMessage('Signup successful! Token: ' );
-      // Redirect to the Login page after successful signup
-      nav('/login');
-    } catch (error) {
-      setMessage('Error: ' + error.message);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/users/signup`, {
+        email,
+        password,
+        role
+      });
+      navigate(`/${shopName}/login`); // Redirect to login after successful signup
+    } catch (err) {
+      setError(err.response?.data?.error || 'Signup failed');
     }
   };
 
   return (
     <div>
-      <h2>Signup</h2>
-      <form onSubmit={handleSignup}>
+      <h2>Sign Up for {shopName}</h2>
+      {error && <p>{error}</p>}
+      <form onSubmit={handleSubmit}>
         <input
           type="email"
-          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
+          placeholder="Email"
         />
-        <br />
         <input
           type="password"
-          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
+          placeholder="Password"
         />
-        <br />
+        <select value={role} onChange={(e) => setRole(e.target.value)}>
+          <option value="admin">Admin</option>
+          <option value="user">User</option>
+        </select>
         <button type="submit">Sign Up</button>
       </form>
-      {message && <p>{message}</p>}
     </div>
   );
 };
