@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 const Navbar = ({ shopName }) => {
   return (
-    <div className="bg-white shadow-md p-4">
+    <div className="bg-white p-4">
       <div className="flex items-center justify-between">
         <NavLink
           to={`/${shopName}/dashboard`}

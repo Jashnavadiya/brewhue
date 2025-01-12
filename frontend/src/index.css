@@ -2,5 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     color: #444444;
+    
+    font-family: 'poppins', sans-serif;
 }
+@font-face {
+    font-family: 'ClassiclyDemo';
+    src: url('../public/fonts/ClassiclyDemo.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'Hawthorne';
+    src: url('../public/fonts/hawthorne.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'Aqala';
+    src: url('../public/fonts/Aqala.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }

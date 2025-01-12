@@ -25,7 +25,7 @@ app.use(cors());
 
 // Function to dynamically connect to a database
 const connectToDatabase = async (dbName) => {
-    const uri = `mongodb+srv://jashnavadiya8:Asdf1234@cluster0.zebzdmi.mongodb.net/${dbName}`;
+    const uri = `mongodb://Lasans:Asdf@1234@140.238.246.225:27017/${dbName}`;
     const connection = mongoose.createConnection(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -57,7 +57,7 @@ app.post('/api/create-database/:shopName', async (req, res) => {
   // Endpoint to list all databases
   app.get('/api/databases', async (req, res) => {
     try {
-      const client = new MongoClient(`mongodb+srv://jashnavadiya8:Asdf1234@cluster0.zebzdmi.mongodb.net/`, { useUnifiedTopology: true });
+      const client = new MongoClient(`mongodb://Lasans:Asdf@1234@140.238.246.225:27017/`, { useUnifiedTopology: true });
       await client.connect();
      
         
@@ -87,7 +87,7 @@ app.post('/api/create-database/:shopName', async (req, res) => {
     // Check if a connection to this database already exists
     if (!connections[shopName]) {
       try {
-        const uri = `mongodb+srv://jashnavadiya8:Asdf1234@cluster0.zebzdmi.mongodb.net/${shopName}`;
+        const uri = `mongodb://Lasans:Asdf@1234@140.238.246.225:27017/${shopName}`;
         const connection = mongoose.createConnection(uri, {
           useNewUrlParser: true,
           useUnifiedTopology: true,

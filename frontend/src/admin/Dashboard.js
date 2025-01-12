@@ -37,31 +37,37 @@ const Dashboard = () => {
   return (
     <div className="flex-col h-screen">
       {/* Sidebar */}
-      <Navbar shopName={shopName} />
-      <div className='flex h-full'>
-        <div className='w-2/12'>
-          <div className="h-full flex-col justify-between  bg-white hidden lg:flex ">
+
+      <div className='flex '>
+        <div className='w-2/12 border-e-[#F3F2F2] border sticky top-0 '>
+          <div className="h-screen flex-col justify-between sticky top-0 bg-white hidden lg:flex ">
+
             <div className="px-4 py-6">
+              <div className='w-1/2 flex justify-center align-middle'>
+                <img src="/enso.png" alt=""  className='w-full '/>
+              </div>
               <nav aria-label="Main Nav" className="mt-6 flex flex-col space-y-1">
                 <Link
-                  to={`/${shopName}/dashboard/profile`}
-                  className="flex items-center gap-2 rounded-lg hover:bg-gray-100 px-4 py-2 text-gray-700"
+                  to={`/${shopName}/dashboard/home`}
+                  className="flex items-center align-middle gap-2 rounded-lg hover:bg-gray-100 px-4 py-2 text-gray-700"
                 >
                   <img
                     alt="dashboard-icon"
-                    src="/dashboard-icon.png"
+                    src="/icons/home.png"
+                    className='w-4'
                   />
-                  <span className="text-sm font-medium"> Dashboard </span>
+                  <span className="text-base font-normal">Home</span>
                 </Link>
                 <Link
-                  to={`/${shopName}/dashboard/info`}
-                  className="flex items-center gap-2 rounded-lg hover:bg-gray-100 px-4 py-2 text-gray-700"
+                  to={`/${shopName}/dashboard/settings`}
+                  className="flex items-center align-middle gap-2 rounded-lg hover:bg-gray-100 px-4 py-2 text-gray-700"
                 >
                   <img
                     alt="dashboard-icon"
-                    src="/dashboard-icon.png"
+                    src="/icons/setting.png"
+                    className='w-4'
                   />
-                  <span className="text-sm font-medium"> info </span>
+                  <span className="text-base font-normal">Settings</span>
                 </Link>
 
 
@@ -91,7 +97,7 @@ const Dashboard = () => {
         </div>
         {/* Main Content */}
         <div className="w-10/12 h-full">
-          
+          <Navbar shopName={shopName} />
           <Outlet />
         </div>
       </div>

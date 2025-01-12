@@ -1,0 +1,6 @@
+/* FlipBook page back styling */
+.rpf-flipbook .page .back {
+    background-color: black !important;
+    color: white; /* Optional: Change text color if needed */
+  }
+  
