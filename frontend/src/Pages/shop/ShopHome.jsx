@@ -57,6 +57,7 @@ const ShopHome = () => {
             className="h-9 absolute left-[20%] top-[30px]"
             alt=""
           />
+          
           <Link
             to="Menu"
             smooth={true} // Smooth scrolling enabled
