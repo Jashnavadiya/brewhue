@@ -1,8 +1,28 @@
-import React from "react";
-import { Card, CardFooter, Image, Button } from "@nextui-org/react";
+import React, { useState } from "react";
+import {
+  Card,
+  CardFooter,
+  Image,
+  Button,
+  Form,
+  Input,
+} from "@nextui-org/react";
 import Carousel from "../../components/Carousel";
 import PdfViewer from "../../components/PdfViewer";
+import { Link, animateScroll as scroll } from "react-scroll";
 const ShopHome = () => {
+  const [message, setMessage] = useState(
+    "Shhh!\n Sometimes, \nfree treats happen * "
+  );
+  const [submitted, setSubmitted] = React.useState(null);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+
+    setSubmitted(data);
+  };
+
   return (
     <>
       <div className="w-[98%] m-auto h-[100%]">
@@ -14,7 +34,7 @@ const ShopHome = () => {
                 <img
                   className="absolute top-0 left-0 w-full h-full object-cover rounded-large"
                   alt="Responsive Image"
-                  src="https://i.ibb.co/BsTP1qr/307984637-800975171350120-6878291970239627947-n.jpg"
+                  src="https://s3-alpha-sig.figma.com/img/dad7/cb6a/52fc5ea0d1eb437753d98a2cf949005b?Expires=1737936000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=U1jx9gJagV3WmURm6p7BosqfJHsd-IueX3xo7Ve4g0E-qJvKGfid3RtYBeq8L2RxwIms1dy5~whXOvX0NEJq5HoqgrRU3UP7e2efeEBDdatuPFuqW9HYLtvFB6Xf1UAvUxccpN7SwMwQJBA70CfwIH9grG8ttGHAwo7xUZPuktg~2rRK7OpwR7xJ3elSwnT95uj~Apa31O6EfmAz8f7sfoEY5wpNjEAwf7vvrkkh9VquxjsvcywelynbcdSYuTNDf01xl0FkVDUM8b15mxTZmlamQV7YjfNey6GFTp5w92WVEudLsIA~2Cz-1LRpzav2j~c5Vdt6Wg3xXCFKau56zA__"
                 />
               </div>
 
@@ -37,16 +57,20 @@ const ShopHome = () => {
             className="h-9 absolute left-[20%] top-[30px]"
             alt=""
           />
-
-          <Button
-            radius="sm"
-            className="bg-black text-white mt-5 w-4/12 py-5 text-sm "
+          <Link
+            to="Menu"
+            smooth={true} // Smooth scrolling enabled
+            duration={700} // Duration in milliseconds (slower scrolling)
+            className="p-7  cursor-pointer rounded-xl mx-auto block bg-black text-white my-5 w-4/12 py-3 text-sm"
           >
-            <span className="text-ffirst">Menu</span>{" "}
-          </Button>
+            {/* NextUI Button inside the Link */}
+
+            <span className="text-ffirst">Menu</span>
+          </Link>
+
           <img
             src="/icons/coffee-beans.png"
-            className="h-10 absolute right-[19%] top-[15px]"
+            className="h-10 absolute right-[15%] top-[-15px]"
             alt=""
           />
         </div>
@@ -60,8 +84,14 @@ const ShopHome = () => {
           >
             <div className=" bg-black">
               <div className=" shadow-black/5 shadow-none rounded-large w-full aspect-[16/11]  relative">
-                <div className="bg-black text-white rounded-lg ps-6 pt-6 pb-6 pe-1 shadow-lg h-full relative">
-                  <h1 className="text-2xl font-bold mb-4 w-2/12 text-white">
+                <div className="bg-black text-white rounded-lg ps-7 pt-6 pb-6 pe-1 shadow-lg h-full relative">
+                  <h1
+                    className="text-[26px] font-bold mb-4 w-2/12 text-white"
+                    style={{
+                      fontFamily: " 'Abril Fatface', serif",
+                      fontWeight: "400",
+                    }}
+                  >
                     Ethereal Aesthetics
                   </h1>
                   <ul className="space-y-3 w-max  ms-auto">
@@ -105,12 +135,18 @@ const ShopHome = () => {
                           </defs>
                         </svg>
                       </span>
-                      <span className="text-[10px] text-white">
+                      <span
+                        className="text-[10px] text-white"
+                        style={{
+                          fontFamily: " 'Inria Serif', serif",
+                          fontWeight: "400",
+                        }}
+                      >
                         Premium, Best-in-Class Ingredients.
                       </span>
                     </li>
                     <li className="flex items-center justify-start space-x-2">
-                      <span className="text-lg">
+                      <span className="text-lg opacity-45">
                         <svg
                           width="15"
                           height="15"
@@ -163,12 +199,18 @@ const ShopHome = () => {
                           </defs>
                         </svg>
                       </span>
-                      <span className="text-[10px] text-white">
+                      <span
+                        className="text-[10px] text-white"
+                        style={{
+                          fontFamily: " 'Inria Serif', serif",
+                          fontWeight: "400",
+                        }}
+                      >
                         Finest and Most Beautiful Brews, Every Time.
                       </span>
                     </li>
                     <li className="flex items-center justify-start space-x-2">
-                      <span className="text-sm">
+                      <span className="text-sm opacity-45">
                         <svg
                           width="15"
                           height="15"
@@ -189,12 +231,24 @@ const ShopHome = () => {
                           </defs>
                         </svg>
                       </span>
-                      <span className="text-[10px] text-white">
+                      <span
+                        className="text-[10px] text-white"
+                        style={{
+                          fontFamily: " 'Inria Serif', serif",
+                          fontWeight: "400",
+                        }}
+                      >
                         An Ambience You'll Absolutely Love.
                       </span>
                     </li>
                   </ul>
-                  <div className="text-gray-400 text-[8px] w-max ms-auto absolute right-[10px] bottom-[10px]">
+                  <div
+                    className="text-gray-400 text-[8px] w-max ms-auto absolute right-[10px] bottom-[10px]"
+                    style={{
+                      fontFamily: " 'Inria Serif', serif",
+                      fontWeight: "400",
+                    }}
+                  >
                     <p>Best Café in Ambience - Jan 2025</p>
                     <p className="text-gray-600 text-left">
                       {" "}
@@ -255,7 +309,8 @@ const ShopHome = () => {
         </div>
 
         {/* section 4 */}
-        <div>arrow will hereeeeee</div>
+
+        <div>btn here</div>
 
         {/* section 5 */}
         <div>
@@ -272,9 +327,15 @@ const ShopHome = () => {
               </Card>
             </div>
             <div className="w-1/2 flex justify-between align-middle ">
-              <span className="w-10/12 text-black text-2xl m-auto">
-                Vibe Check Done!
-              </span>
+              <pre
+                className="w-max text-black text-[26px] m-auto text-left"
+                style={{
+                  fontFamily: " 'Abril Fatface', serif",
+                  fontWeight: "400",
+                }}
+              >
+                {"Vibe Check\n Done!"}
+              </pre>
             </div>
           </div>
           <div className="flex">
@@ -331,27 +392,37 @@ const ShopHome = () => {
         </div>
 
         {/* section 6 */}
-        <div className="relative py-10 mt-6 ">
+        <div className="relative py-10 mt-6 " id="Menu">
           <div className="">
-            <div className="text-black text-xl w-max text-left ms-2">
-              Sip Happens- <br />
-              Choose Your Fave!
-            </div>
+            <pre
+              className="text-black text-[26px] w-max text-left ms-2"
+              style={{
+                fontFamily: " 'Abril Fatface', serif",
+                fontWeight: "400",
+              }}
+            >
+              {"Sip Happens- \nChoose Your Fave!"}
+            </pre>
             <div className="absolute right-0 top-0 w-4/12">
               <img src="/etc/Aerrow.png" alt="" className="h-16 " />
             </div>
           </div>
-          <div style={{ width: "100%",  }}>
-          <PdfViewer url="/lamensa.pdf" />
-    </div>
+          <div style={{ width: "100%" }}>
+            <PdfViewer url="/lamensa.pdf" />
+          </div>
         </div>
 
         {/* section 7 */}
         <div>
-          <div>Log Kya Kahenge!!!</div>
+          <div
+            className="text-[26px] text-black"
+            style={{ fontFamily: " 'Abril Fatface', serif", fontWeight: "400" }}
+          >
+            Log Kya Kahenge!!!
+          </div>
           <div className="mx-auto p-4">
-      <Carousel /> {/* Use the Carousel component */}
-    </div>
+            <Carousel /> {/* Use the Carousel component */}
+          </div>
         </div>
 
         {/* section 8 */}
@@ -363,17 +434,54 @@ const ShopHome = () => {
           >
             <div className=" bg-black">
               <div className=" shadow-black/5 shadow-none rounded-large w-full aspect-[16/11]  relative">
-                <div className="bg-black text-white w-9/12 space-y-1 mx-auto rounded-lg flex flex-col justify-center align-middle items-center shadow-lg h-full relative">
-                  <div className="text-white text-2xl">We're Open</div>
-                  <div className="text-white text-sm mt-10">Everyday</div>
-                  <div className="text-gray-600 text-sm">
+                <div className="bg-black text-white w-9/12  mx-auto rounded-lg flex flex-col justify-center align-middle items-center shadow-lg h-full relative">
+                  <div
+                    className="text-white text-2xl font-normal
+                   "
+                    style={{
+                      fontFamily: " 'Abril Fatface', serif",
+                      fontWeight: "400",
+                    }}
+                  >
+                    We're Open
+                  </div>
+                  <div
+                    className="text-white text-sm mt-7 "
+                    style={{
+                      fontFamily: " 'Inria Serif', serif",
+                      fontWeight: "400",
+                    }}
+                  >
+                    Everyday
+                  </div>
+                  <div
+                    className="text-white opacity-45 text-sm  my-2 "
+                    style={{
+                      fontFamily: " 'Inria Serif', serif",
+                      fontWeight: "400",
+                    }}
+                  >
                     10:00AM to 11:00PM
                   </div>
-                  <div className="text-white text-sm">
+                  <div
+                    className="text-white text-sm  "
+                    style={{
+                      fontFamily: " 'Inria Serif', serif",
+                      fontWeight: "400",
+                    }}
+                  >
                     301, Sunday Hub, near Ankur School, Katargam, Surat, Gujarat
                     - 395004
                   </div>
-                  <div className="text-white text-sm"> +91 81289 55751</div>
+                  <div
+                    className="text-white text-xs  my-2"
+                    style={{
+                      fontFamily: " 'Inria Serif', serif",
+                      fontWeight: "400",
+                    }}
+                  >
+                    +91 81289 55751
+                  </div>
                 </div>
                 <div className="absolute bottom-0 right-0 w-max h-max opacity-100 ">
                   <svg
@@ -420,6 +528,56 @@ const ShopHome = () => {
             </div>
           </Card>
         </div>
+
+        {/* section 9 */}
+        <div className="relative pt-12 mt-3">
+          <div className="absolute top-[10px] right-[20px]">
+            <img
+              className="h-16"
+              src="https://s3-alpha-sig.figma.com/img/e0eb/44df/6e9a4c9eded31946fee416ae88a8b189?Expires=1737936000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=b8gBqURkXb8rsj5V-hNCES2~xFjuMcTI0MEwOeYE92n4E4JfG8JnsYpqEBq2NWevz7hyNjWypO7nGZkex~xFvvs5UuuGAN6cVVhN8qh718BboCVoRHNscHUm37QB9CgFtpfefAslB4NBnLzsad-JixGgHuUpSl9Dc771EbfcFnMVHg1eNJ15kB3Z~vjR3sBjOBh11gmZzCkJOyo-OWGbbUIJXhsbq6EFrzQolA1zCbtUIINrMWWZ-9cBdpv0toHNSycbpHonCYi2f4IUgjHOjxxu~KoriEb611DEcvuvIzF-bEUo6d73qBc8vUG6zRUnTyoGM69oUzcrO9Nn4wzVxA__"
+              alt=""
+            />
+          </div>
+
+          <div
+            className="1/2 text-[28px]"
+            style={{ fontFamily: " 'Abril Fatface', serif", fontWeight: "400" }}
+          >
+            <pre
+              className="text-black"
+              style={{
+                fontFamily: " 'Abril Fatface', serif",
+                fontWeight: "400",
+              }}
+            >
+              {message}
+            </pre>
+          </div>
+          <div className="relative w-11/12 m-auto">
+            <div className="flex justify-between my-5">
+              <input
+                type="email"
+                className="w-8/12 bg-transparent border-black rounded-medium border-[2px] p-2"
+                placeholder="meraemailid@address.com"
+                style={{ "::placeholder": { color: "black" } }}
+              />
+              <button className="w-max bg-black text-white rounded-medium py-2 border-[2px] px-3 border-black text-sm">
+                Count me !
+              </button>
+            </div>
+          </div>
+          <div
+            className="text-[26px] text-black"
+            style={{
+              fontFamily: " 'Abril Fatface', serif",
+              fontWeight: "400",
+            }}
+          >
+            <span className="text-transparent">～</span>(～￣▽￣)～
+          </div>
+        </div>
+
+        {/* setion 10 */}
       </div>
     </>
   );

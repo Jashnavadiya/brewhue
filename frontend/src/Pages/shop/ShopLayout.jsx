@@ -103,9 +103,6 @@ export default function App() {
       </div>
 
       <div className="flex w-full flex-col">
-
-
-        
         <Tabs
           fullWidth
           aria-label="Options"
@@ -148,6 +145,38 @@ export default function App() {
         </Tabs>
       </div>
 
+      <div className="mt-10 bg-black pt-16" >
+        <div className="w-5/12 m-auto">
+          <div>
+            <div className="text-white text-sm "  style={{
+                      fontFamily: " 'Abril Fatface', serif",
+                      fontWeight: "400",
+                    }}>Made With Love</div>
+            <img
+              className="w-full mt-3"
+              src="/images/brewhue.png"
+              alt=""
+            />
+            <div className="my-5 text-white" style={{
+                      fontFamily: " 'Abril Fatface', serif",
+                      fontWeight: "400",
+                    }}>X</div>
+            <img
+              className="w-7/12 m-auto"
+              src="/images/enso_white.png"
+              alt=""
+            />
+          </div>
+          <pre className="text-[10px] text-gray-500 mt-20"  style={{
+                          fontFamily: " 'Inria Serif', serif",
+                          fontWeight: "400",
+                        }}>
+            {
+              "BrewHue Cafe Networks. - Surat\n© CYPHER IT SOLUTIONS\n*T&C - Policy Page\n2025-27\n\n"
+            }
+          </pre>
+        </div>
+      </div>
       {/* <Outlet/> */}
     </div>
   );

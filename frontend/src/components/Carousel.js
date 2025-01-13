@@ -68,9 +68,9 @@ const Carousel = () => {
       >
         <div className=" p-5  rounded-lg ">
           <div className="carousel-title text-2xl font-bold bg-[#D4D4D8] w-max m-auto rounded-full p-4">{slides[currentIndex].title}</div>
-          <div className="carousel-subtitle text-sm text-black">{slides[currentIndex].subtitle}</div>
-          <div className="carousel-description text-gray-500 text-sm my-3">{slides[currentIndex].description}</div>
-          <div className="carousel-date text-sm text-black">{slides[currentIndex].date}</div>
+          <div className="carousel-subtitle text-sm text-black" style={{fontFamily:" 'Inria Serif', serif",fontWeight:"400"}}>{slides[currentIndex].subtitle}</div>
+          <div className="carousel-description text-gray-500 text-sm my-3" style={{fontFamily:" 'Inria Serif', serif",fontWeight:"400"}}>{slides[currentIndex].description}</div>
+          <div className="carousel-date text-sm text-black" style={{fontFamily:" 'Inria Serif', serif",fontWeight:"400"}}>{slides[currentIndex].date}</div>
         </div>
       </motion.div>
 
