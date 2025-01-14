@@ -1,26 +1,41 @@
-import React from 'react';
-import './App.css'; // Make sure to create a CSS file
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
-const BackgroundText = () => {
+const TextAnimation = () => {
+  const [splitText, setSplitText] = useState([]);
+
+  useEffect(() => {
+    // Split the text into individual characters
+    const text = "Hello World!";
+    const characters = text.split("").map((char, index) => ({
+      char,
+      index,
+    }));
+    setSplitText(characters);
+  }, []);
+
   return (
-    <div className="container">
-      <div className="background-image">
-        {/* This will display the background image */}
-      </div>
-      <div className="svg-overlay">
-        <svg width="500" height="200" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="backgroundImage" patternUnits="userSpaceOnUse" width="500" height="200">
-              <image href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PFRUWFhURFRUYHSggGBolHRUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDQ0NDg0NDisZFRktKystKy0tLSsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIALcBEwMBIgACEQEDEQH/xAAYAAEBAQEBAAAAAAAAAAAAAAAAAQIDB//EABcQAQEBAQAAAAAAAAAAAAAAAAABEQL/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/APDpGpEjUAxcVaKzi4oImGNFBnDGsQVMTGigzhimCJiY0gqYYoCYmNAM4mNAM4Y0gMjSAgoIgAAACKgAANctxjluCqKQBUkawCQIoiIoCI0gJUDAQUBFEFAAEqoAioAACAAIqAACAIAADfLcY4bgqkiLAaEWCCykAVLABMTCgJRbUBKUAQAUAARUARQEAAQAEUBABBFQAAG+G4xw3BVAgjUEWAsBQRGqzQKisgFKAhoAIqChqLAEAAEAABAAEVAABBFQAAG+W2OWxSLEaEFhoClJQBK1WAVKaAiKlABAVAFAQCgAIoCAgAAAIAAIIqAAA3y2xy3BSNRlRGhlQUgAGGpoCWrqAaIgKRAUoIClCggACKgAIAAAioAAIIqAAA1y6Rz5bgqqhAVUAU0BAQAEoAgACoKAAgAAAIAAgAAAIAgAAioAADXLcYjUFaBNBVQAWVFEBABAAAFEUARagBQBAAEVAAAEAAAQAARUAABqNRiNQVoABUUAAAAEC0oIqAAAAACAACAqAACAACAAAAIAAACxqMxQaVlRVEUAAAKAAgAAAICiAAAggCgAIAAAIAAioAAAAAqoA0ICtCaAqs6A1qIaCiaACAKIAqAACAogCoAgAAAAgAAAAAAAoABoAaaALpoAaABqABpoAAAAAAAAAAAIAAAAAAAAAAAP/9k=" x="0" y="0" width="500" height="200" />
-            </pattern>
-          </defs>
-          <text x="50%" y="50%" font-size="50" text-anchor="middle" fill="url(#backgroundImage)" stroke="white" stroke-width="1">
-            ENSO
-          </text>
-        </svg>
-      </div>
+    <div style={{ overflow: "hidden", display: "inline-block" }}>
+      <h1 style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+        {splitText.map((item, index) => (
+          <motion.span
+            key={index}
+            initial={{ y: 40, opacity: 0 }}  // Start below the normal position
+            animate={{ y: 0, opacity: 1 }}   // Animate upwards to final position
+            transition={{
+              delay: index * 0.1,              // Stagger the animation for each character
+              duration: 0.8,                   // Slightly longer duration for bounce effect
+              type: "spring",                  // Spring for bounce effect
+              stiffness: 200,                  // Higher stiffness = stronger bounce
+              damping: 20,                     // Higher damping = less bounce
+            }}
+          >
+            {item.char}
+          </motion.span>
+        ))}
+      </h1>
     </div>
   );
 };
 
-export default BackgroundText;
+export default TextAnimation;

@@ -14,7 +14,6 @@ import LoadingScreen from "../../components/Loadingscreen";
 import "./ShopDetails.css";
 import AddShop from "../lasans/AddShop";
 import ShopHome from "./ShopHome";
-import PdfViewer from "../../components/PdfViewer";
 import ShopMenu from "./ShopMenu";
 import ShopAbout from "./ShopAbout";
 
@@ -117,13 +116,13 @@ export default function App() {
           >
             <ShopHome />
           </Tab>
-          <Tab
+          {/* <Tab
             key="About"
             title="About"
             className="!shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
           >
             <ShopAbout />
-          </Tab>
+          </Tab> */}
           <Tab
             key="Menu"
             title="Menu"
@@ -132,11 +131,11 @@ export default function App() {
           >
             <ShopMenu />
           </Tab>
-          <Tab
+          {/* <Tab
             key="Contact Us"
             title="Contact"
             className="!shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
-          ></Tab>
+          ></Tab> */}
           <Tab
             key="Social Media"
             title="Social"
@@ -145,32 +144,41 @@ export default function App() {
         </Tabs>
       </div>
 
-      <div className="mt-10 bg-black pt-16" >
+      <div className="mt-10 bg-black pt-16">
         <div className="w-5/12 m-auto">
           <div>
-            <div className="text-white text-sm "  style={{
-                      fontFamily: " 'Abril Fatface', serif",
-                      fontWeight: "400",
-                    }}>Made With Love</div>
-            <img
-              className="w-full mt-3"
-              src="/images/brewhue.png"
-              alt=""
-            />
-            <div className="my-5 text-white" style={{
-                      fontFamily: " 'Abril Fatface', serif",
-                      fontWeight: "400",
-                    }}>X</div>
+            <div
+              className="text-white text-sm "
+              style={{
+                fontFamily: " 'Abril Fatface', serif",
+                fontWeight: "400",
+              }}
+            >
+              Made With Love
+            </div>
+            <img className="w-full mt-3" src="/images/brewhue.png" alt="" />
+            <div
+              className="my-5 text-white"
+              style={{
+                fontFamily: " 'Abril Fatface', serif",
+                fontWeight: "400",
+              }}
+            >
+              X
+            </div>
             <img
               className="w-7/12 m-auto"
               src="/images/enso_white.png"
               alt=""
             />
           </div>
-          <pre className="text-[10px] text-gray-500 mt-20"  style={{
-                          fontFamily: " 'Inria Serif', serif",
-                          fontWeight: "400",
-                        }}>
+          <pre
+            className="text-[10px] text-gray-500 mt-20"
+            style={{
+              fontFamily: " 'Inria Serif', serif",
+              fontWeight: "400",
+            }}
+          >
             {
               "BrewHue Cafe Networks. - Surat\n© CYPHER IT SOLUTIONS\n*T&C - Policy Page\n2025-27\n\n"
             }

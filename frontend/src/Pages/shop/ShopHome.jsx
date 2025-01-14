@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardFooter,
@@ -8,8 +8,9 @@ import {
   Input,
 } from "@nextui-org/react";
 import Carousel from "../../components/Carousel";
-import PdfViewer from "../../components/PdfViewer";
+import SinglePageFlipBook from "../../components/PdfViewerhome";
 import { Link, animateScroll as scroll } from "react-scroll";
+import { motion } from "framer-motion";
 const ShopHome = () => {
   const [message, setMessage] = useState(
     "Shhh!\n Sometimes, \nfree treats happen * "
@@ -22,6 +23,18 @@ const ShopHome = () => {
 
     setSubmitted(data);
   };
+
+  const text = "Just You, Just Here"; // The text you want to animate
+  const [splitText, setSplitText] = useState([]);
+
+  useEffect(() => {
+    // Split the text by characters (including spaces)
+    const characters = Array.from(text).map((char, index) => ({
+      char,
+      index,
+    }));
+    setSplitText(characters);
+  }, []);
 
   return (
     <>
@@ -41,10 +54,37 @@ const ShopHome = () => {
               {/* Tinted overlay with blend mode */}
               <div className="absolute inset-0 bg-black mix-blend-multiply z-10 opacity-60 flex justify-center align-middle"></div>
 
-              <div className="absolute inset-0   z-20 flex justify-center align-middle items-center">
+              {/* <div className="absolute inset-0   z-20 flex justify-center align-middle items-center">
                 <span className="text-ffirst font-[Aqala] text-3xl lg:text-8xl">
                   Just You, Just Here
                 </span>
+              </div> */}
+              <div className="absolute inset-0  z-20 flex justify-center align-middle items-center" >
+                <h1
+                  style={{ display: "flex", flexWrap: "wrap"}}
+                >
+                  {splitText.map((item, index) =>
+                    item.char === " " ? (
+                      <span className="text-ffirst font-[Aqala] text-3xl lg:text-8xl" key={index}>&nbsp;</span> // Use non-breaking space for visual gap
+                    ) : (
+                      <motion.span
+                        key={index}
+                        className="text-ffirst font-[Aqala] text-3xl lg:text-8xl"
+                        initial={{ y: 40, opacity: 0 }} // Start below and invisible
+                        animate={{ y: 0, opacity: 1 }} // Move to normal position and visible
+                        transition={{
+                          delay: index * 0.05, // Staggered delay for each character
+                          duration: 0.6, // Bounce duration
+                          type: "spring", // Spring type for bounce effect
+                          stiffness: 200, // Stronger bounce
+                          damping: 20, // Control bounce decay
+                        }}
+                      >
+                        {item.char}
+                      </motion.span>
+                    )
+                  )}
+                </h1>
               </div>
             </div>
           </Card>
@@ -57,7 +97,7 @@ const ShopHome = () => {
             className="h-9 absolute left-[20%] top-[30px]"
             alt=""
           />
-          
+
           <Link
             to="Menu"
             smooth={true} // Smooth scrolling enabled
@@ -409,7 +449,7 @@ const ShopHome = () => {
             </div>
           </div>
           <div style={{ width: "100%" }}>
-            <PdfViewer url="/lamensa.pdf" />
+            <SinglePageFlipBook url="/lamensa.pdf" />
           </div>
         </div>
 
@@ -421,7 +461,7 @@ const ShopHome = () => {
           >
             Log Kya Kahenge!!!
           </div>
-          <div className="mx-auto p-4">
+          <div className="mx-auto p-4 h-[250px]">
             <Carousel /> {/* Use the Carousel component */}
           </div>
         </div>

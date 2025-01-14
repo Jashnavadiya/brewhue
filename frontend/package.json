@@ -31,7 +31,8 @@
     "react-swipeable": "^7.0.2",
     "simple": "file:..",
     "turn.js": "^1.0.5",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^4.2.4",
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "scripts": {
     "start": "react-scripts start",
