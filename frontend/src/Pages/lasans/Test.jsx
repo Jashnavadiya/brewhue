@@ -1,39 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 
 const TextAnimation = () => {
-  const [splitText, setSplitText] = useState([]);
-
-  useEffect(() => {
-    // Split the text into individual characters
-    const text = "Hello World!";
-    const characters = text.split("").map((char, index) => ({
-      char,
-      index,
-    }));
-    setSplitText(characters);
-  }, []);
+  const lines = [
+    "Finest and Most Beautiful Brews, Every Time.",
+    "An Ambience You'll Absolutely Love.",
+    "Enjoy Our Exquisite Selection of Coffees.",
+  ]; // Dynamic lines array
 
   return (
-    <div style={{ overflow: "hidden", display: "inline-block" }}>
-      <h1 style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-        {splitText.map((item, index) => (
-          <motion.span
-            key={index}
-            initial={{ y: 40, opacity: 0 }}  // Start below the normal position
-            animate={{ y: 0, opacity: 1 }}   // Animate upwards to final position
-            transition={{
-              delay: index * 0.1,              // Stagger the animation for each character
-              duration: 0.8,                   // Slightly longer duration for bounce effect
-              type: "spring",                  // Spring for bounce effect
-              stiffness: 200,                  // Higher stiffness = stronger bounce
-              damping: 20,                     // Higher damping = less bounce
-            }}
-          >
-            {item.char}
-          </motion.span>
-        ))}
-      </h1>
+    <div>
+      {lines.map((line, lineIndex) => (
+        <motion.div
+          key={lineIndex}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            delay: lineIndex * 0.5, // Delay each line animation based on its position
+            duration: 0.5,
+          }}
+        >
+          <h1>
+            {Array.from(line).map((char, index) => (
+              <motion.span
+                key={index}
+                initial={{ y: 20, opacity: 0 }} // Start below and invisible
+                animate={{ y: 0, opacity: 1 }}  // Move to normal position and visible
+                transition={{
+                  delay: index * 0.05, // Stagger characters in the line
+                  duration: 0.5,       // Bounce duration
+                  type: "spring",      // Spring type for bounce effect
+                  stiffness: 100,      // Bounce stiffness
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </h1>
+        </motion.div>
+      ))}
     </div>
   );
 };
