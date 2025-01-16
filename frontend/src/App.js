@@ -22,6 +22,7 @@ import ShopMenu from './Pages/shop/ShopMenu';
 import ShopHome from './Pages/shop/ShopHome';
 import ShopContact from './Pages/shop/ShopContact';
 import ShopSocial from './Pages/shop/ShopSocial';
+import UserPanel from './admin/Userpanel';
 function App() {
   const customTheme = {
     theme: {
@@ -58,6 +59,7 @@ function App() {
         <Route path="profile" element={<ShopProfile />} />
         <Route path="info" element={<ShopDetail />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="userpanel" element={<UserPanel />} />
       </Route>
       
       <Route path="/create-shop" element={<ShopForm />} />

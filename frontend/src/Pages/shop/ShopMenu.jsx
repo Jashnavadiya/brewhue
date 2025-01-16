@@ -5,7 +5,7 @@ const ShopMenu = () => {
   return (
     <div className="w-11/12 m-auto border-lg  ">
       <pre
-        className="text-left text-2xl"
+        className="text-left text-2xl text-black"
         style={{
           fontFamily: " 'Abril Fatface', serif",
           fontWeight: "400",

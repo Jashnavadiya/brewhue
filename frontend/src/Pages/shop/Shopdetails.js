@@ -13,6 +13,9 @@ const ShopPage = () => {
   const [loading, setLoading] = useState(true);
   const [isMenu, setIsMenu] = useState(false); // State to track if "Menu" tab is selected
 
+
+  
+
   // useEffect(() => {
   //   if (shopName) {
   //     axios.get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/shop`)
