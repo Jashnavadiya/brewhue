@@ -25,19 +25,19 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [isMenu, setIsMenu] = useState(false); // State to track if "Menu" tab is selected
   const nav = useNavigate();
-  useEffect(() => {
-    if (shopName) {
-      axios
-        .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/shop`)
-        .then((res) => setShopData(res.data))
-        .catch((err) => console.error("Error fetching shop data", err));
+  // useEffect(() => {
+  //   if (shopName) {
+  //     axios
+  //       .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/shop`)
+  //       .then((res) => setShopData(res.data))
+  //       .catch((err) => console.error("Error fetching shop data", err));
 
-      axios
-        .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/widgets`)
-        .then((res) => setIconsData(res.data))
-        .catch((err) => console.error("Error fetching widgets data", err));
-    }
-  }, [shopName]);
+  //     axios
+  //       .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/widgets`)
+  //       .then((res) => setIconsData(res.data))
+  //       .catch((err) => console.error("Error fetching widgets data", err));
+  //   }
+  // }, [shopName]);
 
   // function usePrevious(value) {
   //   const ref = React.useRef();
@@ -173,7 +173,7 @@ export default function App() {
             />
           </div>
           <pre
-            className="text-[10px] text-gray-500 mt-20"
+            className="text-[10px] text-white opacity-45 mt-20"
             style={{
               fontFamily: " 'Inria Serif', serif",
               fontWeight: "400",

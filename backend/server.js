@@ -43,21 +43,21 @@ const connectToDatabase = async (dbName) => {
 
 // Endpoint to create or access a shop database
 // Endpoint to create a new database
-app.post('/api/create-database/:shopName', async (req, res) => {
-  const shopName = req.params.shopName;
+// app.post('/api/create-database/:shopName', async (req, res) => {
+//   const shopName = req.params.shopName;
 
-  try {
-    const shopDb = await connectToDatabase(shopName);
-    loadModels(shopDb)
-    // const SampleCollection = shopDb.collection('sampleCollection');
-    // await SampleCollection.insertOne({ initialized: true });
+//   try {
+//     const shopDb = await connectToDatabase(shopName);
+//     loadModels(shopDb)
+//     // const SampleCollection = shopDb.collection('sampleCollection');
+//     // await SampleCollection.insertOne({ initialized: true });
 
-    res.status(201).send(`Database "${shopName}" created successfully!`);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error creating database');
-  }
-});
+//     res.status(201).send(`Database "${shopName}" created successfully!`);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send('Error creating database');
+//   }
+// });
 
 // Endpoint to list all databases
 app.get('/api/databases', async (req, res) => {
@@ -76,6 +76,76 @@ app.get('/api/databases', async (req, res) => {
     res.status(500).send('Error fetching database list');
   }
 });
+app.get('/api/check-database/:shopName', async (req, res) => {
+  const shopName = req.params.shopName;
+
+  try {
+    const client = new MongoClient(`${process.env.MONGO_URI}`, { useUnifiedTopology: true });
+    await client.connect();
+
+    const adminDb = client.db().admin();
+    const databases = await adminDb.listDatabases();
+
+    const dbExists = databases.databases.some(db => db.name === shopName);
+
+    if (dbExists) {
+      res.status(200).send(`Database "${shopName}" exists!`);
+    } else {
+      res.status(404).send(`Database "${shopName}" does not exist.`);
+    }
+
+    await client.close();
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error checking database');
+  }
+});
+
+const bcrypt = require('bcryptjs');
+app.post('/api/create-database/:shopName', async (req, res) => {
+  
+  const shopName = req.params.shopName;
+  const { email, password } = req.body; // Admin user credentials
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  try {
+    // Connect to the new shop database
+    const shopDb = await connectToDatabase(shopName);
+
+    // Load models into the database
+    loadModels(shopDb);
+
+    // Register the User model in the new database
+    const User = shopDb.model('User');
+
+    // Check if the user already exists in the shop database
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists in the shop database' });
+    }
+    
+  
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create and save the new admin user
+    const user = new User({ email, password: hashedPassword, role: 'admin' });
+    const savedUser = await user.save();
+
+    console.log("test2");
+
+    res.status(201).json({
+      message: `Database "${shopName}" created successfully!`,
+      adminUser: savedUser,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error creating database or user', details: err.message });
+  }
+});
 
 
 const loadModels = require('./models/dynamicModelLoader');  // Import the loader function
@@ -89,13 +159,25 @@ const dbMiddleware = async (req, res, next) => {
     return res.status(400).send('Shop name is required');
   }
 
-  // Check if a connection to this database already exists
-  if (!connections[shopName]) {
-    try {
-      // Ensure the connection string is constructed correctly
-      const uri = `${process.env.MONGO_URI}${shopName}?retryWrites=true&w=majority`;
-      console.log(uri);
+  try {
+    // Check if a connection to this database already exists
+    if (!connections[shopName]) {
+      // Connect to the MongoDB server (without specifying a database)
+      const client = new MongoClient(`${process.env.MONGO_URI}`, { useUnifiedTopology: true });
+      await client.connect();
 
+      const adminDb = client.db().admin();
+      const databases = await adminDb.listDatabases();
+
+      const dbExists = databases.databases.some(db => db.name === shopName);
+
+      if (!dbExists) {
+        await client.close();
+        return res.status(404).send(`Database "${shopName}" does not exist.`);
+      }
+
+      // If the database exists, create the connection
+      const uri = `${process.env.MONGO_URI}${shopName}?retryWrites=true&w=majority`;
       const connection = mongoose.createConnection(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -107,15 +189,17 @@ const dbMiddleware = async (req, res, next) => {
 
       // Dynamically load all models and associate them with the current database
       loadModels(connections[shopName]); // This loads all models and associates them
-    } catch (err) {
-      console.error(`Error connecting to database: ${shopName}`, err);
-      return res.status(500).send('Error connecting to database');
-    }
-  }
 
-  // Attach the connection to the request object
-  req.db = connections[shopName];
-  next();
+      await client.close();
+    }
+
+    // Attach the connection to the request object
+    req.db = connections[shopName];
+    next();
+  } catch (err) {
+    console.error(`Error connecting to database: ${shopName}`, err);
+    res.status(500).send('Error connecting to database');
+  }
 };
 
 

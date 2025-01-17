@@ -12,46 +12,45 @@ import SinglePageFlipBook from "../../components/PdfViewerhome";
 import { Link, animateScroll as scroll } from "react-scroll";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
+import { useDispatch,useSelector  } from 'react-redux';
+import { setFormData } from '../../slices/formDataSlice';
+
 import axios from "axios";
+import "./ShopMenu.css";
 const ShopHome = () => {
   const { shopName } = useParams();
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    home: {
-      section6: {
-        time_period: "",
-        time_open: "",
-        time_close: "",
-        address: "",
-        number: [""],
-      },
-      logo: "",
-      darkLogo: "",
-      section1Img: "", // Initialize as empty string or appropriate default
-      section1Text: "",
-      section2Heading: "",
-      section2Info: [],
-      section3Heading: "",
-      section3Img: [{ img: "", _id: "" }],
-      section4Heading: "",
-      section4Pdf: "",
-      section5Heading: "",
-      section5Comments: [
-        { logo_name: "", name: "", review: "", date: "", _id: "" },
-      ],
-    },
-  });
+  const formData = useSelector((state) => state.formData);
+  // const [formData, setFormData] = useState({
+  //   home: {
+  //     section6: {
+  //       time_period: "",
+  //       time_open: "",
+  //       time_close: "",
+  //       address: "",
+  //       number: [""],
+  //     },
+  //     logo: "",
+  //     darkLogo: "",
+  //     section1Img: "", // Initialize as empty string or appropriate default
+  //     section1Text: "",
+  //     section2Heading: "",
+  //     section2Info: [],
+  //     section3Heading: "",
+  //     section3Img: [{ img: "", _id: "" }],
+  //     section4Heading: "",
+  //     section4Pdf: "",
+  //     section5Heading: "",
+  //     section5Comments: [
+  //       { logo_name: "", name: "", review: "", date: "", _id: "" },
+  //     ],
+  //   },
+  // });
   const [message, setMessage] = useState(
     "Shhh!\n Sometimes, \nfree treats happen * "
   );
-  const [submitted, setSubmitted] = React.useState(null);
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-
-    setSubmitted(data);
-  };
 
   const text = "Just You, Just Here"; // The text you want to animate
   const [splitText, setSplitText] = useState([]);
@@ -73,11 +72,18 @@ const ShopHome = () => {
       )
       .then((res) => {
         console.log("Fetched data:", res.data); // Log the fetched data
-        setFormData(res.data);
+        dispatch(setFormData(res.data));
         setLoading(false);
       })
       .catch((err) => console.error("Error fetching data:", err));
   }, []);
+
+  const formatTime = (time24) => {
+    const [hour, minute] = time24.split(":").map(Number);
+    const period = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12; // Convert 0 or 12 to 12 for 12-hour format
+    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
+  };
 
   if (loading) return;
   return (
@@ -94,15 +100,8 @@ const ShopHome = () => {
                   src={`${process.env.REACT_APP_BASE_URL}${formData.home.section1Img}`}
                 />
               </div>
-
               {/* Tinted overlay with blend mode */}
               <div className="absolute inset-0 bg-black mix-blend-multiply z-10 opacity-60 flex justify-center align-middle"></div>
-
-              {/* <div className="absolute inset-0   z-20 flex justify-center align-middle items-center">
-                <span className="text-ffirst font-[Aqala] text-3xl lg:text-8xl">
-                  Just You, Just Here
-                </span>
-              </div> */}
               <div className="absolute inset-0  z-20 flex justify-center align-middle items-center">
                 <h1 style={{ display: "flex", flexWrap: "wrap" }}>
                   {/* 
@@ -137,7 +136,6 @@ const ShopHome = () => {
             </div>
           </Card>
         </div>
-
         {/* section 2 */}
         <div className="relative ">
           <img
@@ -181,12 +179,15 @@ const ShopHome = () => {
                       fontWeight: "400",
                     }}
                   >
-                    {formData.home.section2Heading}
+                    {formData.home.section2Heading.replace(/\\n/g, "\n")}
                   </h1>
-                  <ul className="space-y-3 w-max  ms-auto">
+                  <ul className="space-y-3 w-max pe-3  ms-auto">
                     <li className="flex items-center justify-start space-x-2">
                       <span className="text-sm opacity-45 w-[14px]">
-                      <img src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[0].img}`} alt="" />
+                        <img
+                          src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[0].img}`}
+                          alt=""
+                        />
                       </span>
                       <span
                         className="text-[10px] text-white"
@@ -200,7 +201,10 @@ const ShopHome = () => {
                     </li>
                     <li className="flex items-center justify-start space-x-2">
                       <span className="text-lg opacity-45 w-[14px]">
-                       <img src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[1].img}`} alt="" />
+                        <img
+                          src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[1].img}`}
+                          alt=""
+                        />
                       </span>
                       <span
                         className="text-[10px] text-white"
@@ -214,7 +218,10 @@ const ShopHome = () => {
                     </li>
                     <li className="flex items-center justify-start space-x-2">
                       <span className="text-sm opacity-45 w-[14px]">
-                      <img src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[2].img}`} alt="" />
+                        <img
+                          src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[2].img}`}
+                          alt=""
+                        />
                       </span>
                       <span
                         className="text-[10px] text-white"
@@ -228,16 +235,29 @@ const ShopHome = () => {
                     </li>
                   </ul>
                   <div
-                    className="text-gray-400 text-[8px] w-max ms-auto absolute right-[10px] bottom-[10px]"
+                    className=" text-white text-[8px] w-[43%] ms-auto absolute flex flex-col items-center justify-center right-[10px] bottom-[10px]"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
                     }}
                   >
-                    <p>Best Café in Ambience - Jan 2025</p>
-                    <p className="text-gray-600 text-left">
-                      {" "}
-                      - Bewhew Cafe Network{" "}
+                    <p
+                      className="text-center text-white opacity-60"
+                      style={{
+                        fontFamily: " 'Inria Serif', serif",
+                        fontWeight: "400",
+                      }}
+                    >
+                      Best Café in Ambience - Jan 2025
+                    </p>
+                    <p
+                      className="text-center text-white opacity-60"
+                      style={{
+                        fontFamily: " 'Inria Serif', serif",
+                        fontWeight: "400",
+                      }}
+                    >
+                      - Brewhew Cafe Network{" "}
                     </p>
                   </div>
                 </div>
@@ -283,8 +303,10 @@ const ShopHome = () => {
                     </g>
                   </svg>
                 </div>
+                <div class="down_arrow">
+                  <img src="/icons/down-arrow1.png" className="" alt="" />
+                </div>
               </div>
-
               {/* Tinted overlay with blend mode */}
               {/* <div className="absolute inset-0  mix-blend-multiply z-10 flex justify-center align-middle">
                
@@ -294,8 +316,6 @@ const ShopHome = () => {
         </div>
 
         {/* section 4 */}
-
-        <div>btn here</div>
 
         {/* section 5 */}
         <div>
@@ -319,7 +339,7 @@ const ShopHome = () => {
                   fontWeight: "400",
                 }}
               >
-                {formData.home.section3Heading.replace(/\\n/g, '\n')}
+                {formData.home.section3Heading.replace(/\\n/g, "\n")}
               </pre>
             </div>
           </div>
@@ -379,18 +399,17 @@ const ShopHome = () => {
         {/* section 6 */}
         <div className="relative py-10 mt-6 " id="Menu">
           <div className="">
-          <pre
-  className="text-black text-[26px] w-max text-left ms-2"
-  style={{
-    fontFamily: " 'Abril Fatface', serif",
-    fontWeight: "400",
-    whiteSpace: "pre-wrap", // Important for preserving \n
-    wordWrap: "break-word", // Prevent text overflow
-  }}
->
-  {formData.home.section4Heading.replace(/\\n/g, '\n')}
-</pre>
-
+            <pre
+              className="text-black text-[26px] w-max text-left ms-2"
+              style={{
+                fontFamily: " 'Abril Fatface', serif",
+                fontWeight: "400",
+                whiteSpace: "pre-wrap", // Important for preserving \n
+                wordWrap: "break-word", // Prevent text overflow
+              }}
+            >
+              {formData.home.section4Heading.replace(/\\n/g, "\n")}
+            </pre>
 
             <div className="absolute right-0 top-0 w-4/12">
               <img src="/etc/Aerrow.png" alt="" className="h-16 " />
@@ -409,11 +428,10 @@ const ShopHome = () => {
             className="text-[26px] text-black"
             style={{ fontFamily: " 'Abril Fatface', serif", fontWeight: "400" }}
           >
-            {formData.home.section5Heading}
+            {formData.home.section5Heading.replace(/\\n/g, "\n")}
           </div>
-          <div className="mx-auto p-4 h-[250px]">
-            <Carousel slides={formData.home.section5Comments}/> {/* Use the Carousel component */}
-          </div>
+          <Carousel slides={formData.home.section5Comments} />{" "}
+          {/* Use the Carousel component */}
         </div>
 
         {/* section 8 */}
@@ -446,15 +464,16 @@ const ShopHome = () => {
                     {formData.home.section6.time_period}
                   </div>
                   <div
-                    className="text-white opacity-45 text-sm  my-2 "
+                    className="text-white opacity-45 text-sm my-2"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
                     }}
                   >
-                    {formData.home.section6.time_open} to{" "}
-                    {formData.home.section6.time_close}
+                    {formatTime(formData.home.section6.time_open)} to{" "}
+                    {formatTime(formData.home.section6.time_close)}
                   </div>
+
                   <div
                     className="text-white text-sm  "
                     style={{
@@ -549,10 +568,20 @@ const ShopHome = () => {
               <input
                 type="email"
                 className="w-8/12 bg-transparent border-black rounded-medium border-[2px] p-2"
+                style={{
+                  fontFamily: " 'Inria Serif', serif",
+                  fontWeight: "400",
+                  "::placeholder": { color: "black" },
+                }}
                 placeholder="meraemailid@address.com"
-                style={{ "::placeholder": { color: "black" } }}
               />
-              <button className="w-max bg-black text-white rounded-medium py-2 border-[2px] px-3 border-black text-sm">
+              <button
+                className="w-max bg-black text-white rounded-medium py-2 border-[2px] px-3 border-black text-sm"
+                style={{
+                  fontFamily: " 'Inria Serif', serif",
+                  fontWeight: "400",
+                }}
+              >
                 Count me !
               </button>
             </div>

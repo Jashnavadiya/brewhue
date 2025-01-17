@@ -1,4 +1,5 @@
 // const UserPanel = require('../models/UserPanel');
+const mongoose = require('mongoose');
 
 // Get user panel data
 const getUserPanel = async (req, res) => {
@@ -19,23 +20,48 @@ const getUserPanel = async (req, res) => {
 // Update or add user panel data
 const upsertUserPanel = async (req, res) => {
   try {
-      const UserPanel=req.db.model('UserPanel');
+    const UserPanel = req.db.model('UserPanel'); // Dynamically loaded model
     const userPanelData = req.body;
-    // Check if a document exists, and update it or create a new one
+
+    // Validate section5Comments
+    if (Array.isArray(userPanelData?.home?.section5Comments)) {
+      userPanelData.home.section5Comments = userPanelData.home.section5Comments.map(comment => {
+        if (!comment._id) {
+          comment._id = new mongoose.Types.ObjectId(); // Generate a valid ObjectId
+        }
+        return comment;
+      });
+    }
+     // Validate section3Img
+     if (Array.isArray(userPanelData?.home?.section3Img)) {
+      userPanelData.home.section3Img = userPanelData.home.section3Img.map(image => {
+        if (!image._id) {
+          image._id = new mongoose.Types.ObjectId(); // Generate a valid ObjectId
+        }
+        return image;
+      });
+    }
+
+    // Upsert the document
     const updatedUserPanel = await UserPanel.findOneAndUpdate(
-      {}, // Find the first document
-      userPanelData, // Data to update or add
-      { upsert: true, new: true } // Upsert and return the updated document
+      {}, // Add a filter here if needed
+      userPanelData,
+      { upsert: true, new: true, runValidators: true }
     );
 
     res.status(200).json({
       message: 'Data updated successfully!',
-      data: updatedUserPanel
+      data: updatedUserPanel,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error updating data' });
+    console.error('Error during upsert:', error.message);
+    res.status(500).json({
+      message: 'Error updating data',
+      error: error.message,
+    });
   }
 };
+
+
 
 module.exports = { getUserPanel, upsertUserPanel };

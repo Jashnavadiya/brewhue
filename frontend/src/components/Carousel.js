@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
 
-const Carousel = ({slides}) => {
-  
+const Carousel = ({ slides }) => {
+
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -33,30 +33,34 @@ const Carousel = ({slides}) => {
     trackMouse: true
   });
 
-  return (
-    <div
-      className="carousel-container relative max-w-full w-full h-full"
-      style={{ height: 'auto' }}
-      {...swipeHandlers} // Add swipeable handlers
-    >
-      <motion.div
-        key={currentIndex}
-        className="carousel-slide  top-0 left-0 w-10/12 m-auto"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className=" p-5  rounded-lg ">
-          <div className="carousel-title text-2xl font-bold bg-[#D4D4D8] w-max m-auto rounded-full p-4">{slides[currentIndex].logo_name}</div>
-          <div className="carousel-subtitle text-sm text-black" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].name}</div>
-          <div className="carousel-description text-gray-500 text-sm my-3" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].review}</div>
-          <div className="carousel-date text-sm text-black" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].date}</div>
-        </div>
-      </motion.div>
+  return (<>
 
-      {/* Navigation */}
-      <div className="carousel-navigation absolute top-1/2 left-0 right-0 flex justify-between items-center px-4 transform -translate-y-1/2">
+    <div className="mx-auto p-4 h-[250px] relative">
+      <div
+        className="carousel-container relative max-w-full w-full h-full"
+        style={{ height: 'auto' }}
+        {...swipeHandlers} // Add swipeable handlers
+      >
+        <motion.div
+          key={currentIndex}
+          className="carousel-slide  top-0 left-0 w-10/12 m-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <div className=" p-5  rounded-lg ">
+            <div className="carousel-title text-2xl font-medium bg-[#D4D4D8]  w-[56px] h-[56px] m-auto rounded-full relative"><span className="absolute top-0 bottom-0 left-0 h-max m-auto right-0">{slides[currentIndex].logo_name}</span></div>
+            <div className="carousel-subtitle text-sm text-black mt-2" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].name}</div>
+            <div className="carousel-description text-gray-500 text-sm my-3" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].review}</div>
+            <div className="carousel-date text-sm text-black" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].date}</div>
+          </div>
+        </motion.div>
+
+        {/* Navigation */}
+
+      </div>
+      <div className="carousel-navigation absolute w-full top-1/2 left-0 right-0 flex justify-between p-0 items-center transform px-4 -translate-y-1/2">
         <button
           onClick={handlePrev}
           className=" text-gray-500 text-4xl rounded-fulltransition"
@@ -77,6 +81,7 @@ const Carousel = ({slides}) => {
         </button>
       </div>
     </div>
+  </>
   );
 };
 

@@ -31,7 +31,7 @@ const UserPanel = () => {
     // Fetch data on component mount
     useEffect(() => {
         axios
-            .get(`http://localhost:5000/api/${shopName}/shopinfo/userpanel`)
+            .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/shopinfo/userpanel`)
             .then((res) => {
                 console.log("Fetched data:", res.data); // Log the fetched data
                 setFormData(res.data);
@@ -40,27 +40,47 @@ const UserPanel = () => {
     }, []);
 
 
- // Handle input changes
-const handleChange = (e, parentKey, childKey, index = null) => {
-    const { name, value } = e.target;
+    const handleChange = (e, parentKey, childKey, nestedKey = null, index = null) => {
+        const { name, value } = e.target;
 
-    setFormData((prev) => {
-        const updatedHome = { ...prev[parentKey] };
+        setFormData((prev) => {
+            const updatedHome = { ...prev[parentKey] };
 
-        if (index !== null) {
-            // For arrays (like section2Info)
-            updatedHome[childKey] = updatedHome[childKey].map((item, idx) =>
-                idx === index ? { ...item, [name]: value } : item
-            );
-        } else {
-            // For single-level properties
-            updatedHome[childKey] = value;
+            if (nestedKey) {
+                // Handle updates for nested objects like section6
+                updatedHome[childKey] = {
+                    ...updatedHome[childKey],
+                    [nestedKey]: value,
+                };
+            } else if (index !== null) {
+                // For arrays like section5Comments
+                updatedHome[childKey] = updatedHome[childKey].map((item, idx) =>
+                    idx === index ? { ...item, [name]: value } : item
+                );
+            } else {
+                // For single-level properties
+                updatedHome[childKey] = value;
+            }
+
+            return { ...prev, [parentKey]: updatedHome };
+        });
+    };
+
+    const handleWordLimit = (e, wordLimit, parentKey, childKey, index) => {
+        const { name, value } = e.target;
+
+        // Split input value by spaces to count words
+        const words = value.trim().split(/\s+/);
+
+        // If word limit is exceeded, show alert
+        if (words.length > wordLimit) {
+            alert(`You have reached the maximum word limit of ${wordLimit} words.`);
+            return;
         }
 
-        return { ...prev, [parentKey]: updatedHome };
-    });
-};
-
+        // Update state if within word limit
+        handleChange(e, parentKey, childKey, null, index);
+    };
 
 
 
@@ -75,7 +95,7 @@ const handleChange = (e, parentKey, childKey, index = null) => {
         formData.append("key", key);
 
         try {
-            const response = await axios.post(`http://localhost:5000/${shopName}/userpanel/home/upload`, formData, {
+            const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/${shopName}/userpanel/home/upload`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -153,45 +173,36 @@ const handleChange = (e, parentKey, childKey, index = null) => {
             },
         }));
     };
+    // Handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
+        // Preprocess data: Replace actual line breaks with '\n'
+        const preprocessData = (data) => {
+            if (typeof data === "string") {
+                return data.replace(/\n/g, "\\n"); // Replace actual newlines with '\n'
+            } else if (Array.isArray(data)) {
+                return data.map((item) => preprocessData(item));
+            } else if (typeof data === "object" && data !== null) {
+                const newData = {};
+                Object.keys(data).forEach((key) => {
+                    newData[key] = preprocessData(data[key]);
+                });
+                return newData;
+            }
+            return data;
+        };
 
+        const processedFormData = preprocessData(formData);
 
-
-
-
- // Handle form submission
-const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Preprocess data: Replace actual line breaks with '\n'
-    const preprocessData = (data) => {
-        if (typeof data === "string") {
-            return data.replace(/\n/g, "\\n"); // Replace actual newlines with '\n'
-        } else if (Array.isArray(data)) {
-            return data.map((item) => preprocessData(item));
-        } else if (typeof data === "object" && data !== null) {
-            const newData = {};
-            Object.keys(data).forEach((key) => {
-                newData[key] = preprocessData(data[key]);
-            });
-            return newData;
+        try {
+            await axios.post(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/shopinfo/userpanel`, processedFormData);
+            alert("Data updated successfully!");
+        } catch (err) {
+            console.error("Error updating data:", err);
+            alert("Failed to update data.");
         }
-        return data;
     };
-
-    const processedFormData = preprocessData(formData);
-
-    try {
-        await axios.post(`http://localhost:5000/api/${shopName}/shopinfo/userpanel`, processedFormData);
-        alert("Data updated successfully!");
-    } catch (err) {
-        console.error("Error updating data:", err);
-        alert("Failed to update data.");
-    }
-};
-
-
-
     if (!formData || !formData.home) {
         // Optionally render a loading state or nothing until data is fetched
         return <div>Loading...</div>;
@@ -280,19 +291,6 @@ const handleSubmit = async (e) => {
                             placeholder="Section 2 Heading"
                             className="w-full p-2 border rounded"
                         />
-
-                        {/* Dynamically Add Logo */}
-                        {/* {formData.home.logo && (
-                            <div className="flex items-center space-x-4">
-                                <img
-                                    src={formData.home.logo}
-                                    alt="Logo"
-                                    className="w-16 h-16 object-contain border rounded"
-                                />
-                                <span className="text-gray-600">Logo is displayed dynamically</span>
-                            </div>
-                        )} */}
-
                         {/* Section 2 Info */}
                         {formData.home.section2Info.map((info, index) => (
                             <div key={index} className="space-y-2 border p-2 rounded-md">
@@ -300,20 +298,20 @@ const handleSubmit = async (e) => {
                                     type="text"
                                     name="img"
                                     value={info.img || ""}
-                                    onChange={(e) => handleChange(e, "home", "section2Info", index)}
+                                    onChange={(e) => handleChange(e, "home", "section2Info", null, index)}
                                     placeholder="Image URL"
                                     className="w-full p-2 border rounded"
                                 />
                                 <input
                                     type="file"
-                                    onChange={(e) => handleFileUpload(e, "home", "section2Info", index)}
+                                    onChange={(e) => handleFileUpload(e, "home", "section2Info", null, index)}
                                     className="w-full p-2 border rounded"
                                 />
                                 <textarea
                                     type="text"
                                     name="text"
                                     value={info.text || ""}
-                                    onChange={(e) => handleChange(e, "home", "section2Info", index)}
+                                    onChange={(e) => handleChange(e, "home", "section2Info", null, index)}
                                     placeholder="Text"
                                     className="w-full p-2 border rounded"
                                 />
@@ -429,33 +427,32 @@ const handleSubmit = async (e) => {
                         {formData.home.section5Comments.map((comment, index) => (
                             <div key={index} className="space-y-2 border p-2 rounded-md">
                                 <textarea
-                                    type="text"
                                     name="logo_name"
                                     value={comment.logo_name || ""}
-                                    onChange={(e) => handleChange(e, "home", "section5Comments", index)}
+                                    onChange={(e) => handleChange(e, "home", "section5Comments", null, index)}
                                     placeholder="Logo Name"
                                     className="w-full p-2 border rounded"
                                 />
                                 <textarea
-                                    type="text"
                                     name="name"
                                     value={comment.name || ""}
-                                    onChange={(e) => handleChange(e, "home", "section5Comments", index)}
+                                    onChange={(e) => handleChange(e, "home", "section5Comments", null, index)}
                                     placeholder="Name"
                                     className="w-full p-2 border rounded"
                                 />
                                 <textarea
                                     name="review"
                                     value={comment.review || ""}
-                                    onChange={(e) => handleChange(e, "home", "section5Comments", index)}
+                                    onChange={(e) => handleWordLimit(e, 25, "home", "section5Comments", index)} // Limit set to 25 words
                                     placeholder="Review"
                                     className="w-full p-2 border rounded"
-                                ></textarea>
+                                />
+
                                 <textarea
                                     type="text"
                                     name="date"
                                     value={comment.date || ""}
-                                    onChange={(e) => handleChange(e, "home", "section5Comments", index)}
+                                    onChange={(e) => handleChange(e, "home", "section5Comments", null, index)}
                                     placeholder="Date"
                                     className="w-full p-2 border rounded"
                                 />
@@ -489,7 +486,7 @@ const handleSubmit = async (e) => {
                             type="text"
                             name="time_period"
                             value={formData.home.section6.time_period}
-                            onChange={(e) => handleChange(e, "home", "section6")}
+                            onChange={(e) => handleChange(e, "home", "section6", "time_period")}
                             placeholder="Time Period"
                             className="w-full p-2 border rounded"
                         />
@@ -497,7 +494,7 @@ const handleSubmit = async (e) => {
                             type="time"
                             name="time_open"
                             value={formData.home.section6.time_open}
-                            onChange={(e) => handleChange(e, "home", "section6")}
+                            onChange={(e) => handleChange(e, "home", "section6", "time_open")}
                             placeholder="Time Open"
                             className="w-full p-2 border rounded"
                         />
@@ -505,7 +502,7 @@ const handleSubmit = async (e) => {
                             type="time"
                             name="time_close"
                             value={formData.home.section6.time_close}
-                            onChange={(e) => handleChange(e, "home", "section6")}
+                            onChange={(e) => handleChange(e, "home", "section6", "time_close")}
                             placeholder="Time Close"
                             className="w-full p-2 border rounded"
                         />
@@ -513,7 +510,7 @@ const handleSubmit = async (e) => {
                             type="text"
                             name="address"
                             value={formData.home.section6.address}
-                            onChange={(e) => handleChange(e, "home", "section6")}
+                            onChange={(e) => handleChange(e, "home", "section6", "address")}
                             placeholder="Address"
                             className="w-full p-2 border rounded"
                         />
@@ -523,12 +520,26 @@ const handleSubmit = async (e) => {
                                 type="text"
                                 name="number"
                                 value={num}
-                                onChange={(e) => handleChange(e, "home", "section6", index)}
+                                onChange={(e) => {
+                                    const updatedNumbers = [...formData.home.section6.number];
+                                    updatedNumbers[index] = e.target.value;
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        home: {
+                                            ...prev.home,
+                                            section6: {
+                                                ...prev.home.section6,
+                                                number: updatedNumbers,
+                                            },
+                                        },
+                                    }));
+                                }}
                                 placeholder={`Phone Number ${index + 1}`}
                                 className="w-full p-2 border rounded"
                             />
                         ))}
                     </div>
+
                 </div>
 
 

@@ -138,8 +138,29 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const LoadingScreen = ({ OgComponent }) => {
+const LoadingScreen = ({ OgComponent ,Loading}) => {
+  const { shopName } = useParams();
+  const nav=useNavigate();
+  const checkDatabase = async () => {
+    if (!shopName) return;
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/check-database/${shopName}`);
+    } catch (err) {
+      console.error(err);
+      if (err.response && err.response.status === 404) {
+        console.log('Database does not exist.');
+        nav("/notfound")
+    }}
+  };
+  
+  useEffect(() => {
+    checkDatabase();
+  }, [shopName]);
+
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -172,8 +193,8 @@ const LoadingScreen = ({ OgComponent }) => {
          
            <motion.img  
             initial={{ scale: 0.45 }} // Start with full opacity
-            animate={{ scale: 1 }} // Keep full opacity while loading
-            exit={{ scale: 1 }} // Fade out when exiting
+            animate={{ scale: 1}} // Keep full opacity while loading
+            exit={{ scale: 1}} // Fade out when exiting
             transition={{ duration: 1, ease: 'easeOut' }} // Smooth fade-out effect
            src="/coffeebeans.png" className='w-full h-100  z-1' alt="" ></motion.img>
          

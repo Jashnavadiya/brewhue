@@ -122,71 +122,80 @@ const SinglePageFlipBook = ({ url }) => {
   // Configure PDF.js worker
   pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
 
-  useEffect(() => {
-    const parentElement = flipBookRef.current?.parentElement;
+useEffect(() => {
+  const parentElement = flipBookRef.current?.parentElement;
 
-    const updateDimensions = () => {
-      if (parentElement) {
-        const { width, height } = parentElement.getBoundingClientRect();
-        setParentDimensions({ width, height });
-      }
+  const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), delay);
     };
+  };
 
-    const observer = new ResizeObserver(updateDimensions);
-    if (parentElement) observer.observe(parentElement);
+  const updateDimensions = debounce(() => {
+    if (parentElement) {
+      const { width, height } = parentElement.getBoundingClientRect();
+      setParentDimensions({ width, height });
+    }
+  }, 200);
 
-    updateDimensions();
+  const observer = new ResizeObserver(updateDimensions);
+  if (parentElement) observer.observe(parentElement);
 
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
+  updateDimensions();
 
+  return () => observer.disconnect();
+}, []);
+
+  
   useEffect(() => {
     const renderPDF = async () => {
       setIsRendering(true);
       try {
         const pdf = await pdfjs.getDocument(url).promise;
         setNumPages(pdf.numPages);
-
-        // Render each page sequentially to avoid sharing the canvas context
+  
         for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
           const page = await pdf.getPage(pageNumber);
           const canvas = canvasRefs.current[pageNumber - 1];
           const context = canvas.getContext("2d");
-
+  
           const viewport = page.getViewport({ scale: 1.5 });
           canvas.width = viewport.width;
           canvas.height = viewport.height;
-
+  
           const renderContext = {
             canvasContext: context,
             viewport,
           };
-
-          // Ensure no previous render task is running
+  
+          // Cancel any existing render task for this page
           if (renderTasks.current[pageNumber]) {
             renderTasks.current[pageNumber].cancel();
           }
-
-          // Store the render task for cancellation if needed
+  
+          // Create a new render task and store it
           const renderTask = page.render(renderContext);
           renderTasks.current[pageNumber] = renderTask;
-
-          // Ensure each page render completes before moving to the next
+  
+          // Wait for the current page to finish rendering
           await renderTask.promise;
         }
       } catch (error) {
-        console.error("Error rendering PDF:", error);
+        if (error.name !== "RenderingCancelledException") {
+          console.error("Error rendering PDF:", error);
+        }
       } finally {
         setIsRendering(false);
       }
     };
-
+  
     if (url) {
       renderPDF();
     }
   }, [url]);
+  
 
   return (
     <div ref={flipBookRef} style={{ width: "100%", height: "100%" }}>
@@ -202,7 +211,7 @@ const SinglePageFlipBook = ({ url }) => {
         showCover={false}
         mobileScrollSupport={true}
         useMouseEvents={true}
-        flippingTime={1000}
+        flippingTime={1100}
         className="rpf-flipbook" // Custom class for CSS targeting
       >
         {Array.from(new Array(numPages), (el, index) => (
