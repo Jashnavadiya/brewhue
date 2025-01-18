@@ -12,46 +12,47 @@ import SinglePageFlipBook from "../../components/PdfViewerhome";
 import { Link, animateScroll as scroll } from "react-scroll";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setFormData, setLoading } from "../../slices/formDataSlice";
+
 import axios from "axios";
+import "./ShopMenu.css";
 const ShopHome = () => {
   const { shopName } = useParams();
-  const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    home: {
-      section6: {
-        time_period: "",
-        time_open: "",
-        time_close: "",
-        address: "",
-        number: [""],
-      },
-      logo: "",
-      darkLogo: "",
-      section1Img: "", // Initialize as empty string or appropriate default
-      section1Text: "",
-      section2Heading: "",
-      section2Info: [],
-      section3Heading: "",
-      section3Img: [{ img: "", _id: "" }],
-      section4Heading: "",
-      section4Pdf: "",
-      section5Heading: "",
-      section5Comments: [
-        { logo_name: "", name: "", review: "", date: "", _id: "" },
-      ],
-    },
-  });
+  const dispatch = useDispatch();
+  // dispatch(setLoading(true)); // Set loading to true initially
+
+  // const [loading, setLoading] = useState(true);
+  const formData = useSelector((state) => state.formData);
+  const loading = useSelector((state) => state.formData.loading);
+  // const [formData, setFormData] = useState({
+  //   home: {
+  //     section6: {
+  //       time_period: "",
+  //       time_open: "",
+  //       time_close: "",
+  //       address: "",
+  //       number: [""],
+  //     },
+  //     logo: "",
+  //     darkLogo: "",
+  //     section1Img: "", // Initialize as empty string or appropriate default
+  //     section1Text: "",
+  //     section2Heading: "",
+  //     section2Info: [],
+  //     section3Heading: "",
+  //     section3Img: [{ img: "", _id: "" }],
+  //     section4Heading: "",
+  //     section4Pdf: "",
+  //     section5Heading: "",
+  //     section5Comments: [
+  //       { logo_name: "", name: "", review: "", date: "", _id: "" },
+  //     ],
+  //   },
+  // });
   const [message, setMessage] = useState(
     "Shhh!\n Sometimes, \nfree treats happen * "
   );
-  const [submitted, setSubmitted] = React.useState(null);
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-
-    setSubmitted(data);
-  };
 
   const text = "Just You, Just Here"; // The text you want to animate
   const [splitText, setSplitText] = useState([]);
@@ -66,23 +67,18 @@ const ShopHome = () => {
   }, []);
 
   // Fetch data on component mount
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_BASE_URL}/api/${shopName}/shopinfo/userpanel`
-      )
-      .then((res) => {
-        console.log("Fetched data:", res.data); // Log the fetched data
-        setFormData(res.data);
-        setLoading(false);
-      })
-      .catch((err) => console.error("Error fetching data:", err));
-  }, []);
+
+  const formatTime = (time24) => {
+    const [hour, minute] = time24.split(":").map(Number);
+    const period = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12; // Convert 0 or 12 to 12 for 12-hour format
+    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
+  };
 
   if (loading) return;
   return (
     <>
-      <div className="w-[98%] m-auto h-[100%]">
+      <div className="w-full m-auto h-[100%]">
         {/* section 1 */}
         <div>
           <Card isFooterBlurred className="border shadow-none" radius="lg">
@@ -94,15 +90,8 @@ const ShopHome = () => {
                   src={`${process.env.REACT_APP_BASE_URL}${formData.home.section1Img}`}
                 />
               </div>
-
               {/* Tinted overlay with blend mode */}
               <div className="absolute inset-0 bg-black mix-blend-multiply z-10 opacity-60 flex justify-center align-middle"></div>
-
-              {/* <div className="absolute inset-0   z-20 flex justify-center align-middle items-center">
-                <span className="text-ffirst font-[Aqala] text-3xl lg:text-8xl">
-                  Just You, Just Here
-                </span>
-              </div> */}
               <div className="absolute inset-0  z-20 flex justify-center align-middle items-center">
                 <h1 style={{ display: "flex", flexWrap: "wrap" }}>
                   {/* 
@@ -137,7 +126,6 @@ const ShopHome = () => {
             </div>
           </Card>
         </div>
-
         {/* section 2 */}
         <div className="relative ">
           <img
@@ -149,7 +137,7 @@ const ShopHome = () => {
           <Link
             to="Menu"
             smooth={true} // Smooth scrolling enabled
-            duration={700} // Duration in milliseconds (slower scrolling)
+            duration={300} // Duration in milliseconds (slower scrolling)
             className="p-7  cursor-pointer rounded-xl mx-auto block bg-black text-white my-5 w-4/12 py-3 text-sm"
           >
             {/* NextUI Button inside the Link */}
@@ -181,12 +169,15 @@ const ShopHome = () => {
                       fontWeight: "400",
                     }}
                   >
-                    {formData.home.section2Heading}
+                    {formData.home.section2Heading.replace(/\\n/g, "\n")}
                   </h1>
-                  <ul className="space-y-3 w-max  ms-auto">
+                  <ul className="space-y-3 w-max pe-3  ms-auto">
                     <li className="flex items-center justify-start space-x-2">
-                      <span className="text-sm opacity-45 w-[14px]">
-                      <img src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[0].img}`} alt="" />
+                      <span className="text-sm w-[14px]">
+                        <img
+                          src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[0].img}`}
+                          alt=""
+                        />
                       </span>
                       <span
                         className="text-[10px] text-white"
@@ -199,8 +190,11 @@ const ShopHome = () => {
                       </span>
                     </li>
                     <li className="flex items-center justify-start space-x-2">
-                      <span className="text-lg opacity-45 w-[14px]">
-                       <img src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[1].img}`} alt="" />
+                      <span className="text-lg w-[14px]">
+                        <img
+                          src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[1].img}`}
+                          alt=""
+                        />
                       </span>
                       <span
                         className="text-[10px] text-white"
@@ -213,8 +207,11 @@ const ShopHome = () => {
                       </span>
                     </li>
                     <li className="flex items-center justify-start space-x-2">
-                      <span className="text-sm opacity-45 w-[14px]">
-                      <img src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[2].img}`} alt="" />
+                      <span className="text-sm w-[14px]">
+                        <img
+                          src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[2].img}`}
+                          alt=""
+                        />
                       </span>
                       <span
                         className="text-[10px] text-white"
@@ -227,17 +224,42 @@ const ShopHome = () => {
                       </span>
                     </li>
                   </ul>
+
+                  <div className="absolute bottom-[5%] left-[4%]">
+                    <Link
+                      to="Vibe_check"
+                      smooth={true} // Smooth scrolling enabled
+                      duration={700} // Duration in milliseconds (slower scrolling)
+                      className="down_arrow"
+                      offset={-30}
+                    >
+                      <img src="/icons/down-arrow1.png" className="" alt="" />
+                    </Link>
+                  </div>
                   <div
-                    className="text-gray-400 text-[8px] w-max ms-auto absolute right-[10px] bottom-[10px]"
+                    className=" text-white text-[8px] w-[43%] ms-auto absolute flex flex-col items-center justify-center right-[10px] bottom-[10%]"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
                     }}
                   >
-                    <p>Best Café in Ambience - Jan 2025</p>
-                    <p className="text-gray-600 text-left">
-                      {" "}
-                      - Bewhew Cafe Network{" "}
+                    <p
+                      className="text-center text-white opacity-60"
+                      style={{
+                        fontFamily: " 'Inria Serif', serif",
+                        fontWeight: "400",
+                      }}
+                    >
+                      Best Café in Ambience - Jan 2025
+                    </p>
+                    <p
+                      className="text-center text-white opacity-60"
+                      style={{
+                        fontFamily: " 'Inria Serif', serif",
+                        fontWeight: "400",
+                      }}
+                    >
+                      - Brewhew Cafe Network{" "}
                     </p>
                   </div>
                 </div>
@@ -284,7 +306,6 @@ const ShopHome = () => {
                   </svg>
                 </div>
               </div>
-
               {/* Tinted overlay with blend mode */}
               {/* <div className="absolute inset-0  mix-blend-multiply z-10 flex justify-center align-middle">
                
@@ -295,10 +316,8 @@ const ShopHome = () => {
 
         {/* section 4 */}
 
-        <div>btn here</div>
-
         {/* section 5 */}
-        <div>
+        <div className="mt-7" id="Vibe_check">
           <div className="flex ">
             <div className="w-1/2 p-1">
               <Card isFooterBlurred className="border shadow-none" radius="lg">
@@ -319,7 +338,7 @@ const ShopHome = () => {
                   fontWeight: "400",
                 }}
               >
-                {formData.home.section3Heading.replace(/\\n/g, '\n')}
+                {formData.home.section3Heading.replace(/\\n/g, "\n")}
               </pre>
             </div>
           </div>
@@ -379,18 +398,17 @@ const ShopHome = () => {
         {/* section 6 */}
         <div className="relative py-10 mt-6 " id="Menu">
           <div className="">
-          <pre
-  className="text-black text-[26px] w-max text-left ms-2"
-  style={{
-    fontFamily: " 'Abril Fatface', serif",
-    fontWeight: "400",
-    whiteSpace: "pre-wrap", // Important for preserving \n
-    wordWrap: "break-word", // Prevent text overflow
-  }}
->
-  {formData.home.section4Heading.replace(/\\n/g, '\n')}
-</pre>
-
+            <pre
+              className="text-black text-[26px] w-max text-left ms-2"
+              style={{
+                fontFamily: " 'Abril Fatface', serif",
+                fontWeight: "400",
+                whiteSpace: "pre-wrap", // Important for preserving \n
+                wordWrap: "break-word", // Prevent text overflow
+              }}
+            >
+              {formData.home.section4Heading.replace(/\\n/g, "\n")}
+            </pre>
 
             <div className="absolute right-0 top-0 w-4/12">
               <img src="/etc/Aerrow.png" alt="" className="h-16 " />
@@ -409,11 +427,10 @@ const ShopHome = () => {
             className="text-[26px] text-black"
             style={{ fontFamily: " 'Abril Fatface', serif", fontWeight: "400" }}
           >
-            {formData.home.section5Heading}
+            {formData.home.section5Heading.replace(/\\n/g, "\n")}
           </div>
-          <div className="mx-auto p-4 h-[250px]">
-            <Carousel slides={formData.home.section5Comments}/> {/* Use the Carousel component */}
-          </div>
+          <Carousel slides={formData.home.section5Comments} />{" "}
+          {/* Use the Carousel component */}
         </div>
 
         {/* section 8 */}
@@ -446,15 +463,16 @@ const ShopHome = () => {
                     {formData.home.section6.time_period}
                   </div>
                   <div
-                    className="text-white opacity-45 text-sm  my-2 "
+                    className="text-white opacity-45 text-sm my-2"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
                     }}
                   >
-                    {formData.home.section6.time_open} to{" "}
-                    {formData.home.section6.time_close}
+                    {formatTime(formData.home.section6.time_open)} to{" "}
+                    {formatTime(formData.home.section6.time_close)}
                   </div>
+
                   <div
                     className="text-white text-sm  "
                     style={{
@@ -549,10 +567,20 @@ const ShopHome = () => {
               <input
                 type="email"
                 className="w-8/12 bg-transparent border-black rounded-medium border-[2px] p-2"
+                style={{
+                  fontFamily: " 'Inria Serif', serif",
+                  fontWeight: "400",
+                  "::placeholder": { color: "black" },
+                }}
                 placeholder="meraemailid@address.com"
-                style={{ "::placeholder": { color: "black" } }}
               />
-              <button className="w-max bg-black text-white rounded-medium py-2 border-[2px] px-3 border-black text-sm">
+              <button
+                className="w-max bg-black text-white rounded-medium py-2 border-[2px] px-3 border-black text-sm"
+                style={{
+                  fontFamily: " 'Inria Serif', serif",
+                  fontWeight: "400",
+                }}
+              >
                 Count me !
               </button>
             </div>

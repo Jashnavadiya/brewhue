@@ -32,7 +32,14 @@ const UserPanelSchema = new mongoose.Schema({
       number: [String]
     }
   },
-  social: {}
+  social: {
+    insta:[],
+    facebook: [],
+    twitter: [],
+    pinterest: [],
+    linkedin: [],
+    yt: [],
+  }
 });
 
 const UserPanel = mongoose.model('UserPanel', UserPanelSchema);
