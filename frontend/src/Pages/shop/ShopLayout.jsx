@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useMemo  } from "react";
 import { Tabs, Tab, Card, CardBody, Button } from "@nextui-org/react";
 import {
   Outlet,
@@ -16,63 +16,25 @@ import AddShop from "../lasans/AddShop";
 import ShopHome from "./ShopHome";
 import ShopMenu from "./ShopMenu";
 import ShopAbout from "./ShopAbout";
+import ShopSocial from "./ShopSocial";
+import { useSelector } from "react-redux";
 
 export default function App() {
   const [selected, setSelected] = useState("Home");
+  const formData = useSelector((state) => state.formData);
   const { shopName } = useParams();
-  const [shopData, setShopData] = useState(null);
-  const [iconsData, setIconsData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const memoizedComponents = useMemo(() => {
+    return {
+      Home: <ShopHome />,
+      Menu: <ShopMenu />,
+      Social: <ShopSocial />,
+    };
+  }, []);
   const [isMenu, setIsMenu] = useState(false); // State to track if "Menu" tab is selected
   const nav = useNavigate();
-  // useEffect(() => {
-  //   if (shopName) {
-  //     axios
-  //       .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/shop`)
-  //       .then((res) => setShopData(res.data))
-  //       .catch((err) => console.error("Error fetching shop data", err));
-
-  //     axios
-  //       .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/widgets`)
-  //       .then((res) => setIconsData(res.data))
-  //       .catch((err) => console.error("Error fetching widgets data", err));
-  //   }
-  // }, [shopName]);
-
-  // function usePrevious(value) {
-  //   const ref = React.useRef();
-  //   useEffect(() => {
-  //     ref.current = value;
-  //   });
-  //   return ref.current;
-  // }
-
-  // const prevSelected = usePrevious(selected);
 
   useEffect(() => {
-    // if (prevSelected === selected) {
-    //   console.log("Same value, no action needed");
-    //   return;
-    // }
-    // const isSame = (prev) => prev === selected; // Simple comparison function
-    // console.log(selected);
-    // if (isSame(selected)) {
-    //   console.log("Same value, no navigation");
-    //   return; // Prevent redundant navigation
-    // }
-    // if (selected === "Menu") {
-    //   setIsMenu(true);
-    //   nav(`/${shopName}/menu`);
-    // } else if (selected === "Home") {
-    //   setIsMenu(false);
-    //   nav(`/${shopName}/`);
-    // } else if (selected === "Contact") {
-    //   nav(`/${shopName}/contact`);
-    // } else if (selected === "Social") {
-    //   nav(`/${shopName}/social`);
-    // } else if (selected === "About") {
-    //   nav(`/${shopName}/about`);
-    // }
+   
   }, [selected]);
 
   return (
@@ -95,13 +57,13 @@ export default function App() {
 
       <div>
         <motion.img
-          src="/enso.png"
+          src={`${process.env.REACT_APP_BASE_URL}${formData.home.logo}`} 
           className={`w-3/12 m-auto py-5 sm:w-5/12 lg:w-2/12 xl:w-2/12 2xl:w-[12%] transition-all duration-300`}
           alt="Responsive Image"
         />
       </div>
 
-      <div className="flex w-full flex-col">
+      {/* <div className="flex w-full flex-col">
         <Tabs
           fullWidth
           aria-label="Options"
@@ -114,37 +76,69 @@ export default function App() {
             title="Home"
             className="shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:text-red-500 [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc] "
           >
-            <ShopHome />
+            {memoizedComponents["Home"]}
           </Tab>
-          {/* <Tab
-            key="About"
-            title="About"
-            className="!shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
-          >
-            <ShopAbout />
-          </Tab> */}
+       
           <Tab
             key="Menu"
             title="Menu"
             className="!shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
             onClick={() => setIsMenu(true)} // Set the isMenu state to true when "Menu" tab is clicked
           >
-            <ShopMenu />
+            {memoizedComponents["Menu"]}
           </Tab>
-          {/* <Tab
-            key="Contact Us"
-            title="Contact"
-            className="!shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
-          ></Tab> */}
           <Tab
             key="Social Media"
             title="Social"
             className="!shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
-          ></Tab>
+          >
+            {memoizedComponents["Social"]}
+          </Tab>
         </Tabs>
-      </div>
+      </div> */}
 
-      <div className="mt-10 bg-black pt-16">
+<div className="flex w-full flex-col">
+      {/* Tabs Navigation */}
+      <Tabs
+        fullWidth
+        aria-label="Options"
+        className="m-auto w-[98%] px-1"
+        selectedKey={selected}
+        onSelectionChange={(key) => setSelected(key)}
+      >
+        <Tab
+          key="Home"
+          title="Home"
+          className="shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:text-red-500 [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
+        />
+        <Tab
+          key="Menu"
+          title="Menu"
+          className="!shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
+        />
+        <Tab
+          key="Social"
+          title="Social"
+          className="!shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
+        />
+      </Tabs>
+
+      {/* Tab Content */}
+      <div className="m-auto w-[98%] px-1 mt-3">
+        {/* Render all components but only display the active one */}
+        <div style={{ display: selected === "Home" ? "block" : "none" }}>
+          <ShopHome />
+        </div>
+        <div style={{ display: selected === "Menu" ? "block" : "none" }}>
+          <ShopMenu />
+        </div>
+        <div style={{ display: selected === "Social" ? "block" : "none" }}>
+          <ShopSocial />
+        </div>
+      </div>
+    </div>
+
+      <div className="mt-5 bg-black pt-16">
         <div className="w-5/12 m-auto">
           <div>
             <div
@@ -168,7 +162,7 @@ export default function App() {
             </div>
             <img
               className="w-7/12 m-auto"
-              src="/images/enso_white.png"
+              src={`${process.env.REACT_APP_BASE_URL}${formData.home.darkLogo}`} 
               alt=""
             />
           </div>

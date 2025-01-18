@@ -12,17 +12,19 @@ import SinglePageFlipBook from "../../components/PdfViewerhome";
 import { Link, animateScroll as scroll } from "react-scroll";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
-import { useDispatch,useSelector  } from 'react-redux';
-import { setFormData } from '../../slices/formDataSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { setFormData, setLoading } from "../../slices/formDataSlice";
 
 import axios from "axios";
 import "./ShopMenu.css";
 const ShopHome = () => {
   const { shopName } = useParams();
   const dispatch = useDispatch();
+  // dispatch(setLoading(true)); // Set loading to true initially
 
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const formData = useSelector((state) => state.formData);
+  const loading = useSelector((state) => state.formData.loading);
   // const [formData, setFormData] = useState({
   //   home: {
   //     section6: {
@@ -65,18 +67,6 @@ const ShopHome = () => {
   }, []);
 
   // Fetch data on component mount
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_BASE_URL}/api/${shopName}/shopinfo/userpanel`
-      )
-      .then((res) => {
-        console.log("Fetched data:", res.data); // Log the fetched data
-        dispatch(setFormData(res.data));
-        setLoading(false);
-      })
-      .catch((err) => console.error("Error fetching data:", err));
-  }, []);
 
   const formatTime = (time24) => {
     const [hour, minute] = time24.split(":").map(Number);
@@ -88,7 +78,7 @@ const ShopHome = () => {
   if (loading) return;
   return (
     <>
-      <div className="w-[98%] m-auto h-[100%]">
+      <div className="w-full m-auto h-[100%]">
         {/* section 1 */}
         <div>
           <Card isFooterBlurred className="border shadow-none" radius="lg">
@@ -147,7 +137,7 @@ const ShopHome = () => {
           <Link
             to="Menu"
             smooth={true} // Smooth scrolling enabled
-            duration={700} // Duration in milliseconds (slower scrolling)
+            duration={300} // Duration in milliseconds (slower scrolling)
             className="p-7  cursor-pointer rounded-xl mx-auto block bg-black text-white my-5 w-4/12 py-3 text-sm"
           >
             {/* NextUI Button inside the Link */}
@@ -183,7 +173,7 @@ const ShopHome = () => {
                   </h1>
                   <ul className="space-y-3 w-max pe-3  ms-auto">
                     <li className="flex items-center justify-start space-x-2">
-                      <span className="text-sm opacity-45 w-[14px]">
+                      <span className="text-sm w-[14px]">
                         <img
                           src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[0].img}`}
                           alt=""
@@ -200,7 +190,7 @@ const ShopHome = () => {
                       </span>
                     </li>
                     <li className="flex items-center justify-start space-x-2">
-                      <span className="text-lg opacity-45 w-[14px]">
+                      <span className="text-lg w-[14px]">
                         <img
                           src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[1].img}`}
                           alt=""
@@ -217,7 +207,7 @@ const ShopHome = () => {
                       </span>
                     </li>
                     <li className="flex items-center justify-start space-x-2">
-                      <span className="text-sm opacity-45 w-[14px]">
+                      <span className="text-sm w-[14px]">
                         <img
                           src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[2].img}`}
                           alt=""
@@ -234,8 +224,20 @@ const ShopHome = () => {
                       </span>
                     </li>
                   </ul>
+
+                  <div className="absolute bottom-[5%] left-[4%]">
+                    <Link
+                      to="Vibe_check"
+                      smooth={true} // Smooth scrolling enabled
+                      duration={700} // Duration in milliseconds (slower scrolling)
+                      className="down_arrow"
+                      offset={-30}
+                    >
+                      <img src="/icons/down-arrow1.png" className="" alt="" />
+                    </Link>
+                  </div>
                   <div
-                    className=" text-white text-[8px] w-[43%] ms-auto absolute flex flex-col items-center justify-center right-[10px] bottom-[10px]"
+                    className=" text-white text-[8px] w-[43%] ms-auto absolute flex flex-col items-center justify-center right-[10px] bottom-[10%]"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -303,9 +305,6 @@ const ShopHome = () => {
                     </g>
                   </svg>
                 </div>
-                <div class="down_arrow">
-                  <img src="/icons/down-arrow1.png" className="" alt="" />
-                </div>
               </div>
               {/* Tinted overlay with blend mode */}
               {/* <div className="absolute inset-0  mix-blend-multiply z-10 flex justify-center align-middle">
@@ -318,7 +317,7 @@ const ShopHome = () => {
         {/* section 4 */}
 
         {/* section 5 */}
-        <div>
+        <div className="mt-7" id="Vibe_check">
           <div className="flex ">
             <div className="w-1/2 p-1">
               <Card isFooterBlurred className="border shadow-none" radius="lg">

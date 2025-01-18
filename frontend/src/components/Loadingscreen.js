@@ -136,14 +136,19 @@
 
 // export default LoadingScreen;
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const LoadingScreen = ({ OgComponent ,Loading}) => {
+import { useSelector, useDispatch } from 'react-redux';
+import { setLoading,setFormData } from '../slices/formDataSlice';
+import axios from 'axios';
+const LoadingScreen = ({ OgComponent }) => {
   const { shopName } = useParams();
-  const nav=useNavigate();
+  const nav = useNavigate();
+  const dispatch = useDispatch();
+  
+  const loading = useSelector((state) => state.formData.loading);
+
   const checkDatabase = async () => {
     if (!shopName) return;
     try {
@@ -152,67 +157,76 @@ const LoadingScreen = ({ OgComponent ,Loading}) => {
       console.error(err);
       if (err.response && err.response.status === 404) {
         console.log('Database does not exist.');
-        nav("/notfound")
-    }}
+        nav("/notfound");
+      }
+    }
   };
+  const [isLoad,setIsload]=useState(true);
+  useEffect(() => {
+    dispatch(setLoading(true));  // Set loading to true before fetching data
+    axios
+    .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/shopinfo/userpanel`)
+    .then((res) => {
+      console.log("Data fetched:", res.data); // Log the data fetched
+      dispatch(setFormData(res.data));
+      dispatch(setLoading(false)); // Set loading to false once data is fetched
+    })
+    .catch((err) => {
+      console.error("Error fetching data:", err);
+      dispatch(setLoading(false)); // Ensure loading is set to false in case of error
+    });
   
-  useEffect(() => {
-    checkDatabase();
-  }, [shopName]);
-
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate loading time (e.g., 1.5 seconds)
-    setTimeout(() => {
-      setLoading(false); // After the loading duration, set loading to false
-    }, 1500); // Change this duration to simulate loading
   }, []);
+  useEffect(() => {
+    console.log("Loading state:", loading); // Log to track loading state change
+    if(loading) return; 
+    setTimeout(() =>{setIsload(false);},1500)
+    
+  }, [loading]);
+  
+  // useEffect(() => {
+  //   checkDatabase();
+  // }, [shopName]);
+
+
 
   return (
     <div>
-      {/* AnimatePresence to handle the transitions when components enter/leave */}
       <AnimatePresence>
-        {loading && (
+        {isLoad && (
           <motion.div
             style={styles.container}
-            initial={{ opacity: 1 }} // Start with full opacity
-            animate={{ opacity: 1 }} // Keep full opacity while loading
-            exit={{ opacity: 0 }} // Fade out when exiting
-            transition={{ duration: 1, ease: 'easeOut' }} // Smooth fade-out effect
-            className='flex align-middle justify-center'
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1, ease: 'easeOut' }}
           >
-          
-           <motion.img  
-            initial={{ scale: 0.85 }} // Start with full opacity
-            animate={{ scale: 1 }} // Keep full opacity while loading
-            exit={{ scale: 1 }} // Fade out when exiting
-            transition={{ duration: 1, ease: 'easeOut' }} // Smooth fade-out effect
-           src="/enso.png" className='w-1/2 fixed z-10 sm:w-1/2 md:w-1/3 lg:w-1/3 h-100 ' alt="" ></motion.img>
-         
-           <motion.img  
-            initial={{ scale: 0.45 }} // Start with full opacity
-            animate={{ scale: 1}} // Keep full opacity while loading
-            exit={{ scale: 1}} // Fade out when exiting
-            transition={{ duration: 1, ease: 'easeOut' }} // Smooth fade-out effect
-           src="/coffeebeans.png" className='w-full h-100  z-1' alt="" ></motion.img>
-         
+            <motion.img
+              initial={{ scale: 0.85 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 1 }}
+              transition={{ duration: 1, ease: 'easeOut' }}
+              src={`${process.env.REACT_APP_BASE_URL}/uploads/shops/${shopName}.png`}
+              className='w-1/2 fixed z-10 sm:w-1/2 md:w-1/3 lg:w-1/3 h-100'
+              alt="Shop Logo"
+            />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Main content fades in once loading is complete */}
-      {!loading && (
-        <motion.div
-          style={styles.contentContainer}
-          initial={{ opacity: 0 }} // Start with no opacity (hidden)
-          animate={{ opacity: 1 }} // Fade in with full opacity
-          transition={{ duration: 1.4, ease: 'easeOut' }} // Smooth fade-in effect
-        >
-          <OgComponent /> {/* Render the provided OgComponent */}
-        </motion.div>
-      )}
+      {!isLoad && OgComponent ? (
+  <motion.div
+    style={styles.contentContainer}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 1.4, ease: 'easeOut' }}
+  >
+    <OgComponent />
+  </motion.div>
+) : (
+  <div></div>
+)}
+
     </div>
   );
 };
@@ -230,14 +244,6 @@ const styles = {
     right: 0,
     bottom: 0,
     zIndex: 1000,
-  },
-  spinner: {
-    width: '50px',
-    height: '50px',
-    border: '6px solid #ccc',
-    borderTop: '6px solid #3498db',
-    borderRadius: '50%',
-    animation: 'spin 1s linear infinite',
   },
   contentContainer: {
     display: 'flex',

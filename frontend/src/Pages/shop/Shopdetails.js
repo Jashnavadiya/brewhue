@@ -8,6 +8,7 @@ import ShopLayout from './ShopLayout';
 
 const ShopPage = () => {
   const { shopName } = useParams();
+  console.log(shopName);
   const [loading, setLoading] = useState(false);
   const nav=useNavigate();
   const checkDatabase = async () => {

@@ -35,7 +35,7 @@ const Carousel = ({ slides }) => {
 
   return (<>
 
-    <div className="mx-auto p-4 h-[250px] relative">
+    <div className="mx-auto p-4 h-[270px] relative">
       <div
         className="carousel-container relative max-w-full w-full h-full"
         style={{ height: 'auto' }}

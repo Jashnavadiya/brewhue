@@ -26,6 +26,14 @@ const UserPanel = () => {
             section5Heading: "",
             section5Comments: [{ logo_name: "", name: "", review: "", date: "", _id: "" }],
         },
+        social: {
+            insta: [""],
+            facebook: [""],
+            twitter: [""],
+            pinterest: [""],
+            linkedin: [""],
+            yt: [""],
+        },
     });
 
     // Fetch data on component mount
@@ -173,6 +181,32 @@ const UserPanel = () => {
             },
         }));
     };
+    const handleSocialLinkChange = (e, platform, index) => {
+        const { value } = e.target;
+
+        setFormData((prev) => {
+            const updatedSocial = { ...prev.social };
+            updatedSocial[platform][index] = value; // Update the specific link at the given index
+            return { ...prev, social: updatedSocial };
+        });
+    };
+
+    const handleAddSocialLink = (platform) => {
+        setFormData((prev) => {
+            const updatedSocial = { ...prev.social };
+            updatedSocial[platform] = [...updatedSocial[platform], ""]; // Add a new empty link
+            return { ...prev, social: updatedSocial };
+        });
+    };
+
+    const handleRemoveSocialLink = (platform, index) => {
+        setFormData((prev) => {
+            const updatedSocial = { ...prev.social };
+            updatedSocial[platform] = updatedSocial[platform].filter((_, i) => i !== index); // Remove the link at the given index
+            return { ...prev, social: updatedSocial };
+        });
+    };
+
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -203,7 +237,7 @@ const UserPanel = () => {
             alert("Failed to update data.");
         }
     };
-    if (!formData || !formData.home) {
+    if (!formData || !formData.home || !formData.social) {
         // Optionally render a loading state or nothing until data is fetched
         return <div>Loading...</div>;
     }
@@ -542,6 +576,41 @@ const UserPanel = () => {
 
                 </div>
 
+                {/* Social Links Section */}
+                <div className="space-y-4">
+                    {["insta", "facebook", "twitter", "pinterest", "linkedin", "yt"].map((platform) => (
+                        <div key={platform} className="space-y-2">
+                            <label className="block text-lg font-medium text-gray-700">
+                                {platform.charAt(0).toUpperCase() + platform.slice(1)} Links
+                            </label>
+                            {formData.social[platform]?.map((link, index) => (
+                                <div key={index} className="flex items-center space-x-2">
+                                    <input
+                                        type="text"
+                                        value={link}
+                                        onChange={(e) => handleSocialLinkChange(e, platform, index)}
+                                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder={`Edit ${platform} link`}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveSocialLink(platform, index)}
+                                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={() => handleAddSocialLink(platform)}
+                                className="px-4 py-2 mt-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                                Add New {platform.charAt(0).toUpperCase() + platform.slice(1)} Link
+                            </button>
+                        </div>
+                    ))}
+                </div>
 
                 <button
                     type="submit"

@@ -102,50 +102,50 @@ app.get('/api/check-database/:shopName', async (req, res) => {
 });
 
 const bcrypt = require('bcryptjs');
-app.post('/api/create-database/:shopName', async (req, res) => {
+// app.post('/api/create-database/:shopName', async (req, res) => {
   
-  const shopName = req.params.shopName;
-  const { email, password } = req.body; // Admin user credentials
+//   const shopName = req.params.shopName;
+//   const { email, password } = req.body; // Admin user credentials
 
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required' });
-  }
+//   if (!email || !password) {
+//     return res.status(400).json({ error: 'Email and password are required' });
+//   }
 
-  try {
-    // Connect to the new shop database
-    const shopDb = await connectToDatabase(shopName);
+//   try {
+//     // Connect to the new shop database
+//     const shopDb = await connectToDatabase(shopName);
 
-    // Load models into the database
-    loadModels(shopDb);
+//     // Load models into the database
+//     loadModels(shopDb);
 
-    // Register the User model in the new database
-    const User = shopDb.model('User');
+//     // Register the User model in the new database
+//     const User = shopDb.model('User');
 
-    // Check if the user already exists in the shop database
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: 'User already exists in the shop database' });
-    }
+//     // Check if the user already exists in the shop database
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       return res.status(400).json({ error: 'User already exists in the shop database' });
+//     }
     
   
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+//     // Hash the password
+//     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create and save the new admin user
-    const user = new User({ email, password: hashedPassword, role: 'admin' });
-    const savedUser = await user.save();
+//     // Create and save the new admin user
+//     const user = new User({ email, password: hashedPassword, role: 'admin' });
+//     const savedUser = await user.save();
 
-    console.log("test2");
+//     console.log("test2");
 
-    res.status(201).json({
-      message: `Database "${shopName}" created successfully!`,
-      adminUser: savedUser,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error creating database or user', details: err.message });
-  }
-});
+//     res.status(201).json({
+//       message: `Database "${shopName}" created successfully!`,
+//       adminUser: savedUser,
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: 'Error creating database or user', details: err.message });
+//   }
+// });
 
 
 const loadModels = require('./models/dynamicModelLoader');  // Import the loader function
@@ -386,9 +386,74 @@ app.post('/:shopName/userpanel/home/upload', dbMiddleware, upload.single('file')
     res.status(500).send({ error: error.message });
   }
 });
+const uploadDir1 = path.join(__dirname, 'uploads', 'shops');
+if (!fs.existsSync(uploadDir1)) {
+  fs.mkdirSync(uploadDir1, { recursive: true });
+  console.log('Uploads/shops folder created!');
+}
 
 
 
+// Multer storage configuration
+const storage1 = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const shopName = req.params.shopName;
+    const dir = path.join(__dirname, 'uploads', 'shops'); // Save in the shops folder
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    const shopName = req.params.shopName;
+    cb(null, `${shopName}.png`); // Save the image with the shop name as filename
+  },
+});
+const upload1 = multer({ storage: storage1 });
+
+app.post('/api/create-database/:shopName', upload1.single('image'), async (req, res) => {
+  const shopName = req.params.shopName;
+  const { email, password } = req.body; // Admin user credentials
+  console.log("file", req.file);
+
+  // Ensure the image URL follows the correct path
+  const imageUrl = req.file ? `/uploads/shops/${shopName}.png` : null;
+  console.log("file URL", imageUrl);
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  try {
+    // Connect to the new shop database
+    const shopDb = await connectToDatabase(shopName);
+
+    // Load models into the database
+    loadModels(shopDb);
+
+    // Register the User model in the new database
+    const User = shopDb.model('User');
+
+    // Check if the user already exists in the shop database
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists in the shop database' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create and save the new admin user
+    const user = new User({ email, password: hashedPassword, role: 'admin', image: imageUrl });
+    const savedUser = await user.save();
+
+    res.status(201).json({
+      message: `Database "${shopName}" created successfully!`,
+      adminUser: savedUser,
+      imageUrl: imageUrl, // Return the image URL
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error creating database or user', details: err.message });
+  }
+});
 
 
 app.get('/', (req, res) => {

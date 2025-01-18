@@ -1,10 +1,8 @@
 .down_arrow {
     position: relative;
      z-index: 1000; 
-    bottom: 10px;
+    bottom: 0px;
     left: 0;
-    right: 0;
-    margin: auto;
    width: max-content;
    height: max-content;
     border-radius: 100%;
