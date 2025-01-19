@@ -102,24 +102,24 @@ export default function App() {
       <Tabs
         fullWidth
         aria-label="Options"
-        className="m-auto w-[98%] px-1"
+        className="m-auto w-[98%] px-1 "
         selectedKey={selected}
         onSelectionChange={(key) => setSelected(key)}
       >
         <Tab
           key="Home"
           title="Home"
-          className="shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:text-red-500 [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
+          className="shadow-none text-[14px] max-mobiles:text-[12px] max-mobilem:text-[13px] max-mobilel:text-[14px] [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:text-red-500 [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
         />
         <Tab
           key="Menu"
           title="Menu"
-          className="!shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
+          className="!shadow-none text-[14px] max-mobiles:text-[12px] max-mobilem:text-[13px] max-mobilel:text-[14px] [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
         />
         <Tab
           key="Social"
           title="Social"
-          className="!shadow-none [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
+          className="!shadow-none text-[14px] max-mobiles:text-[12px] max-mobilem:text-[13px] max-mobilel:text-[14px] [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
         />
       </Tabs>
 

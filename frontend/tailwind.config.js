@@ -17,6 +17,12 @@ module.exports = {
         ffirst: '#f8f8f8',  // You can add multiple colors
         fsecond: '#777777',   // Example of more custom colors
       },
+      screens: {
+        'mobiles': '320px',     // For screens >= 320px
+        'mobilem': '375px',     // For screens >= 375px
+        'mobilel': '425px',     // For screens >= 425px
+        'tab': '426px',     // For screens >= 426px
+      },
     },
   },
   darkMode: "class",

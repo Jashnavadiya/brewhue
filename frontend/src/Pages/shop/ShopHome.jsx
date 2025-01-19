@@ -14,7 +14,9 @@ import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setFormData, setLoading } from "../../slices/formDataSlice";
-
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitType from "split-type";
 import axios from "axios";
 import "./ShopMenu.css";
 const ShopHome = () => {
@@ -54,17 +56,7 @@ const ShopHome = () => {
     "Shhh!\n Sometimes, \nfree treats happen * "
   );
 
-  const text = "Just You, Just Here"; // The text you want to animate
-  const [splitText, setSplitText] = useState([]);
 
-  useEffect(() => {
-    // Split the text by characters (including spaces)
-    const characters = Array.from(text).map((char, index) => ({
-      char,
-      index,
-    }));
-    setSplitText(characters);
-  }, []);
 
   // Fetch data on component mount
 
@@ -74,6 +66,58 @@ const ShopHome = () => {
     const formattedHour = hour % 12 || 12; // Convert 0 or 12 to 12 for 12-hour format
     return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
   };
+  const applyAnimation = (targetId, parentClass) => {
+    const split = new SplitType(`#${targetId}`, { type: "chars" });
+
+    gsap.to(split.chars, {
+      color: "black", // Change text color
+      display: "inline-block", // Inline-block for individual chars
+      stagger: 0.05, // Delay between chars
+      opacity: 1, // Ensure opacity animation
+      ease: "none", // No easing
+      fontFamily: "'Abril Fatface', serif",
+      scrollTrigger: {
+        trigger: `.${parentClass}`, // Parent container as trigger
+        start: "top center",
+        end: "bottom center",
+        scrub: true, // Scroll scrubbing effect
+        markers: false, // Enable markers for debugging if needed
+      },
+    });
+  };
+
+  const applyParentOpacityAnimation = (parentClass) => {
+    gsap.to(`.${parentClass}`, {
+      opacity: 1, // Animate to full opacity
+      scrollTrigger: {
+        trigger: `.${parentClass}`, // Parent container as trigger
+        start: "top center",
+        end: "bottom center",
+        scrub: true, // Smooth scrub
+        markers: false, // Enable markers for debugging
+      },
+    });
+  };
+
+  useEffect(() => {
+    gsap.config({ trialWarn: false });
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Apply animations to both targets
+    applyAnimation("target", "parent");
+    applyAnimation("target1", "parent1");
+
+    // Apply opacity animation to parent1
+    applyParentOpacityAnimation("parent1");
+
+    // Global refresh after setup
+    setTimeout(() => ScrollTrigger.refresh(), 100);
+
+    // Cleanup on component unmount
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
 
   if (loading) return;
   return (
@@ -118,9 +162,23 @@ const ShopHome = () => {
                     )
                   )}
                    */}
-                  <span className="text-ffirst font-[Aqala] text-3xl lg:text-8xl">
+                  <motion.span
+                    className="text-ffirst font-[Aqala] text-4xl max-mobiles:text-2xl max-mobilem:text-3xl max-mobilel:text-4xl"
+                    initial={{ y: 40, opacity: 0 }} // Start below and invisible
+                    animate={{ y: 0, opacity: 1 }} // Move to normal position and visible
+                    transition={{
+                      delay: 0.4, // Staggered delay for each character
+                      duration: 5, // Bounce duration
+                      type: "spring", // Spring type for bounce effect
+                      stiffness: 200, // Stronger bounce
+                      damping: 20, // Control bounce decay
+                    }}
+                  >
                     {formData.home.section1Text}
-                  </span>
+                  </motion.span>
+                  {/* <span className="text-ffirst font-[Aqala]  text-4xl max-mobiles:text-2xl max-mobilem:text-3xl max-mobilel:text-4xl">
+                    {formData.home.section1Text}
+                  </span> */}
                 </h1>
               </div>
             </div>
@@ -153,26 +211,66 @@ const ShopHome = () => {
         </div>
 
         {/* section 3 */}
-        <div className="mt-7">
+        <div className="mt-7 max-mobiles:mt-1 max-mobilem:mt-3 max-mobilel:mt-5">
           <Card
             isFooterBlurred
             className="border shadow-none static"
             radius="lg"
           >
             <div className=" bg-black">
-              <div className=" shadow-black/5 shadow-none rounded-large w-full aspect-[16/12]  relative">
-                <div className="bg-black text-white rounded-lg ps-[4%] pt-6 pb-[1%] pe-1 shadow-lg h-full relative">
-                  <h1
-                    className="text-[26px] font-bold mb-4 w-2/12 text-white"
-                    style={{
-                      fontFamily: " 'Abril Fatface', serif",
-                      fontWeight: "400",
-                    }}
-                  >
-                    {formData.home.section2Heading.replace(/\\n/g, "\n")}
-                  </h1>
+              <div className=" shadow-black/5 shadow-none rounded-large w-full aspect-[16/11]  relative">
+                <div className="bg-black text-white rounded-lg ps-[6%] max-mobiles:ps-[5%] pt-6 pb-[1%] pe-1 shadow-lg h-full relative">
+                  {[formData.home.section2Heading.replace(/\\n/g, "\n")].map(
+                    (line, lineIndex) => (
+                      <motion.div
+                        key={lineIndex}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{
+                          delay: lineIndex * 0.5, // Delay each line animation based on its position
+                          duration: 2,
+                        }}
+                      >
+                        <h1
+                          className="text-[28px] max-mobiles:text-[20px] max-mobilem:text-[22px] max-mobilel:text-[26px] font-bold mb-4 w-2/12 text-white"
+                          style={{
+                            fontFamily: " 'Abril Fatface', serif",
+                            fontWeight: "400",
+                          }}
+                        >
+                          {Array.from(line).map((char, index) => (
+                            <motion.span
+                              key={index}
+                              className="text-white"
+                              style={{
+                                fontFamily: " 'Abril Fatface', serif",
+                                fontWeight: "400",
+                              }}
+                              initial={{ y: 20, opacity: 0 }} // Start below and invisible
+                              animate={{ y: 0, opacity: 1 }} // Move to normal position and visible
+                              transition={{
+                                delay: index * 0.05, // Stagger characters in the line
+                                duration: 0.5, // Bounce duration
+                                type: "spring", // Spring type for bounce effect
+                                stiffness: 100, // Bounce stiffness
+                              }}
+                            >
+                              {char}
+                            </motion.span>
+                          ))}
+                        </h1>
+                      </motion.div>
+                    )
+                  )}
+                  {/* {formData.home.section2Heading.replace(/\\n/g, "\n")} */}
+
                   <ul className="space-y-3 w-max pe-3  ms-auto">
-                    <li className="flex items-center justify-start space-x-2">
+                    <li
+                      className="flex items-center justify-start space-x-2"
+                      data-aos="fade-left"
+                      data-aos-easing="ease-in-sine"
+                      data-aos-duration="1100"
+                    >
                       <span className="text-sm w-[14px]">
                         <img
                           src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[0].img}`}
@@ -180,7 +278,7 @@ const ShopHome = () => {
                         />
                       </span>
                       <span
-                        className="text-[10px] text-white"
+                        className="text-[10px] max-mobiles:text-[8px] max-mobilem:text-[9px] max-mobilel:text-[10px] text-white"
                         style={{
                           fontFamily: " 'Inria Serif', serif",
                           fontWeight: "400",
@@ -189,7 +287,13 @@ const ShopHome = () => {
                         {formData.home.section2Info[0].text}
                       </span>
                     </li>
-                    <li className="flex items-center justify-start space-x-2">
+                    <li
+                      className="flex items-center justify-start space-x-2"
+                      data-aos="fade-left"
+                      data-aos-delay="300"
+                      data-aos-easing="ease-in-sine"
+                      data-aos-duration="1100"
+                    >
                       <span className="text-lg w-[14px]">
                         <img
                           src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[1].img}`}
@@ -197,7 +301,7 @@ const ShopHome = () => {
                         />
                       </span>
                       <span
-                        className="text-[10px] text-white"
+                        className="text-[10px] max-mobiles:text-[8px] max-mobilem:text-[9px] max-mobilel:text-[10px] text-white"
                         style={{
                           fontFamily: " 'Inria Serif', serif",
                           fontWeight: "400",
@@ -206,7 +310,13 @@ const ShopHome = () => {
                         {formData.home.section2Info[1].text}
                       </span>
                     </li>
-                    <li className="flex items-center justify-start space-x-2">
+                    <li
+                      className="flex items-center justify-start space-x-2"
+                      data-aos="fade-left"
+                      data-aos-delay="600"
+                      data-aos-easing="ease-in-sine"
+                      data-aos-duration="1100"
+                    >
                       <span className="text-sm w-[14px]">
                         <img
                           src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[2].img}`}
@@ -214,7 +324,7 @@ const ShopHome = () => {
                         />
                       </span>
                       <span
-                        className="text-[10px] text-white"
+                        className="text-[10px] max-mobiles:text-[8px] max-mobilem:text-[9px] max-mobilel:text-[10px] text-white"
                         style={{
                           fontFamily: " 'Inria Serif', serif",
                           fontWeight: "400",
@@ -237,7 +347,7 @@ const ShopHome = () => {
                     </Link>
                   </div>
                   <div
-                    className=" text-white text-[8px] w-[43%] ms-auto absolute flex flex-col items-center justify-center right-[10px] bottom-[3%]"
+                    className=" text-white text-[8px] max-mobiles:text-[6px] max-mobilem:text-[7px] max-mobilel:text-[8px] w-[43%] ms-auto absolute flex flex-col items-center justify-center right-[10px] bottom-[3%]"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -263,10 +373,15 @@ const ShopHome = () => {
                     </p>
                   </div>
                 </div>
-                <div className="absolute bottom-0 left-0 w-1/2 h-max opacity-100 ">
+                <div
+                  data-aos="fade-up"
+                  data-aos-easing="ease-out-cubic"
+                  data-aos-duration="2000"
+                  className="absolute bottom-0 left-0 w-1/2 h-max opacity-100 "
+                >
                   <svg
                     width="100%"
-                    height="100%"
+                    height="40%"
                     viewBox="0 0 238 141"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -289,10 +404,15 @@ const ShopHome = () => {
                     </defs>
                   </svg>
                 </div>
-                <div className="absolute top-0 right-0 w-1/2 h-max opacity-100 ">
+                <div
+                  data-aos="fade-down"
+                  data-aos-easing="ease-out-cubic"
+                  data-aos-duration="2000"
+                  className="absolute top-0 right-0 w-1/2 h-max opacity-100 "
+                >
                   <svg
                     width="100%"
-                    height="100%"
+                    height="40%"
                     viewBox="0 0 219 136"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -331,15 +451,35 @@ const ShopHome = () => {
               </Card>
             </div>
             <div className="w-1/2 flex justify-between align-middle ">
-              <pre
-                className="w-max text-black text-[26px] m-auto text-left"
+              <div className="parent">
+                <div className="child">
+                  <h2 id="target" className="heading2">
+                    <pre
+                      className="w-max  text-[26px] max-mobiles:text-[20px] max-mobilem:text-[23px] max-mobilel:text-[26px] m-auto text-left"
+                      style={{
+                        fontFamily: " 'Abril Fatface', serif",
+                        fontWeight: "400",
+                      }}
+                    >
+                      {formData.home.section3Heading
+                        .split("\\n")
+                        .map((line, index) => (
+                          <React.Fragment key={index}>
+                            {line}
+                            <br />
+                          </React.Fragment>
+                        ))}
+                    </pre>
+                  </h2>
+                </div>
+                {/* Rest of your code */}
+              </div>
+              {/* <pre
+                className="w-max text-black text-[26px] max-mobiles:text-[20px] max-mobilem:text-[23px] max-mobilel:text-[26px] m-auto text-left"
                 style={{
                   fontFamily: " 'Abril Fatface', serif",
                   fontWeight: "400",
-                }}
-              >
-                {formData.home.section3Heading.replace(/\\n/g, "\n")}
-              </pre>
+                }}>  </pre> */}
             </div>
           </div>
           <div className="flex">
@@ -399,7 +539,7 @@ const ShopHome = () => {
         <div className="relative py-10 mt-6 " id="Menu">
           <div className="">
             <pre
-              className="text-black text-[26px] w-max text-left ms-2"
+              className="text-black text-[26px] max-mobiles:text-[20px] max-mobilem:text-[23px] max-mobilel:text-[26px] w-max text-left ms-2"
               style={{
                 fontFamily: " 'Abril Fatface', serif",
                 fontWeight: "400",
@@ -424,7 +564,7 @@ const ShopHome = () => {
         {/* section 7 */}
         <div>
           <div
-            className="text-[26px] text-black"
+            className="text-[26px] max-mobiles:text-[20px] max-mobilem:text-[23px] max-mobilel:text-[26px] text-black"
             style={{ fontFamily: " 'Abril Fatface', serif", fontWeight: "400" }}
           >
             {formData.home.section5Heading.replace(/\\n/g, "\n")}
@@ -441,10 +581,10 @@ const ShopHome = () => {
             radius="lg"
           >
             <div className=" bg-black">
-              <div className=" shadow-black/5 shadow-none rounded-large w-full aspect-[16/11]  relative">
+              <div className=" shadow-black/5 shadow-none rounded-large w-full aspect-[16/11] max-mobiles:aspect-[16/13] max-mobilem:aspect-[16/12] max-mobilel:aspect-[16/11]  relative">
                 <div className="bg-black text-white w-9/12  mx-auto rounded-lg flex flex-col justify-center align-middle items-center shadow-lg h-full relative">
                   <div
-                    className="text-white text-2xl font-normal
+                    className="text-white text-2xl max-mobiles:text-lg max-mobilem:text-xl max-mobilel:text-2xl font-normal
                    "
                     style={{
                       fontFamily: " 'Abril Fatface', serif",
@@ -454,7 +594,7 @@ const ShopHome = () => {
                     We're Open
                   </div>
                   <div
-                    className="text-white text-sm mt-7 "
+                    className="text-white text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] mt-7 "
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -463,7 +603,7 @@ const ShopHome = () => {
                     {formData.home.section6.time_period}
                   </div>
                   <div
-                    className="text-white opacity-45 text-sm my-2"
+                    className="text-white opacity-45 text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] my-2"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -474,7 +614,7 @@ const ShopHome = () => {
                   </div>
 
                   <div
-                    className="text-white text-sm  "
+                    className="text-white text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px]  "
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -483,7 +623,7 @@ const ShopHome = () => {
                     {formData.home.section6.address}
                   </div>
                   <div
-                    className="text-white text-xs  my-2"
+                    className="text-white text-[10px] max-mobiles:text-[8px] max-mobilem:text-[9px] max-mobilel:text-[10px]  my-2"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -495,7 +635,7 @@ const ShopHome = () => {
                 <div className="absolute bottom-0 right-0 w-1/4 h-max opacity-100 ">
                   <svg
                     width="100%"
-                    height="100%"
+                    height=""
                     viewBox="0 0 141 162"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -549,21 +689,30 @@ const ShopHome = () => {
           </div>
 
           <div
-            className="1/2 text-[28px]"
+            className=" text-[28px] max-mobiles:text-[22px] max-mobilem:text-[25px] max-mobilel:text-[28px]"
             style={{ fontFamily: " 'Abril Fatface', serif", fontWeight: "400" }}
           >
-            <pre
-              className="text-black"
-              style={{
-                fontFamily: " 'Abril Fatface', serif",
-                fontWeight: "400",
-              }}
-            >
-              {message}
-            </pre>
+            <div className="parent1"  >
+              <div className="child1">
+                <h2 id="target1" className="heading2" >
+                  <pre
+                    className=""
+                    style={{ fontFamily: " 'Abril Fatface', serif", fontWeight: "400" }}
+                  >
+                    {message.split("\n")
+                        .map((line, index) => (
+                          <React.Fragment key={index}>
+                            {line}
+                            <br />
+                          </React.Fragment>
+                        ))}
+                  </pre>
+                </h2>
+              </div>
+            </div>
           </div>
           <div className="relative w-11/12 m-auto">
-            <div className="flex justify-between my-5">
+            <div className="flex justify-around my-5 text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] ">
               <input
                 type="email"
                 className="w-8/12 bg-transparent border-black rounded-medium border-[2px] p-2"
@@ -575,7 +724,7 @@ const ShopHome = () => {
                 placeholder="meraemailid@address.com"
               />
               <button
-                className="w-max bg-black text-white rounded-medium py-2 border-[2px] px-3 border-black text-sm"
+                className="w-max bg-black text-white rounded-medium py-2 border-[2px] px-3 border-black "
                 style={{
                   fontFamily: " 'Inria Serif', serif",
                   fontWeight: "400",

@@ -35,7 +35,7 @@ const Carousel = ({ slides }) => {
 
   return (<>
 
-    <div className="mx-auto p-4 h-[270px] relative">
+    <div className="mx-auto p-4 h-[270px] max-mobiles:h-[250px] max-mobilem:h-[260px] max-mobilel:h-[270px] relative">
       <div
         className="carousel-container relative max-w-full w-full h-full"
         style={{ height: 'auto' }}
@@ -51,9 +51,12 @@ const Carousel = ({ slides }) => {
         >
           <div className=" p-5  rounded-lg ">
             <div className="carousel-title text-2xl font-medium bg-[#D4D4D8]  w-[56px] h-[56px] m-auto rounded-full relative"><span className="absolute top-0 bottom-0 left-0 h-max m-auto right-0">{slides[currentIndex].logo_name}</span></div>
-            <div className="carousel-subtitle text-sm text-black mt-2" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].name}</div>
-            <div className="carousel-description text-gray-500 text-sm my-3" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].review}</div>
-            <div className="carousel-date text-sm text-black" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].date}</div>
+
+            <div className="carousel-subtitle text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] text-black mt-2" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].name}</div>
+
+            <div className="carousel-description text-gray-500 text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] my-3" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].review}</div>
+
+            <div className="carousel-date text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] text-black" style={{ fontFamily: " 'Inria Serif', serif", fontWeight: "400" }}>{slides[currentIndex].date}</div>
           </div>
         </motion.div>
 

@@ -8,7 +8,7 @@ const ShopMenu = () => {
     <div className="w-full m-auto border-lg">
     <div className="flex justify-between items-center my-4 w-[90%] ms-2 mb-7">
     <pre
-        className="text-left text-3xl text-black"
+        className="text-left text-3xl max-mobiles:text-xl max-mobilem:text-2xl max-mobilel:text-3xl text-black"
         style={{
           fontFamily: " 'Abril Fatface', serif",
           fontWeight: "400",
@@ -16,7 +16,7 @@ const ShopMenu = () => {
       >
         {"Make your tastebud's\nfeel gooood..."}
       </pre>
-      <img src="/icons/image 2.png" className="w-12" alt="" />
+      <img src="/icons/image 2.png" className="w-12 max-mobiles:w-10 max-mobilem:w-11 max-mobilel:w-12" alt="" />
     </div>
       <PdfViewerMenu url={`${process.env.REACT_APP_BASE_URL}${formData.home.section4Pdf}`} />
     </div>

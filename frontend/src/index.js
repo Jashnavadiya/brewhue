@@ -8,7 +8,11 @@ import {BrowserRouter, useNavigate, useHref} from "react-router-dom";
 import { Provider } from 'react-redux';
 import store from './store';
 import { NextUIProvider } from '@nextui-org/react';
+import AOS from 'aos';
+import 'aos/dist/aos.css'; // You can also use <link> for styles
+// ..
 const root = ReactDOM.createRoot(document.getElementById('root'));
+AOS.init();
 
 root.render(
   <React.StrictMode>

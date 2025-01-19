@@ -1,46 +1,81 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import SplitType from 'split-type';
+import './App.css';
 
-const TextAnimation = () => {
-  const lines = [
-    "Finest and Most Beautiful Brews, Every Time.",
-    "An Ambience You'll Absolutely Love.",
-    "Enjoy Our Exquisite Selection of Coffees.",
-  ]; // Dynamic lines array
+export default function FreshIdeaTesting() {
+  useEffect(() => {
+    gsap.config({ trialWarn: false });
+    gsap.registerPlugin(ScrollTrigger);
+
+    const split = new SplitType('#target', { type: 'chars' }); // Use SplitType
+
+      const anim = gsap.to(split.chars, {
+        //   delay: 1,
+        color: 'red', // Change color to white
+        stagger: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: ".parent",
+          start: 'top center',
+          end: 'bottom center',
+          scrub: true,
+          markers: false,
+
+        },
+      });
+  }, []);
 
   return (
-    <div>
-      {lines.map((line, lineIndex) => (
-        <motion.div
-          key={lineIndex}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            delay: lineIndex * 0.5, // Delay each line animation based on its position
-            duration: 0.5,
-          }}
-        >
-          <h1>
-            {Array.from(line).map((char, index) => (
-              <motion.span
-                key={index}
-                initial={{ y: 20, opacity: 0 }} // Start below and invisible
-                animate={{ y: 0, opacity: 1 }}  // Move to normal position and visible
-                transition={{
-                  delay: index * 0.05, // Stagger characters in the line
-                  duration: 0.5,       // Bounce duration
-                  type: "spring",      // Spring type for bounce effect
-                  stiffness: 100,      // Bounce stiffness
-                }}
-              >
-                {char}
-              </motion.span>
-            ))}
-          </h1>
-        </motion.div>
-      ))}
+   <>
+    <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+    <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+    <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+     <div className="parent">
+      <div className="child">
+        <h2 id="target" className="heading2 transparent">
+          &#42;
+          <br />
+          To solve modern business challenges, we have{' '}
+          <span>fresh ideas</span>, innovative tools,
+          and a different outlook on creativity.
+        </h2>
+      </div>
+      {/* Rest of your code */}
     </div>
+    <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+    <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+    <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1> <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+    <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+    <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+   </>
   );
-};
-
-export default TextAnimation;
+}

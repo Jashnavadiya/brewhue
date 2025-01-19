@@ -199,13 +199,13 @@ const LoadingScreen = ({ OgComponent }) => {
             initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1, ease: 'easeOut' }}
+            transition={{ duration: 1.5, ease: 'easeOut' }}
           >
             <motion.img
               initial={{ scale: 0.85 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 1 }}
-              transition={{ duration: 1, ease: 'easeOut' }}
+              animate={{ scale: 1.2 }}
+              exit={{ scale: 1.2 }}
+              transition={{ duration: 1.5, ease: 'easeOut' }}
               src={`${process.env.REACT_APP_BASE_URL}/uploads/shops/${shopName}.png`}
               className='w-1/2 fixed z-10 sm:w-1/2 md:w-1/3 lg:w-1/3 h-100'
               alt="Shop Logo"
@@ -219,7 +219,7 @@ const LoadingScreen = ({ OgComponent }) => {
     style={styles.contentContainer}
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
-    transition={{ duration: 1.4, ease: 'easeOut' }}
+    transition={{ duration: 1.5, ease: 'easeOut' }}
   >
     <OgComponent />
   </motion.div>

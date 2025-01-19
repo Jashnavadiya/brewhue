@@ -60,3 +60,23 @@
       margin-top: 0;
     }
   }
+
+
+  
+.parent{
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.103);
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  width: max-content;
+  margin: auto;
+}
+.parent1{
+opacity: 0.5;
+word-spacing: normal;
+}
+.char{
+  font-family: 'Abril Fatface', serif;
+}
+.word{
+  margin: 0;
+}
