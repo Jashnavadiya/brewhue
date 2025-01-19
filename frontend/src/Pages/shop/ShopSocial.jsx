@@ -9,7 +9,7 @@ const ShopSocial = () => {
     <div className="w-full m-auto border-lg  ">
       <div className="flex justify-between items-center ms-2 w-[90%] my-4 mb-7">
       <pre
-        className="text-left text-3xl text-black"
+        className="text-left text-2xl text-black"
         style={{
           fontFamily: " 'Abril Fatface', serif",
           fontWeight: "400",

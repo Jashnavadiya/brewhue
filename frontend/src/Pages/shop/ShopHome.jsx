@@ -160,8 +160,8 @@ const ShopHome = () => {
             radius="lg"
           >
             <div className=" bg-black">
-              <div className=" shadow-black/5 shadow-none rounded-large w-full aspect-[16/11]  relative">
-                <div className="bg-black text-white rounded-lg ps-7 pt-6 pb-6 pe-1 shadow-lg h-full relative">
+              <div className=" shadow-black/5 shadow-none rounded-large w-full aspect-[16/12]  relative">
+                <div className="bg-black text-white rounded-lg ps-[4%] pt-6 pb-[1%] pe-1 shadow-lg h-full relative">
                   <h1
                     className="text-[26px] font-bold mb-4 w-2/12 text-white"
                     style={{
@@ -237,7 +237,7 @@ const ShopHome = () => {
                     </Link>
                   </div>
                   <div
-                    className=" text-white text-[8px] w-[43%] ms-auto absolute flex flex-col items-center justify-center right-[10px] bottom-[10%]"
+                    className=" text-white text-[8px] w-[43%] ms-auto absolute flex flex-col items-center justify-center right-[10px] bottom-[3%]"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -265,8 +265,8 @@ const ShopHome = () => {
                 </div>
                 <div className="absolute bottom-0 left-0 w-1/2 h-max opacity-100 ">
                   <svg
-                    width="238"
-                    height="141"
+                    width="100%"
+                    height="100%"
                     viewBox="0 0 238 141"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -291,8 +291,8 @@ const ShopHome = () => {
                 </div>
                 <div className="absolute top-0 right-0 w-1/2 h-max opacity-100 ">
                   <svg
-                    width="219"
-                    height="136"
+                    width="100%"
+                    height="100%"
                     viewBox="0 0 219 136"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -492,10 +492,10 @@ const ShopHome = () => {
                     {formData.home.section6.number[0]}
                   </div>
                 </div>
-                <div className="absolute bottom-0 right-0 w-max h-max opacity-100 ">
+                <div className="absolute bottom-0 right-0 w-1/4 h-max opacity-100 ">
                   <svg
-                    width="141"
-                    height="162"
+                    width="100%"
+                    height="100%"
                     viewBox="0 0 141 162"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
