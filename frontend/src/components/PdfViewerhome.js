@@ -201,12 +201,12 @@ useEffect(() => {
     <div ref={flipBookRef} style={{ width: "100%", height: "100%" }}>
       <HTMLFlipBook
         size="stretch"
-        width={parentDimensions.width || 400}
-        height={parentDimensions.height || 600}
-        maxWidth={parentDimensions.width || 400}
-        maxHeight={parentDimensions.height || 600}
-        minWidth={300}
-        minHeight={500}
+        width={Math.max(parentDimensions.width, 300)}
+        height={Math.max(parentDimensions.height, 500)}
+        maxWidth={parentDimensions.width}
+        maxHeight={parentDimensions.height}
+        minWidth={250}
+        minHeight={400}
         drawShadow={true}
         showCover={false}
         mobileScrollSupport={true}
@@ -215,7 +215,7 @@ useEffect(() => {
         className="rpf-flipbook" // Custom class for CSS targeting
       >
         {Array.from(new Array(numPages), (el, index) => (
-          <div key={index} style={{ width: "100%", height: "100%" }}>
+          <div key={index} style={{ width: "95%", height: "100%" ,margin:"auto" }}>
             <canvas
               ref={(el) => (canvasRefs.current[index] = el)}
               style={{

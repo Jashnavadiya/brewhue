@@ -1,0 +1,9 @@
+
+BEGIN:VCARD
+VERSION:3.0
+FN:enso
+TEL;TYPE=CELL:1020304050
+EMAIL:enso@cafe.com
+ADR;TYPE=HOME:sunday hub
+URL:enso.com
+END:VCARD

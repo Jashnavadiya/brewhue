@@ -12,6 +12,11 @@ const SinglePageFlipBook = ({ url }) => {
   // Configure PDF.js worker
   pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs/pdf.worker.min.mjs`;
 
+  useEffect(() => {
+    AOS.init({
+      once: true, // Trigger animation only once
+    });
+  }, []);
 
   useEffect(() => {
     const renderPDF = async () => {
@@ -48,7 +53,7 @@ const SinglePageFlipBook = ({ url }) => {
           await renderTask.promise;
         }
 
-        AOS.refresh(); // Refresh AOS after rendering pages
+        AOS.refresh(); // Refresh AOS after rendering page2s
       } catch (error) {
         console.error("Error rendering PDF:", error);
       } finally {
@@ -68,7 +73,7 @@ const SinglePageFlipBook = ({ url }) => {
       {Array.from(new Array(numPages), (el, index) => (
         <div
           data-aos="zoom-in-up"
-          data-aos-duration="500"
+          data-aos-duration="1500"
           // data-aos-anchor-placement="top-bottom"// Ensures animation triggers both ways
      
           

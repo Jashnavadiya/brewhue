@@ -27,6 +27,13 @@ const UserPanel = () => {
             section5Comments: [{ logo_name: "", name: "", review: "", date: "", _id: "" }],
         },
         social: {
+            links: [
+                {
+                    name: "",
+                    icon: "",
+                    url: "",
+                }
+            ],
             insta: [""],
             facebook: [""],
             twitter: [""],
@@ -108,6 +115,7 @@ const UserPanel = () => {
             });
 
             const updatedUserPanel = response.data.updatedUserPanel[section];
+            console.log(updatedUserPanel);
 
             setFormData((prevFormData) => ({
                 ...prevFormData,
@@ -119,36 +127,39 @@ const UserPanel = () => {
         }
     };
 
+    // Add a new link
+    const handleAddLink = () => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            social: {
+                ...prevFormData.social,
+                links: [...prevFormData.social.links, { name: "", icon: "", url: "" }],
+            },
+        }));
+    };
+
+    // Remove a link
+    const handleRemoveLink = (index) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            social: {
+                ...prevFormData.social,
+                links: prevFormData.social.links.filter((_, i) => i !== index),
+            },
+        }));
+    };
+
+    // Handle link input changes dynamically
     const handleLinkChange = (e, index, key) => {
         const { value } = e.target;
-    
-        setFormData((prev) => {
-            const updatedLinks = [...prev.social.links];
-            updatedLinks[index][key] = value; // Update the specific key (name, icon, url)
-            return { ...prev, social: { ...prev.social, links: updatedLinks } };
+
+        setFormData((prevFormData) => {
+            const updatedLinks = [...prevFormData.social.links];
+            updatedLinks[index][key] = value;
+            return { ...prevFormData, social: { ...prevFormData.social, links: updatedLinks } };
         });
     };
 
-    const handleAddLink = () => {
-        setFormData((prev) => ({
-            ...prev,
-            social: {
-                ...prev.social,
-                links: [...prev.social.links, { name: "", icon: "", url: "" }],
-            },
-        }));
-    };
-    
-    const handleRemoveLink = (index) => {
-        setFormData((prev) => ({
-            ...prev,
-            social: {
-                ...prev.social,
-                links: prev.social.links.filter((_, i) => i !== index),
-            },
-        }));
-    };
-    
 
     const handleAddImage = () => {
         setFormData((prevFormData) => {
@@ -237,7 +248,30 @@ const UserPanel = () => {
             return { ...prev, social: updatedSocial };
         });
     };
-
+    const handleGenerateVCard = async () => {
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_BASE_URL}/api/${shopName}/shopinfo/${shopName}/userpanel/generate-vcard`,
+                {
+                    name: formData.home.contactName || "",
+                    phone: formData.home.contactPhone || "",
+                    email: formData.home.contactEmail || "",
+                    address: formData.home.contactAddress || "",
+                    website: formData.home.contactWebsite || "",
+                }
+            );
+    
+            if (response.data.filePath) {
+                alert("vCard generated successfully!");
+            }
+        } catch (err) {
+            console.error("Error generating vCard:", err);
+            alert("Failed to generate vCard");
+        }
+    };
+    
+  
+    
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -642,70 +676,135 @@ const UserPanel = () => {
                         </div>
                     ))}
                 </div>
+
                 <div className="space-y-4">
-    <h2 className="text-2xl font-semibold">Manage Links</h2>
-    {formData.social.links.map((link, index) => (
-        <div key={index} className="flex items-center space-x-4">
-            <div className="flex-1">
-                <input
-                    type="text"
-                    name="name"
-                    value={link.name}
-                    onChange={(e) => handleLinkChange(e, index, "name")}
-                    placeholder="Platform Name (e.g. Instagram)"
-                    className="input"
-                />
-            </div>
-            <div className="flex-1">
-                {/* Icon URL input */}
-                <input
-                    type="text"
-                    name="icon"
-                    value={link.icon}
-                    onChange={(e) => handleLinkChange(e, index, "icon")}
-                    placeholder="Icon URL"
-                    className="input"
-                />
-            </div>
-            <div className="flex-1">
-                {/* Platform URL input */}
-                <input
-                    type="url"
-                    name="url"
-                    value={link.url}
-                    onChange={(e) => handleLinkChange(e, index, "url")}
-                    placeholder="Platform URL"
-                    className="input"
-                />
-            </div>
+                    <h2 className="text-2xl font-semibold">Manage Links</h2>
+                    {formData.social.links.map((link, index) => (
+                        <div key={index} className="space-y-2 border p-2 rounded-md">
+                            {/* Platform Name Input */}
+                            <input
+                                type="text"
+                                name="name"
+                                value={link.name}
+                                onChange={(e) => handleLinkChange(e, index, "name")}
+                                placeholder="Platform Name (e.g. Instagram)"
+                                className="w-full p-2 border rounded"
+                            />
 
-            {/* Image upload for icon */}
-            <div className="flex-1">
-                <input
-                    type="file"
-                    onChange={(e) => handleFileUpload(e, "social", "icon")}
-                    className="w-full p-2 border rounded"
-                />
-            </div>
-            <button
-                type="button"
-                onClick={() => handleRemoveLink(index)}
-                className="text-red-500"
-            >
-                Remove
-            </button>
-        </div>
-    ))}
+                            {/* Icon URL Input */}
+                            <input
+                                type="text"
+                                name="icon"
+                                value={link.icon}
+                                onChange={(e) => handleLinkChange(e, index, "icon")}
+                                placeholder="Icon URL"
+                                className="w-full p-2 border rounded"
+                            />
 
-    {/* Button to add a new link */}
-    <button
-        type="button"
-        onClick={handleAddLink}
-        className="btn bg-blue-500 text-white"
-    >
-        Add Link
-    </button>
-</div>
+                            {/* Platform URL Input */}
+                            <input
+                                type="url"
+                                name="url"
+                                value={link.url}
+                                onChange={(e) => handleLinkChange(e, index, "url")}
+                                placeholder="Platform URL"
+                                className="w-full p-2 border rounded"
+                            />
+
+                            {/* File Upload for Icon */}
+                            <input
+                                type="file"
+                                onChange={(e) => handleFileUpload(e, "social", `links.${index}.icon`)}
+
+                                className="w-full p-2 border rounded"
+                            />
+
+                            {/* Remove Link Button */}
+                            <button
+                                type="button"
+                                onClick={() => handleRemoveLink(index)}
+                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    ))}
+
+                    {/* Add New Link Button */}
+                    <button
+                        type="button"
+                        onClick={handleAddLink}
+                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                        Add Link
+                    </button>
+                </div>
+                {/* Contact Section */}
+                <div className="p-4 bg-white shadow-md rounded-md">
+                    <h2 className="text-xl font-semibold mb-4">Contact Section</h2>
+                    <div className="space-y-4">
+                        {/* Contact Details */}
+                        <textarea
+                            name="contactName"
+                            value={formData.home.contactName || ""}
+                            onChange={(e) => handleChange(e, "home", "contactName")}
+                            placeholder="Contact Name"
+                            className="w-full p-2 border rounded"
+                        ></textarea>
+
+                        <textarea
+                            name="contactPhone"
+                            value={formData.home.contactPhone || ""}
+                            onChange={(e) => handleChange(e, "home", "contactPhone")}
+                            placeholder="Contact Phone"
+                            className="w-full p-2 border rounded"
+                        ></textarea>
+
+                        <textarea
+                            name="contactEmail"
+                            value={formData.home.contactEmail || ""}
+                            onChange={(e) => handleChange(e, "home", "contactEmail")}
+                            placeholder="Contact Email"
+                            className="w-full p-2 border rounded"
+                        ></textarea>
+
+                        <textarea
+                            name="contactAddress"
+                            value={formData.home.contactAddress || ""}
+                            onChange={(e) => handleChange(e, "home", "contactAddress")}
+                            placeholder="Contact Address"
+                            className="w-full p-2 border rounded"
+                        ></textarea>
+
+                        <textarea
+                            name="contactWebsite"
+                            value={formData.home.contactWebsite || ""}
+                            onChange={(e) => handleChange(e, "home", "contactWebsite")}
+                            placeholder="Contact Website"
+                            className="w-full p-2 border rounded"
+                        ></textarea>
+
+                        {/* Generate vCard Button */}
+                        <button
+                            type="button"
+                            onClick={handleGenerateVCard}
+                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                        >
+                            Generate vCard
+                        </button>
+
+                        {/* Download vCard Button */}
+                        {/* <button
+                            type="button"
+                            onClick={handleDownloadVCard}
+                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                        >
+                            Download vCard
+                        </button> */}
+                    </div>
+                </div>
+
+
 
                 <button
                     type="submit"
