@@ -28,7 +28,7 @@ app.use(cors());
 dotenv.config()
 // app.use(
 //   cors({
-//       origin: "http://localhost:5000", // Allow requests from this origin
+//       origin: "http://localhost:3000", // Allow requests from this origin
 //       methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
 //       credentials: true, // Allow cookies and credentials if needed
 //   })
@@ -469,5 +469,5 @@ app.get('*',(req,res)=>{
 
 
 // Start the server
-const PORT = 5000;
+const PORT = 3000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
