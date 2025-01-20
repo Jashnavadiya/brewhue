@@ -26,7 +26,13 @@ app.use(bodyParser.json());
 app.use(cors());
 
 dotenv.config()
-
+// app.use(
+//   cors({
+//       origin: "http://localhost:5000", // Allow requests from this origin
+//       methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+//       credentials: true, // Allow cookies and credentials if needed
+//   })
+// );
 
 // Function to dynamically connect to a database
 const connectToDatabase = async (dbName) => {
@@ -455,10 +461,12 @@ app.post('/api/create-database/:shopName', upload1.single('image'), async (req, 
   }
 });
 
+app.use(express.static(path.join(__dirname,"../frontend/build")));
 
-app.get('/', (req, res) => {
-  res.send('Helosss')
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname,"../frontend","build","index.html"))
 })
+
 
 // Start the server
 const PORT = 5000;

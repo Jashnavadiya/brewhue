@@ -107,17 +107,48 @@ const UserPanel = () => {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
-            const updatedUserPanel = response.data.updatedUserPanel.home;
+            const updatedUserPanel = response.data.updatedUserPanel[section];
 
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                home: updatedUserPanel, // Update the home data with the latest response
+                [section]: updatedUserPanel, // Update the home data with the latest response
             }));
         } catch (error) {
             console.error("Error uploading file:", error);
             alert("Error uploading file. Please try again.");
         }
     };
+
+    const handleLinkChange = (e, index, key) => {
+        const { value } = e.target;
+    
+        setFormData((prev) => {
+            const updatedLinks = [...prev.social.links];
+            updatedLinks[index][key] = value; // Update the specific key (name, icon, url)
+            return { ...prev, social: { ...prev.social, links: updatedLinks } };
+        });
+    };
+
+    const handleAddLink = () => {
+        setFormData((prev) => ({
+            ...prev,
+            social: {
+                ...prev.social,
+                links: [...prev.social.links, { name: "", icon: "", url: "" }],
+            },
+        }));
+    };
+    
+    const handleRemoveLink = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            social: {
+                ...prev.social,
+                links: prev.social.links.filter((_, i) => i !== index),
+            },
+        }));
+    };
+    
 
     const handleAddImage = () => {
         setFormData((prevFormData) => {
@@ -611,6 +642,70 @@ const UserPanel = () => {
                         </div>
                     ))}
                 </div>
+                <div className="space-y-4">
+    <h2 className="text-2xl font-semibold">Manage Links</h2>
+    {formData.social.links.map((link, index) => (
+        <div key={index} className="flex items-center space-x-4">
+            <div className="flex-1">
+                <input
+                    type="text"
+                    name="name"
+                    value={link.name}
+                    onChange={(e) => handleLinkChange(e, index, "name")}
+                    placeholder="Platform Name (e.g. Instagram)"
+                    className="input"
+                />
+            </div>
+            <div className="flex-1">
+                {/* Icon URL input */}
+                <input
+                    type="text"
+                    name="icon"
+                    value={link.icon}
+                    onChange={(e) => handleLinkChange(e, index, "icon")}
+                    placeholder="Icon URL"
+                    className="input"
+                />
+            </div>
+            <div className="flex-1">
+                {/* Platform URL input */}
+                <input
+                    type="url"
+                    name="url"
+                    value={link.url}
+                    onChange={(e) => handleLinkChange(e, index, "url")}
+                    placeholder="Platform URL"
+                    className="input"
+                />
+            </div>
+
+            {/* Image upload for icon */}
+            <div className="flex-1">
+                <input
+                    type="file"
+                    onChange={(e) => handleFileUpload(e, "social", "icon")}
+                    className="w-full p-2 border rounded"
+                />
+            </div>
+            <button
+                type="button"
+                onClick={() => handleRemoveLink(index)}
+                className="text-red-500"
+            >
+                Remove
+            </button>
+        </div>
+    ))}
+
+    {/* Button to add a new link */}
+    <button
+        type="button"
+        onClick={handleAddLink}
+        className="btn bg-blue-500 text-white"
+    >
+        Add Link
+    </button>
+</div>
 
                 <button
                     type="submit"

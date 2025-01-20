@@ -12,7 +12,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css'; // You can also use <link> for styles
 // ..
 const root = ReactDOM.createRoot(document.getElementById('root'));
-AOS.init();
+AOS.init({once:true, easing: 'ease-in-out'});
 
 root.render(
   <React.StrictMode>

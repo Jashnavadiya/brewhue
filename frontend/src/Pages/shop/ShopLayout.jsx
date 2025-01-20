@@ -55,7 +55,7 @@ export default function App() {
         }}
       ></div> */}
 
-      <div>
+      <div id="top">
         <motion.img
           src={`${process.env.REACT_APP_BASE_URL}${formData.home.logo}`} 
           className={`w-3/12 m-auto py-5 sm:w-5/12 lg:w-2/12 xl:w-2/12 2xl:w-[12%] transition-all duration-300`}
@@ -126,7 +126,7 @@ export default function App() {
       {/* Tab Content */}
       <div className="m-auto w-[98%] px-1 mt-3">
         {/* Render all components but only display the active one */}
-        <div style={{ display: selected === "Home" ? "block" : "none" }}>
+        <div style={{ display: selected === "Home" ? "block" : "none" }} >
           <ShopHome />
         </div>
         <div style={{ display: selected === "Menu" ? "block" : "none" }}>

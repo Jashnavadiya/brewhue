@@ -18,7 +18,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
 import axios from "axios";
-import "./ShopMenu.css";
+import "./ShopHome.css";
 const ShopHome = () => {
   const { shopName } = useParams();
   const dispatch = useDispatch();
@@ -78,8 +78,8 @@ const ShopHome = () => {
       fontFamily: "'Abril Fatface', serif",
       scrollTrigger: {
         trigger: `.${parentClass}`, // Parent container as trigger
-        start: "top center",
-        end: "bottom center",
+        start: "top bottom",
+        end: "bottom top",
         scrub: true, // Scroll scrubbing effect
         markers: false, // Enable markers for debugging if needed
       },
@@ -347,7 +347,7 @@ const ShopHome = () => {
                     </Link>
                   </div>
                   <div
-                    className=" text-white text-[8px] max-mobiles:text-[6px] max-mobilem:text-[7px] max-mobilel:text-[8px] w-[43%] ms-auto absolute flex flex-col items-center justify-center right-[10px] bottom-[3%]"
+                    className=" text-white text-[8px] max-mobiles:text-[6px] max-mobilem:text-[7px] max-mobilel:text-[8px] w-[43%] ms-auto absolute flex flex-col items-center justify-center right-[10px] bottom-[5%]"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -437,9 +437,11 @@ const ShopHome = () => {
         {/* section 4 */}
 
         {/* section 5 */}
-        <div className="mt-7" id="Vibe_check">
+        <div className="mt-7 overflow-hidden" id="Vibe_check">
           <div className="flex ">
-            <div className="w-1/2 p-1">
+            <div className="w-1/2 p-1" data-aos="fade-right"
+                      data-aos-easing="ease-in-sine"
+                      data-aos-duration="1100">
               <Card isFooterBlurred className="border shadow-none" radius="lg">
                 <div className="relative shadow-black/5 shadow-none rounded-large w-full aspect-[16/10] lg:aspect-[16/6] ">
                   <img
@@ -483,7 +485,9 @@ const ShopHome = () => {
             </div>
           </div>
           <div className="flex">
-            <div className="w-1/3 p-1">
+            <div className="w-1/3 p-1" data-aos="fade-right"
+                      data-aos-easing="ease-in-sine"
+                      data-aos-duration="1100">
               <Card isFooterBlurred className="border shadow-none" radius="lg">
                 <div className="relative shadow-black/5 shadow-none rounded-large w-full aspect-[16/16] lg:aspect-[16/16] ">
                   <img
@@ -494,7 +498,9 @@ const ShopHome = () => {
                 </div>
               </Card>
             </div>
-            <div className="w-1/3 p-1">
+            <div className="w-1/3 p-1" data-aos="fade-up"
+                      data-aos-easing="ease-in-sine"
+                      data-aos-duration="1100">
               <Card isFooterBlurred className="border shadow-none" radius="lg">
                 <div className="relative shadow-black/5 shadow-none rounded-large w-full  aspect-[16/16] lg:aspect-[16/16]">
                   <img
@@ -505,7 +511,9 @@ const ShopHome = () => {
                 </div>
               </Card>
             </div>
-            <div className="w-1/3 p-1">
+            <div className="w-1/3 p-1" data-aos="fade-left"
+                      data-aos-easing="ease-in-sine"
+                      data-aos-duration="1100">
               <Card isFooterBlurred className="border shadow-none" radius="lg">
                 <div className="relative shadow-black/5 shadow-none rounded-large w-full aspect-[16/16] lg:aspect-[16/16] ">
                   <img
@@ -521,7 +529,9 @@ const ShopHome = () => {
             <div className="w-1/3 flex justify-between align-middle ">
               <span className="w-10/12 text-black text-2xl m-auto"></span>
             </div>
-            <div className="w-2/3 p-1">
+            <div className="w-2/3 p-1" data-aos="fade-left"
+                      data-aos-easing="ease-in-sine"
+                      data-aos-duration="1100">
               <Card isFooterBlurred className="border shadow-none" radius="lg">
                 <div className="relative shadow-black/5 shadow-none rounded-large w-full aspect-[16/8] lg:aspect-[16/6] ">
                   <img
@@ -586,6 +596,9 @@ const ShopHome = () => {
                   <div
                     className="text-white text-2xl max-mobiles:text-lg max-mobilem:text-xl max-mobilel:text-2xl font-normal
                    "
+                   data-aos="fade-up"
+                   data-aos-duration="500"
+                   data-aos-delay="100"
                     style={{
                       fontFamily: " 'Abril Fatface', serif",
                       fontWeight: "400",
@@ -595,6 +608,9 @@ const ShopHome = () => {
                   </div>
                   <div
                     className="text-white text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] mt-7 "
+                    data-aos="fade-up"
+                    data-aos-duration="500"
+                   data-aos-delay="100"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -604,6 +620,9 @@ const ShopHome = () => {
                   </div>
                   <div
                     className="text-white opacity-45 text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] my-2"
+                    data-aos="fade-up"
+                    data-aos-duration="500"
+                   data-aos-delay="100"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -615,6 +634,9 @@ const ShopHome = () => {
 
                   <div
                     className="text-white text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px]  "
+                    data-aos="fade-up"
+                    data-aos-duration="500"
+                   data-aos-delay="100"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -624,6 +646,9 @@ const ShopHome = () => {
                   </div>
                   <div
                     className="text-white text-[10px] max-mobiles:text-[8px] max-mobilem:text-[9px] max-mobilel:text-[10px]  my-2"
+                    data-aos="fade-up"
+                    data-aos-duration="500"
+                   data-aos-delay="100"
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -715,11 +740,12 @@ const ShopHome = () => {
             <div className="flex justify-around my-5 text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] ">
               <input
                 type="email"
-                className="w-8/12 bg-transparent border-black rounded-medium border-[2px] p-2"
+                className="w-8/12 bg-transparent border-black rounded-medium border-[2px] p-2 outline-none"
                 style={{
                   fontFamily: " 'Inria Serif', serif",
                   fontWeight: "400",
                   "::placeholder": { color: "black" },
+
                 }}
                 placeholder="meraemailid@address.com"
               />

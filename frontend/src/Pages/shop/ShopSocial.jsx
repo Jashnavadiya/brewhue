@@ -4,24 +4,48 @@ import { useSelector } from "react-redux";
 import "./ShopSocial.css";
 const ShopSocial = () => {
   const formData = useSelector((state) => state.formData);
-
+   // Handle link clicks
+   const handleLinkClick = (url) => {
+    if (url) {
+        window.open(url, '_blank'); // Open link in a new tab
+    }
+};
   return (
     <div className="w-full m-auto border-lg  ">
       <div className="flex justify-between items-center ms-2 w-[90%] my-4 mb-7">
-      <pre
-        className="text-left text-2xl max-mobiles:text-lg max-mobilem:text-xl max-mobilel:text-2xl text-black"
-        style={{
-          fontFamily: " 'Abril Fatface', serif",
-          fontWeight: "400",
-        }}
-      >
-        {"something some-things "}
-      </pre>
-      <img src="/icons/image 3.png" className="w-16" alt="" />
-      
-        
+        <pre
+          className="text-left text-2xl max-mobiles:text-lg max-mobilem:text-xl max-mobilel:text-2xl text-black"
+          style={{
+            fontFamily: " 'Abril Fatface', serif",
+            fontWeight: "400",
+          }}
+        >
+          {"Something, some-things "}
+        </pre>
+        <img src="/icons/image 3.png" className="w-16" alt="" />
       </div>
-
+      <div className="p-8 space-y-6">
+            <h2 className="text-3xl font-bold">Connect with Us</h2>
+            
+            <div className="flex flex-wrap space-x-6">
+                {formData.social.links.map((link, index) => (
+                    <div
+                        key={index}
+                        className="flex flex-col items-center space-y-2"
+                        onClick={() => handleLinkClick(link.url)}
+                    >
+                        {/* Display the platform's icon */}
+                        <img
+                            src={link.icon || 'default-icon.png'} // Placeholder icon if no icon is provided
+                            alt={link.name}
+                            className="w-16 h-16 cursor-pointer"
+                        />
+                        {/* Display the platform's name */}
+                        <p className="text-lg text-center">{link.name}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
       {/* <div className="masonry-layout mt-5">
         {posts.map((post, index) => (
           <div key={index} className="masonry-item">

@@ -23,6 +23,7 @@ const initialState = {
     section5Comments: [{ logo_name: "", name: "", review: "", date: "", _id: "" }],
   },
   social: {
+    links:[],
     insta: [""], // Initially one empty link
     facebook: [""],
     twitter: [""],

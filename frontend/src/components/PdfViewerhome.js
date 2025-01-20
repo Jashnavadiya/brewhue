@@ -120,7 +120,7 @@ const SinglePageFlipBook = ({ url }) => {
   const renderTasks = useRef({});
 
   // Configure PDF.js worker
-  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
+  pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs/pdf.worker.min.mjs`;
 
 useEffect(() => {
   const parentElement = flipBookRef.current?.parentElement;
