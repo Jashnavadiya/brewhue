@@ -56,8 +56,6 @@ const ShopHome = () => {
     "Shhh!\n Sometimes, \nfree treats happen * "
   );
 
-
-
   // Fetch data on component mount
 
   const formatTime = (time24) => {
@@ -79,7 +77,7 @@ const ShopHome = () => {
       scrollTrigger: {
         trigger: `.${parentClass}`, // Parent container as trigger
         start: "top bottom",
-        end: "bottom top",
+        end: "bottom center",
         scrub: true, // Scroll scrubbing effect
         markers: false, // Enable markers for debugging if needed
       },
@@ -210,6 +208,14 @@ const ShopHome = () => {
           />
         </div>
 
+        {/* <div
+        data-aos="fade-up"
+        data-aos-easing="new-easing"
+        className="transition-all custom-ease duration-700 bg-blue-500 text-white p-6 rounded-md"
+      >
+        This element has a custom cubic-bezier easing function for transition!
+      </div> */}
+
         {/* section 3 */}
         <div className="mt-7 max-mobiles:mt-1 max-mobilem:mt-3 max-mobilel:mt-5">
           <Card
@@ -266,7 +272,7 @@ const ShopHome = () => {
 
                   <ul className="space-y-3 w-max pe-3  ms-auto">
                     <li
-                      className="flex items-center justify-start space-x-2"
+                      className="flex items-center justify-start space-x-2 ease-in-out"
                       data-aos="fade-left"
                       data-aos-easing="ease-in-sine"
                       data-aos-duration="1100"
@@ -439,9 +445,12 @@ const ShopHome = () => {
         {/* section 5 */}
         <div className="mt-7 overflow-hidden" id="Vibe_check">
           <div className="flex ">
-            <div className="w-1/2 p-1" data-aos="fade-right"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="1100">
+            <div
+              className="w-1/2 p-1"
+              data-aos="fade-right"
+              data-aos-easing="ease-in-sine"
+              data-aos-duration="1100"
+            >
               <Card isFooterBlurred className="border shadow-none" radius="lg">
                 <div className="relative shadow-black/5 shadow-none rounded-large w-full aspect-[16/10] lg:aspect-[16/6] ">
                   <img
@@ -485,9 +494,12 @@ const ShopHome = () => {
             </div>
           </div>
           <div className="flex">
-            <div className="w-1/3 p-1" data-aos="fade-right"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="1100">
+            <div
+              className="w-1/3 p-1"
+              data-aos="fade-right"
+              data-aos-easing="ease-in-sine"
+              data-aos-duration="1100"
+            >
               <Card isFooterBlurred className="border shadow-none" radius="lg">
                 <div className="relative shadow-black/5 shadow-none rounded-large w-full aspect-[16/16] lg:aspect-[16/16] ">
                   <img
@@ -498,9 +510,12 @@ const ShopHome = () => {
                 </div>
               </Card>
             </div>
-            <div className="w-1/3 p-1" data-aos="fade-up"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="1100">
+            <div
+              className="w-1/3 p-1"
+              data-aos="fade-up"
+              data-aos-easing="ease-in-sine"
+              data-aos-duration="1100"
+            >
               <Card isFooterBlurred className="border shadow-none" radius="lg">
                 <div className="relative shadow-black/5 shadow-none rounded-large w-full  aspect-[16/16] lg:aspect-[16/16]">
                   <img
@@ -511,9 +526,12 @@ const ShopHome = () => {
                 </div>
               </Card>
             </div>
-            <div className="w-1/3 p-1" data-aos="fade-left"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="1100">
+            <div
+              className="w-1/3 p-1"
+              data-aos="fade-left"
+              data-aos-easing="ease-in-sine"
+              data-aos-duration="1100"
+            >
               <Card isFooterBlurred className="border shadow-none" radius="lg">
                 <div className="relative shadow-black/5 shadow-none rounded-large w-full aspect-[16/16] lg:aspect-[16/16] ">
                   <img
@@ -529,9 +547,12 @@ const ShopHome = () => {
             <div className="w-1/3 flex justify-between align-middle ">
               <span className="w-10/12 text-black text-2xl m-auto"></span>
             </div>
-            <div className="w-2/3 p-1" data-aos="fade-left"
-                      data-aos-easing="ease-in-sine"
-                      data-aos-duration="1100">
+            <div
+              className="w-2/3 p-1"
+              data-aos="fade-left"
+              data-aos-easing="ease-in-sine"
+              data-aos-duration="1100"
+            >
               <Card isFooterBlurred className="border shadow-none" radius="lg">
                 <div className="relative shadow-black/5 shadow-none rounded-large w-full aspect-[16/8] lg:aspect-[16/6] ">
                   <img
@@ -564,7 +585,7 @@ const ShopHome = () => {
               <img src="/etc/Aerrow.png" alt="" className="h-16 " />
             </div>
           </div>
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "95%",padding:"auto",margin:"auto" }}>
             <SinglePageFlipBook
               url={`${process.env.REACT_APP_BASE_URL}${formData.home.section4Pdf}`}
             />
@@ -592,13 +613,13 @@ const ShopHome = () => {
           >
             <div className=" bg-black">
               <div className=" shadow-black/5 shadow-none rounded-large w-full aspect-[16/11] max-mobiles:aspect-[16/13] max-mobilem:aspect-[16/12] max-mobilel:aspect-[16/11]  relative">
-                <div className="bg-black text-white w-9/12  mx-auto rounded-lg flex flex-col justify-center align-middle items-center shadow-lg h-full relative">
+                <div className="bg-black text-white w-9/12  mx-auto rounded-lg flex flex-col justify-center align-middle items-center shadow-lg h-full relative"  data-aos="fade-up"
+                    data-aos-duration="500"
+                    data-aos-delay="100">
                   <div
                     className="text-white text-2xl max-mobiles:text-lg max-mobilem:text-xl max-mobilel:text-2xl font-normal
                    "
-                   data-aos="fade-up"
-                   data-aos-duration="500"
-                   data-aos-delay="100"
+                   
                     style={{
                       fontFamily: " 'Abril Fatface', serif",
                       fontWeight: "400",
@@ -608,9 +629,7 @@ const ShopHome = () => {
                   </div>
                   <div
                     className="text-white text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] mt-7 "
-                    data-aos="fade-up"
-                    data-aos-duration="500"
-                   data-aos-delay="100"
+                 
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -620,9 +639,7 @@ const ShopHome = () => {
                   </div>
                   <div
                     className="text-white opacity-45 text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] my-2"
-                    data-aos="fade-up"
-                    data-aos-duration="500"
-                   data-aos-delay="100"
+                   
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -634,9 +651,7 @@ const ShopHome = () => {
 
                   <div
                     className="text-white text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px]  "
-                    data-aos="fade-up"
-                    data-aos-duration="500"
-                   data-aos-delay="100"
+                   
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -646,9 +661,7 @@ const ShopHome = () => {
                   </div>
                   <div
                     className="text-white text-[10px] max-mobiles:text-[8px] max-mobilem:text-[9px] max-mobilel:text-[10px]  my-2"
-                    data-aos="fade-up"
-                    data-aos-duration="500"
-                   data-aos-delay="100"
+                    
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -717,20 +730,22 @@ const ShopHome = () => {
             className=" text-[28px] max-mobiles:text-[22px] max-mobilem:text-[25px] max-mobilel:text-[28px]"
             style={{ fontFamily: " 'Abril Fatface', serif", fontWeight: "400" }}
           >
-            <div className="parent1"  >
+            <div className="parent1">
               <div className="child1">
-                <h2 id="target1" className="heading2" >
+                <h2 id="target1" className="heading2">
                   <pre
                     className=""
-                    style={{ fontFamily: " 'Abril Fatface', serif", fontWeight: "400" }}
+                    style={{
+                      fontFamily: " 'Abril Fatface', serif",
+                      fontWeight: "400",
+                    }}
                   >
-                    {message.split("\n")
-                        .map((line, index) => (
-                          <React.Fragment key={index}>
-                            {line}
-                            <br />
-                          </React.Fragment>
-                        ))}
+                    {message.split("\n").map((line, index) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        <br />
+                      </React.Fragment>
+                    ))}
                   </pre>
                 </h2>
               </div>
@@ -745,7 +760,6 @@ const ShopHome = () => {
                   fontFamily: " 'Inria Serif', serif",
                   fontWeight: "400",
                   "::placeholder": { color: "black" },
-
                 }}
                 placeholder="meraemailid@address.com"
               />

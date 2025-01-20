@@ -23,6 +23,9 @@ module.exports = {
         'mobilel': '425px',     // For screens >= 425px
         'tab': '426px',     // For screens >= 426px
       },
+      transitionTimingFunction: {
+        "custom-ease": "cubic-bezier(0.1, 0.7, 1.0, 0.1)", // Customize timing curve
+      },
     },
   },
   darkMode: "class",

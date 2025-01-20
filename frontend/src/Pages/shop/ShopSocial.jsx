@@ -24,21 +24,21 @@ const ShopSocial = () => {
         </pre>
         <img src="/icons/image 3.png" className="w-16" alt="" />
       </div>
-      <div className="p-8 space-y-6">
-            <h2 className="text-3xl font-bold">Connect with Us</h2>
+      <div className="space-y-6">
+  
             
             <div className="flex flex-wrap space-x-6">
                 {formData.social.links.map((link, index) => (
                     <div
                         key={index}
-                        className="flex flex-col items-center space-y-2"
+                        className="flex flex-col w-1/4 m-1 items-center"
                         onClick={() => handleLinkClick(link.url)}
                     >
                         {/* Display the platform's icon */}
                         <img
-                            src={link.icon || 'default-icon.png'} // Placeholder icon if no icon is provided
+                            src={`${process.env.REACT_APP_BASE_URL}${link.icon}`|| 'default-icon.png'} // Placeholder icon if no icon is provided
                             alt={link.name}
-                            className="w-16 h-16 cursor-pointer"
+                            className=" w-2/3 m-auto cursor-pointer"
                         />
                         {/* Display the platform's name */}
                         <p className="text-lg text-center">{link.name}</p>

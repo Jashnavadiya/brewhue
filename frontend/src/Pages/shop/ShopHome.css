@@ -80,3 +80,9 @@ word-spacing: normal;
 .word{
   margin: 0;
 }
+[data-aos] {
+  body[data-aos-easing="new-easing"] &,
+  &[data-aos][data-aos-easing="new-easing"] {
+    transition-timing-function: cubic-bezier(1.0, 1.0, 0.5, 0.1);
+  }
+}
