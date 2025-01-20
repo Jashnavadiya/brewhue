@@ -27,21 +27,24 @@ const ShopSocial = () => {
       <div className="space-y-6">
   
             
-            <div className="flex flex-wrap space-x-6">
+            <div className="flex flex-wrap">
                 {formData.social.links.map((link, index) => (
                     <div
                         key={index}
-                        className="flex flex-col w-1/4 m-1 items-center"
+                        className="flex flex-col w-1/3 px-[1%] items-center"
                         onClick={() => handleLinkClick(link.url)}
                     >
                         {/* Display the platform's icon */}
                         <img
                             src={`${process.env.REACT_APP_BASE_URL}${link.icon}`|| 'default-icon.png'} // Placeholder icon if no icon is provided
                             alt={link.name}
-                            className=" w-2/3 m-auto cursor-pointer"
+                            className=" w-1/2 m-auto cursor-pointer"
                         />
                         {/* Display the platform's name */}
-                        <p className="text-lg text-center">{link.name}</p>
+                        <p className="text-lg text-center"  style={{
+                          fontFamily: " 'Inria Serif', serif",
+                          fontWeight: "400",
+                        }}>{link.name}</p>
                     </div>
                 ))}
             </div>

@@ -4,7 +4,9 @@
 html {
   scroll-behavior: smooth;
 }
-
+.border{
+  border: none;
+}
 *{
     margin: 0;
     padding: 0;

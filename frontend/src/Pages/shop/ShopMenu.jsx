@@ -32,7 +32,7 @@ const ShopMenu = () => {
   return (
     <>
       <div className="w-full m-auto border-lg" >
-        <div className="flex justify-between items-center my-4 w-[90%] ms-2 mb-7" >
+        <div className="flex justify-between items-center my-4  w-[90%] ms-2 mb-7" >
           <pre
             className="text-left text-3xl max-mobiles:text-lg max-mobilem:text-xl max-mobilel:text-2xl text-black"
             style={{
