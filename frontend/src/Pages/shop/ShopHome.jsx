@@ -183,10 +183,10 @@ const ShopHome = () => {
           </Card>
         </div>
         {/* section 2 */}
-        <div className="relative ">
+        <div className="relative">
           <img
             src="/icons/scribble.png"
-            className="h-9 absolute left-[20%] top-[30px]"
+            className="h-9 absolute left-[20%] top-[30%]"
             alt=""
           />
 
@@ -203,7 +203,7 @@ const ShopHome = () => {
 
           <img
             src="/icons/coffee-beans.png"
-            className="h-10 absolute right-[15%] top-[-15px]"
+            className="h-10 absolute right-[15%] top-[-20%]"
             alt=""
           />
         </div>
@@ -567,7 +567,7 @@ const ShopHome = () => {
         </div>
 
         {/* section 6 */}
-        <div className="relative py-10 mt-6 " id="Menu">
+        <div className="relative py-10  mt-6 " id="Menu">
           <div className="">
             <pre
               className="text-black text-[26px] max-mobiles:text-[20px] max-mobilem:text-[23px] max-mobilel:text-[26px] w-max text-left ms-2"
@@ -585,7 +585,7 @@ const ShopHome = () => {
               <img src="/etc/Aerrow.png" alt="" className="h-16 " />
             </div>
           </div>
-          <div style={{ width: "95%",padding:"auto",margin:"auto" }}>
+          <div style={{ width: "95%",padding:"auto",margin:"10px auto" }}>
             <SinglePageFlipBook
               url={`${process.env.REACT_APP_BASE_URL}${formData.home.section4Pdf}`}
             />

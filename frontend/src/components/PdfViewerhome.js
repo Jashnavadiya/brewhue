@@ -215,12 +215,12 @@ useEffect(() => {
         className="rpf-flipbook" // Custom class for CSS targeting
       >
         {Array.from(new Array(numPages), (el, index) => (
-          <div key={index} style={{ width: "95%", height: "100%" ,margin:"auto" }}>
+          <div key={index} style={{ width: "100%", height: "100%" ,margin:"auto" }}>
             <canvas
               ref={(el) => (canvasRefs.current[index] = el)}
               style={{
                 width: "100%",
-                height: "100%",
+                height: `100%`,
                 borderRadius: "10px",
                 objectFit: "contain",
               }}
