@@ -12,7 +12,7 @@ const ShopSocial = () => {
 };
   return (
     <div className="w-full m-auto border-lg  ">
-      <div className="flex justify-between items-center ms-2 w-[90%] my-4 mb-7">
+      <div className="flex justify-between items-center mx-auto w-[95%] my-4 mb-7">
         <pre
           className="text-left text-2xl max-mobiles:text-lg max-mobilem:text-xl max-mobilel:text-2xl text-black"
           style={{
@@ -22,26 +22,26 @@ const ShopSocial = () => {
         >
           {"Something, some-things "}
         </pre>
-        <img src="/icons/image 3.png" className="w-16" alt="" />
+        <img src="/icons/image 3.png" className="w-2/12 " alt="" />
       </div>
       <div className="space-y-6">
   
             
-            <div className="flex flex-wrap">
+            <div className="flex flex-wrap justify-around">
                 {formData.social.links.map((link, index) => (
                     <div
                         key={index}
-                        className="flex flex-col w-1/3 px-[1%] items-center"
+                        className="flex flex-col w-1/3 px-[1%] items-center "
                         onClick={() => handleLinkClick(link.url)}
                     >
                         {/* Display the platform's icon */}
                         <img
                             src={`${process.env.REACT_APP_BASE_URL}${link.icon}`|| 'default-icon.png'} // Placeholder icon if no icon is provided
                             alt={link.name}
-                            className=" w-1/2 m-auto cursor-pointer"
+                            className=" w-4/12 m-auto cursor-pointer"
                         />
                         {/* Display the platform's name */}
-                        <p className="text-lg text-center"  style={{
+                        <p className="text-[16px] max-mobiles:text-[14px] max-mobilem:text-[15px] max-mobilel:text-[16px] text-center"  style={{
                           fontFamily: " 'Inria Serif', serif",
                           fontWeight: "400",
                         }}>{link.name}</p>

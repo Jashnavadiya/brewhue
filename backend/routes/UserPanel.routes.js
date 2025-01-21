@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUserPanel, upsertUserPanel,addOrUpdateLinks,getLinks,generateVCard } = require('../controllers/UserPanel.controller');
+const { getUserPanel, upsertUserPanel, addOrUpdateLinks, getLinks, generateVCard } = require('../controllers/UserPanel.controller');
 
 // Route to get the user panel data
 router.get('/userpanel', getUserPanel);

@@ -76,8 +76,8 @@ const ShopHome = () => {
       fontFamily: "'Abril Fatface', serif",
       scrollTrigger: {
         trigger: `.${parentClass}`, // Parent container as trigger
-        start: "top bottom",
-        end: "bottom center",
+        start: "top center+=25%",
+        end: "bottom center-=10%",
         scrub: true, // Scroll scrubbing effect
         markers: false, // Enable markers for debugging if needed
       },

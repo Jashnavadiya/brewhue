@@ -14,7 +14,9 @@ const SinglePageFlipBook = ({ url }) => {
 
   useEffect(() => {
     AOS.init({
-      once: true, // Trigger animation only once
+      duration: 1000,
+      easing: "ease-in-out",
+      once: false, // Trigger animation only once
     });
   }, []);
 
