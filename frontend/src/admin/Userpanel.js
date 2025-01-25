@@ -26,7 +26,14 @@ const UserPanel = () => {
             section5Heading: "",
             section5Comments: [{ logo_name: "", name: "", review: "", date: "", _id: "" }],
         },
+        menu: {
+            menu_info: "",
+            menu_img: "",
+        },
         social: {
+            vcard:{},
+            social_info: "",
+            social_img: "",
             links: [
                 {
                     name: "",
@@ -53,6 +60,9 @@ const UserPanel = () => {
             })
             .catch((err) => console.error("Error fetching data:", err));
     }, []);
+
+    useEffect(()=>{console.log(formData);
+    },[formData])
 
 
     const handleChange = (e, parentKey, childKey, nestedKey = null, index = null) => {
@@ -260,7 +270,7 @@ const UserPanel = () => {
                     website: formData.home.contactWebsite || "",
                 }
             );
-    
+
             if (response.data.filePath) {
                 alert("vCard generated successfully!");
             }
@@ -269,9 +279,9 @@ const UserPanel = () => {
             alert("Failed to generate vCard");
         }
     };
-    
-  
-    
+
+
+
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -641,7 +651,72 @@ const UserPanel = () => {
 
                 </div>
 
+
+
+                {/* Menu Section */}
+                <div className="space-y-6">
+                    <h2 className="text-2xl font-semibold">Menu</h2>
+
+                    {/* Menu Info */}
+                    <div className="space-y-4">
+                        <label className="block text-lg font-medium text-gray-700">Menu Info</label>
+                        {console.log("hiiiiii",formData)
+                        }
+                        <textarea
+                            name="menu_info"
+                            value={formData.menu.menu_info || ""}
+                            onChange={(e) => handleChange(e, "menu", "menu_info")}
+                            placeholder="Enter a brief description for your menu."
+                            className="w-full p-2 border rounded"
+                        ></textarea>
+                    </div>
+
+                    {/* Menu Image */}
+                    <div className="space-y-4">
+                        <label className="block text-lg font-medium text-gray-700">Menu Image</label>
+                        <input
+                            type="file"
+                            onChange={(e) => handleFileUpload(e, "menu", "menu_img")}
+                            className="w-full p-2 border rounded"
+                        />
+                    </div>
+                </div>
+
                 {/* Social Links Section */}
+
+                <h2 className="text-2xl font-semibold">Social Media</h2>
+
+                {/* Social Info */}
+                <div className="space-y-4">
+                    <label className="block text-lg font-medium text-gray-700">Social Info</label>
+                    <textarea
+                        name="social_info"
+                        value={formData.social.social_info || ""}
+                        onChange={(e) => handleChange(e, "social", "social_info")}
+                        placeholder="Enter a brief description for your social section."
+                        className="w-full p-2 border rounded"
+                    ></textarea>
+                </div>
+
+                {/* Social Image */}
+                <div className="space-y-4">
+                    <label className="block text-lg font-medium text-gray-700">Social Image</label>
+                    <input
+                        type="file"
+                        onChange={(e) => handleFileUpload(e, "social", "social_img")}
+                        className="block w-full p-2 border rounded"
+                    />
+                    {formData.social.social_img && (
+                        <div className="mt-2">
+                            <img
+                                src={formData.social.social_img}
+                                alt="Social"
+                                className="h-32 w-32 object-cover rounded"
+                            />
+                        </div>
+                    )}
+                </div>
+
                 <div className="space-y-4">
                     {["insta", "facebook", "twitter", "pinterest", "linkedin", "yt"].map((platform) => (
                         <div key={platform} className="space-y-2">

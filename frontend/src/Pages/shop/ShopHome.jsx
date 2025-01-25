@@ -23,7 +23,9 @@ const ShopHome = () => {
   const { shopName } = useParams();
   const dispatch = useDispatch();
   // dispatch(setLoading(true)); // Set loading to true initially
-
+  const [email, setEmail] = useState("");
+  const [emailloading, setemailLoading] = useState(false);
+  const [emailmessage, setemailMessage] = useState("");
   // const [loading, setLoading] = useState(true);
   const formData = useSelector((state) => state.formData);
   const loading = useSelector((state) => state.formData.loading);
@@ -116,6 +118,38 @@ const ShopHome = () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!shopName) {
+      setemailMessage("Shop name is missing!");
+      return;
+    }
+
+    setemailLoading(true);
+    setemailMessage("");
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/api/${shopName}/userall`,
+        { email, shopname: shopName }
+      );
+      setemailMessage(response.data.message);
+    } catch (error) {
+      setemailMessage(
+        error.response?.data?.error || "Something went wrong. Please try again."
+      );
+    } finally {
+      setemailLoading(false);
+      setEmail("");
+    }
+
+    setTimeout(() => {
+      setemailMessage("");
+    }, 2000);
+  };
+
 
   if (loading) return;
   return (
@@ -567,7 +601,7 @@ const ShopHome = () => {
         </div>
 
         {/* section 6 */}
-        <div className="relative py-10  mt-6 " id="Menu">
+        <div className="relative py-10  mt-10 " id="Menu">
           <div className="">
             <pre
               className="text-black text-[26px] max-mobiles:text-[20px] max-mobilem:text-[23px] max-mobilel:text-[26px] w-max text-left ms-2"
@@ -585,7 +619,7 @@ const ShopHome = () => {
               <img src="/etc/Aerrow.png" alt="" className="h-16 " />
             </div>
           </div>
-          <div style={{ width: "95%",padding:"auto",margin:"10px auto" }}>
+          <div style={{ width: "95%", padding: "auto", margin: "10px auto" }}>
             <SinglePageFlipBook
               url={`${process.env.REACT_APP_BASE_URL}${formData.home.section4Pdf}`}
             />
@@ -613,13 +647,15 @@ const ShopHome = () => {
           >
             <div className=" bg-black">
               <div className=" shadow-black/5 shadow-none rounded-large w-full aspect-[16/11] max-mobiles:aspect-[16/13] max-mobilem:aspect-[16/12] max-mobilel:aspect-[16/11]  relative">
-                <div className="bg-black text-white w-9/12  mx-auto rounded-lg flex flex-col justify-center align-middle items-center shadow-lg h-full relative"  data-aos="fade-up"
-                    data-aos-duration="500"
-                    data-aos-delay="100">
+                <div
+                  className="bg-black text-white w-9/12  mx-auto rounded-lg flex flex-col justify-center align-middle items-center shadow-lg h-full relative"
+                  data-aos="fade-up"
+                  data-aos-duration="500"
+                  data-aos-delay="100"
+                >
                   <div
                     className="text-white text-2xl max-mobiles:text-lg max-mobilem:text-xl max-mobilel:text-2xl font-normal
                    "
-                   
                     style={{
                       fontFamily: " 'Abril Fatface', serif",
                       fontWeight: "400",
@@ -629,7 +665,6 @@ const ShopHome = () => {
                   </div>
                   <div
                     className="text-white text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] mt-7 "
-                 
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -639,7 +674,6 @@ const ShopHome = () => {
                   </div>
                   <div
                     className="text-white opacity-45 text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] my-2"
-                   
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -651,7 +685,6 @@ const ShopHome = () => {
 
                   <div
                     className="text-white text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px]  "
-                   
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -661,7 +694,6 @@ const ShopHome = () => {
                   </div>
                   <div
                     className="text-white text-[10px] max-mobiles:text-[8px] max-mobilem:text-[9px] max-mobilel:text-[10px]  my-2"
-                    
                     style={{
                       fontFamily: " 'Inria Serif', serif",
                       fontWeight: "400",
@@ -727,7 +759,7 @@ const ShopHome = () => {
           </div>
 
           <div
-            className=" text-[28px] max-mobiles:text-[22px] max-mobilem:text-[25px] max-mobilel:text-[28px]"
+            className=" text-[26px] max-mobiles:text-[20px] max-mobilem:text-[23px] max-mobilel:text-[26px]"
             style={{ fontFamily: " 'Abril Fatface', serif", fontWeight: "400" }}
           >
             <div className="parent1">
@@ -752,27 +784,41 @@ const ShopHome = () => {
             </div>
           </div>
           <div className="relative w-11/12 m-auto">
-            <div className="flex justify-around my-5 text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] ">
-              <input
-                type="email"
-                className="w-8/12 bg-transparent border-black rounded-medium border-[2px] p-2 outline-none"
-                style={{
-                  fontFamily: " 'Inria Serif', serif",
-                  fontWeight: "400",
-                  "::placeholder": { color: "black" },
-                }}
-                placeholder="meraemailid@address.com"
-              />
-              <button
-                className="w-max bg-black text-white rounded-medium py-2 border-[2px] px-3 border-black "
-                style={{
-                  fontFamily: " 'Inria Serif', serif",
-                  fontWeight: "400",
-                }}
+            <form onSubmit={handleSubmit}>
+              <div className="flex justify-around my-5 text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px]">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-8/12 bg-transparent border-black rounded-medium border-[2px] p-2 outline-none"
+                  style={{
+                    fontFamily: "'Inria Serif', serif",
+                    fontWeight: "400",
+                  }}
+                  placeholder="meraemailid@address.com"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={emailloading}
+                  className={`w-max bg-black text-white rounded-medium py-2 border-[2px] px-3 border-black`}
+                  style={{
+                    fontFamily: "'Inria Serif', serif",
+                    fontWeight: "400",
+                  }}
+                >
+                  {emailloading ? "Processing..." : "Count me!"}
+                </button>
+              </div>
+            </form>
+
+            {emailmessage && (
+              <p
+                className={`text-center mt-3 text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px]`}
               >
-                Count me !
-              </button>
-            </div>
+                {emailmessage}
+              </p>
+            )}
           </div>
           <div
             className="text-[26px] text-black"

@@ -315,6 +315,8 @@ const SinglePageFlipBook = ({ url }) => {
         // overflow: "hidden", // Avoid scrollbars
       }}
     >
+      {/* {console.log(containerRef.current.offsetWidth :"")} */}
+      
       <HTMLFlipBook
         width={containerRef.current?.offsetWidth || 300} // Fallback for SSR
         height={containerRef.current?.offsetHeight || 500} // Fallback for SSR

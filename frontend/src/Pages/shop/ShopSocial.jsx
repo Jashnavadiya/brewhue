@@ -4,12 +4,12 @@ import { useSelector } from "react-redux";
 import "./ShopSocial.css";
 const ShopSocial = () => {
   const formData = useSelector((state) => state.formData);
-   // Handle link clicks
-   const handleLinkClick = (url) => {
+  // Handle link clicks
+  const handleLinkClick = (url) => {
     if (url) {
-        window.open(url, '_blank'); // Open link in a new tab
+      window.open(url, "_blank"); // Open link in a new tab
     }
-};
+  };
   return (
     <div className="w-full m-auto border-lg  ">
       <div className="flex justify-between items-center mx-auto w-[95%] my-4 mb-7">
@@ -20,35 +20,47 @@ const ShopSocial = () => {
             fontWeight: "400",
           }}
         >
-          {"Something, some-things "}
+          {/* {"Something, some-things "} */}
+          {formData.social.social_info.split("\\n").map((line, index) => (
+            <React.Fragment key={index}>
+              {line}
+              <br />
+            </React.Fragment>
+          ))}
         </pre>
-        <img src="/icons/image 3.png" className="w-2/12 " alt="" />
+        <img src={`${process.env.REACT_APP_BASE_URL}${formData.social.social_img}`} className="w-[14%] " alt="" />
       </div>
       <div className="space-y-6">
-  
-            
-            <div className="flex flex-wrap justify-around">
-                {formData.social.links.map((link, index) => (
-                    <div
-                        key={index}
-                        className="flex flex-col w-1/3 px-[1%] items-center "
-                        onClick={() => handleLinkClick(link.url)}
-                    >
-                        {/* Display the platform's icon */}
-                        <img
-                            src={`${process.env.REACT_APP_BASE_URL}${link.icon}`|| 'default-icon.png'} // Placeholder icon if no icon is provided
-                            alt={link.name}
-                            className=" w-4/12 m-auto cursor-pointer"
-                        />
-                        {/* Display the platform's name */}
-                        <p className="text-[16px] max-mobiles:text-[14px] max-mobilem:text-[15px] max-mobilel:text-[16px] text-center"  style={{
-                          fontFamily: " 'Inria Serif', serif",
-                          fontWeight: "400",
-                        }}>{link.name}</p>
-                    </div>
-                ))}
+        <div className="flex flex-wrap justify-around">
+          {formData.social.links.map((link, index) => (
+            <div
+              key={index}
+              className="flex flex-col w-1/3 px-[1%] items-center "
+              onClick={() => handleLinkClick(link.url)}
+            >
+              {/* Display the platform's icon */}
+              <img
+                src={
+                  `${process.env.REACT_APP_BASE_URL}${link.icon}` ||
+                  "default-icon.png"
+                } // Placeholder icon if no icon is provided
+                alt={link.name}
+                className=" w-4/12 m-auto cursor-pointer"
+              />
+              {/* Display the platform's name */}
+              <p
+                className="text-[16px] max-mobiles:text-[14px] max-mobilem:text-[15px] max-mobilel:text-[16px] text-center"
+                style={{
+                  fontFamily: " 'Inria Serif', serif",
+                  fontWeight: "400",
+                }}
+              >
+                {link.name}
+              </p>
             </div>
+          ))}
         </div>
+      </div>
       {/* <div className="masonry-layout mt-5">
         {posts.map((post, index) => (
           <div key={index} className="masonry-item">

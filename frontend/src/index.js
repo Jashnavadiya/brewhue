@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {BrowserRouter, useNavigate, useHref} from "react-router-dom";
+import { BrowserRouter, useNavigate, useHref } from "react-router-dom";
 
 import { Provider } from 'react-redux';
 import store from './store';
@@ -12,18 +12,18 @@ import AOS from 'aos';
 import 'aos/dist/aos.css'; // You can also use <link> for styles
 // ..
 const root = ReactDOM.createRoot(document.getElementById('root'));
-AOS.init({once:true,    duration: 2000,  easing: 'new-easing'});
+AOS.init({ once: true, duration: 2000, easing: 'new-easing' });
 
 root.render(
   <React.StrictMode>
 
-<Provider store={store}>
-  
+    <Provider store={store}>
+
       <BrowserRouter>
         <App />
       </BrowserRouter>
-</Provider>
-  
+    </Provider>
+
   </React.StrictMode>
 );
 

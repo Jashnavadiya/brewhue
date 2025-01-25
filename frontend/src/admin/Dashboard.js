@@ -3,13 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from './Navbar';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const Dashboard = () => {
   const { shopName } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-
+  const formData = useSelector((state) => state.formData);
   // Authentication check
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -44,10 +45,12 @@ const Dashboard = () => {
 
             <div className="px-4 py-6">
               <div className='w-1/2 flex justify-center align-middle'>
-                <img src="/enso.png" alt=""  className='w-full '/>
+              {console.log(formData.home)}
+              
+                <img  src={`${process.env.REACT_APP_BASE_URL}/uploads/shops/${shopName}.png`} alt=""  className='w-full '/>
               </div>
               <nav aria-label="Main Nav" className="mt-6 flex flex-col space-y-1">
-                <Link
+                {/* <Link
                   to={`/${shopName}/dashboard/home`}
                   className="flex items-center align-middle gap-2 rounded-lg hover:bg-gray-100 px-4 py-2 text-gray-700"
                 >
@@ -57,6 +60,17 @@ const Dashboard = () => {
                     className='w-4'
                   />
                   <span className="text-base font-normal">Home</span>
+                </Link> */}
+                <Link
+                  to={`/${shopName}/dashboard/userpanel`}
+                  className="flex items-center align-middle gap-2 rounded-lg hover:bg-gray-100 px-4 py-2 text-gray-700"
+                >
+                  <img
+                    alt="dashboard-icon"
+                    src="/icons/home.png"
+                    className='w-4'
+                  />
+                  <span className="text-base font-normal">Userpanel</span>
                 </Link>
                 <Link
                   to={`/${shopName}/dashboard/settings`}

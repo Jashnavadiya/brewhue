@@ -22,7 +22,7 @@
 //             initial={{ opacity: 1 }}
 //             animate={{ opacity: 1 }}
 //             exit={{ opacity: 1 }}
-    
+
 //             className="relative flex justify-center items-center"
 //           >
 //             {/* Wrapper for SVG Text and OgComponent */}
@@ -86,7 +86,7 @@
 //         )}
 //       </AnimatePresence>
 
-     
+
 //         <motion.div
 //           style={styles.contentContainer}
 //           initial={{ opacity: 0 }}
@@ -95,7 +95,7 @@
 //         >
 //           <OgComponent />
 //         </motion.div>
-    
+
 //     </div>
 //   );
 // };
@@ -140,13 +140,13 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setLoading,setFormData } from '../slices/formDataSlice';
+import { setLoading, setFormData } from '../slices/formDataSlice';
 import axios from 'axios';
 const LoadingScreen = ({ OgComponent }) => {
   const { shopName } = useParams();
   const nav = useNavigate();
   const dispatch = useDispatch();
-  
+
   const loading = useSelector((state) => state.formData.loading);
 
   const checkDatabase = async () => {
@@ -161,29 +161,88 @@ const LoadingScreen = ({ OgComponent }) => {
       }
     }
   };
-  const [isLoad,setIsload]=useState(true);
-  useEffect(() => {
-    dispatch(setLoading(true));  // Set loading to true before fetching data
-    axios
-    .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/shopinfo/userpanel`)
-    .then((res) => {
-      console.log("Data fetched:", res.data); // Log the data fetched
-      dispatch(setFormData(res.data));
-      dispatch(setLoading(false)); // Set loading to false once data is fetched
-    })
-    .catch((err) => {
-      console.error("Error fetching data:", err);
-      dispatch(setLoading(false)); // Ensure loading is set to false in case of error
+  const [isLoad, setIsload] = useState(true);
+  const preloadResource = (url) => {
+    return new Promise((resolve, reject) => {
+      if (!url) resolve(); // Skip if URL is empty
+      if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".webp")) {
+        const img = new Image();
+        img.src = url;
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error(`Failed to load image: ${url}`));
+      } else if (url.endsWith(".pdf")) {
+        fetch(url)
+          .then((response) => {
+            if (response.ok) resolve();
+            else reject(new Error(`Failed to load PDF: ${url}`));
+          })
+          .catch((err) => reject(err));
+      } else {
+        resolve(); // Handle unsupported file types
+      }
     });
-  
-  }, []);
+  };
+
+  const loadAllResources = async (data) => {
+    const urls = [];
+
+    // Extract URLs from your structure
+    if (data.home) {
+      const home = data.home;
+      urls.push(home.logo, home.darkLogo, home.section1Img, home.section4Pdf);
+
+      if (home.section2Info && Array.isArray(home.section2Info)) {
+        home.section2Info.forEach((info) => urls.push(info.img));
+      }
+
+      if (home.section3Img && Array.isArray(home.section3Img)) {
+        home.section3Img.forEach((imgObj) => urls.push(imgObj.img));
+      }
+    }
+
+    if (data.social && data.social.links) {
+      data.social.links.forEach((link) => urls.push(link.icon));
+    }
+
+    // Filter out empty URLs
+    const filteredUrls = urls.filter((url) => url);
+
+    // Preload all URLs
+    const promises = filteredUrls.map((url) => preloadResource(url));
+    return Promise.all(promises);
+  };
+
+  useEffect(() => {
+    dispatch(setLoading(true)); // Start loading state
+
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/shopinfo/userpanel`)
+      .then(async (res) => {
+        console.log("Data fetched:", res.data);
+        dispatch(setFormData(res.data));
+
+        try {
+          await loadAllResources(res.data); // Preload all resources
+          setTimeout(() => setIsload(false), 1500); // Add slight delay for better UX
+        } catch (err) {
+          console.error("Error loading resources:", err);
+        } finally {
+          dispatch(setLoading(false)); // Ensure loading ends
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching data:", err);
+        dispatch(setLoading(false)); // Ensure loading ends in case of error
+      });
+  }, [dispatch, shopName]);
+
   useEffect(() => {
     console.log("Loading state:", loading); // Log to track loading state change
-    if(loading) return; 
-    setTimeout(() =>{setIsload(false);},1500)
-    
+    if (loading) return;
+    setTimeout(() => { setIsload(false); }, 2000)
+
   }, [loading]);
-  
+
   // useEffect(() => {
   //   checkDatabase();
   // }, [shopName]);
@@ -215,17 +274,17 @@ const LoadingScreen = ({ OgComponent }) => {
       </AnimatePresence>
 
       {!isLoad && OgComponent ? (
-  <motion.div
-    style={styles.contentContainer}
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 2, ease: 'easeOut' }}
-  >
-    <OgComponent />
-  </motion.div>
-) : (
-  <div></div>
-)}
+        <motion.div
+          style={styles.contentContainer}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2, ease: 'easeOut' }}
+        >
+          <OgComponent />
+        </motion.div>
+      ) : (
+        <div></div>
+      )}
 
     </div>
   );

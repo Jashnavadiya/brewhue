@@ -21,8 +21,15 @@ const initialState = {
     section4Pdf: "",
     section5Heading: "",
     section5Comments: [{ logo_name: "", name: "", review: "", date: "", _id: "" }],
-  },
-  social: {
+  }, 
+  menu: {
+    menu_info: "",
+    menu_img: "",
+},
+social: {
+  vcard:{},
+    social_info: "",
+    social_img: "",
     links:[],
     insta: [""], // Initially one empty link
     facebook: [""],

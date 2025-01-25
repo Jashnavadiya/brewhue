@@ -21,6 +21,7 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { Menu, NextUIProvider } from '@nextui-org/react';
 import UserPanel from './admin/Userpanel';
 import Notfound404 from './components/Notfound404';
+import PrivacyPolicy from './Pages/zerotable/PrivacyPolicy';
 function App() {
   const customTheme = {
     theme: {
@@ -52,6 +53,7 @@ function App() {
         <Route path="/lasan" element={<ShopDataFetcher />} />
         <Route path="/add-shop" element={<AddShop />} />
         <Route path="/test" element={<LoadingZoomText />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
 
         <Route path="/:shopName" element={<ShopPage />}/>
         <Route path="/:shopName/signup" element={<Signup />} />

@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const LinkSchema = new mongoose.Schema({
-  name: { type: String, required: true }, // Platform name (e.g., Instagram, vCard)
+  name: { type: String, }, // Platform name (e.g., Instagram, vCard)
   icon: { type: String }, // URL for platform icon
-  url: { type: String, required: true }, // Platform URL or file path
+  url: { type: String, }, // Platform URL or file path
 });
 
 const UserPanelSchema = new mongoose.Schema({
@@ -39,13 +39,20 @@ const UserPanelSchema = new mongoose.Schema({
     }
   },
   social: {
+    vcard:{},
     links: [LinkSchema], // Array of links
-    insta:[],
+    insta: [],
     facebook: [],
     twitter: [],
     pinterest: [],
     linkedin: [],
     yt: [],
+    social_info: String,
+    social_img: String,
+  },
+  menu: {
+    menu_info: String,
+    menu_img: String,
   }
 });
 

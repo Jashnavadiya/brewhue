@@ -10,6 +10,7 @@ const multer = require('multer');
 
 const userRoutes = require('./routes/userRoutes.js');
 const userPanelRotes = require('./routes/UserPanel.routes.js');
+const userALLRoutes = require('./routes/user(All).routes.js');
 
 
 
@@ -155,16 +156,75 @@ const bcrypt = require('bcryptjs');
 
 
 const loadModels = require('./models/dynamicModelLoader');  // Import the loader function
+const { log } = require('console');
 
 const connections = {};  // Store connections to reuse them
 
-const dbMiddleware = async (req, res, next) => {
-  const shopName = req.params.shopName;
+// const dbMiddleware = async (req, res, next) => {
+//   const shopName = req.params.shopName;
+  
+//   const useUserDB = req.path.startsWith('/userall'); // Check if the route is user-related
+//   console.log(req.path,useUserDB);
 
+//   if (!shopName && !useUserDB) {
+//     return res.status(400).send('Shop name is required');
+//   }
+
+//   try {
+//     const dbName = useUserDB ? 'user' : shopName; // Use 'user' database for user-related operations
+//     console.log(dbName);
+    
+//     // Check if a connection to this database already exists
+//     if (!connections[dbName]) {
+//       const client = new MongoClient(`${process.env.MONGO_URI}`, { useUnifiedTopology: true });
+//       await client.connect();
+
+//       const adminDb = client.db().admin();
+//       const databases = await adminDb.listDatabases();
+
+//       const dbExists = databases.databases.some(db => db.name === dbName);
+
+//       if (!dbExists) {
+//         await client.close();
+//         return res.status(404).send(`Database "${dbName}" does not exist.`);
+//       }
+
+//       // Create a connection for the target database
+//       const uri = `${process.env.MONGO_URI}${dbName}?retryWrites=true&w=majority`;
+//       const connection = mongoose.createConnection(uri, {
+//         useNewUrlParser: true,
+//         useUnifiedTopology: true,
+//       });
+
+//       connections[dbName] = connection;
+//       console.log(`Connected to database: ${dbName}`);
+
+//       // Dynamically load all models and associate them with the current database
+//       loadModels(connections[dbName]);
+
+//       await client.close();
+//     }
+
+//     // Attach the connection to the request object
+//     req.db = connections[dbName];
+//     next();
+//   } catch (err) {
+//     console.error(`Error connecting to database: ${dbName}`, err);
+//     res.status(500).send('Error connecting to database');
+//   }
+// };
+
+const dbMiddleware = async (req, res, next) => {
+  // const shopName = req.params.shopName;
+  const useUserDB = req.path.endsWith('/userall'); // Check if the route is user-related
+  const hi= req.params.shopName
+  
+  const shopName = useUserDB ? 'user' :hi; // Use 'user' database for user-related operations
+  
   if (!shopName) {
     return res.status(400).send('Shop name is required');
   }
-
+  
   try {
     // Check if a connection to this database already exists
     if (!connections[shopName]) {
@@ -207,8 +267,6 @@ const dbMiddleware = async (req, res, next) => {
     res.status(500).send('Error connecting to database');
   }
 };
-
-
 
 
 
@@ -284,8 +342,7 @@ app.put('/api/:shopName/shop', dbMiddleware, checkShopExists, async (req, res) =
 });
 
 
-app.use('/api/:shopName/users', dbMiddleware, userRoutes);
-app.use('/api/:shopName/shopinfo', dbMiddleware, userPanelRotes);
+
 app.use('/uploads', (req, res, next) => {
   console.log('Serving file:', req.originalUrl);
   next();
@@ -460,6 +517,11 @@ app.post('/api/create-database/:shopName', upload1.single('image'), async (req, 
     res.status(500).json({ error: 'Error creating database or user', details: err.message });
   }
 });
+
+
+app.use('/api/:shopName/users', dbMiddleware, userRoutes);
+app.use('/api/:shopName/shopinfo', dbMiddleware, userPanelRotes);
+app.use('/api',dbMiddleware, userALLRoutes);
 
 app.use(express.static(path.join(__dirname,"../frontend/build")));
 
