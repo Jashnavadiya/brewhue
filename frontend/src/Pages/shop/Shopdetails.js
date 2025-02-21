@@ -8,7 +8,7 @@ import ShopLayout from './ShopLayout';
 
 const ShopPage = () => {
   const { shopName } = useParams();
-  console.log(shopName);
+
   const [loading, setLoading] = useState(false);
   const nav=useNavigate();
   const checkDatabase = async () => {
@@ -22,7 +22,6 @@ const ShopPage = () => {
     } catch (err) {
       console.error(err);
       if (err.response && err.response.status === 404) {
-        console.log('Database does not exist.');
         nav("/notfound")
     }}
   };

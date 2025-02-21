@@ -26,6 +26,8 @@
     "pdfjs-dist": "^3.11.174",
     "postcss": "^8.4.49",
     "react": "^19.0.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.5",
     "react-fast-marquee": "^1.6.5",

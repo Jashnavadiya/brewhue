@@ -1,0 +1,9 @@
+config:
+  target: 'https://menu.thezerotable.com/enso'
+  phases:
+    - duration: 60  # Duration of the test in seconds
+      arrivalRate: 1000  # Number of requests per second
+scenarios:
+  - flow:
+      - get:
+          url: "/"

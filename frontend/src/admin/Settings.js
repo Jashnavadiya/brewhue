@@ -21,7 +21,7 @@ const Settings = () => {
 
         // Fetch the widgets associated with the shop
         const widgetsRes = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/widgets`);
-        console.log(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/widgets`);
+      
         
         setWidgets(widgetsRes.data); // Store widgets in state
       } catch (err) {
@@ -29,7 +29,7 @@ const Settings = () => {
       }
       
     };
-    console.log(shopName,shop,widgets);
+   
     
     fetchShopAndWidgets();
   }, []);

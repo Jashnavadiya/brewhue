@@ -252,6 +252,7 @@ const Page = React.forwardRef((props, ref) => {
 });
 
 const SinglePageFlipBook = ({ url }) => {
+    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
   const containerRef = useRef(null);
     const [numPages, setNumPages] = useState(null);
   const [isRendering, setIsRendering] = useState(false);
@@ -263,7 +264,13 @@ const SinglePageFlipBook = ({ url }) => {
     const renderPDF = async () => {
       setIsRendering(true);
       try {
-        const pdf = await pdfjs.getDocument(url).promise;
+        const loadingTask = pdfjs.getDocument({
+          url: url,
+          withCredentials: false, // Ensure this is false for public files
+        });
+    
+        const pdf = await loadingTask.promise;
+        console.log("PDF loaded successfully:", pdf);
         setNumPages(pdf.numPages);
 
         for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {

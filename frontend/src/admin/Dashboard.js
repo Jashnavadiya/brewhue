@@ -4,7 +4,8 @@ import { Outlet, useParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from './Navbar';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 const Dashboard = () => {
   const { shopName } = useParams();
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Dashboard = () => {
   // Authentication check
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log("hi", token);
+
 
     if (!token) {
       navigate(`/${shopName}/login`);
@@ -45,9 +46,9 @@ const Dashboard = () => {
 
             <div className="px-4 py-6">
               <div className='w-1/2 flex justify-center align-middle'>
-              {console.log(formData.home)}
+  
               
-                <img  src={`${process.env.REACT_APP_BASE_URL}/uploads/shops/${shopName}.png`} alt=""  className='w-full '/>
+                <img  src={`${process.env.REACT_APP_BASE_URL}/uploads/shops/${shopName}.webp`} alt=""  className='w-full '/>
               </div>
               <nav aria-label="Main Nav" className="mt-6 flex flex-col space-y-1">
                 {/* <Link
@@ -112,7 +113,10 @@ const Dashboard = () => {
         {/* Main Content */}
         <div className="w-10/12 h-full">
           <Navbar shopName={shopName} />
+          <DndProvider backend={HTML5Backend}>
+            
           <Outlet />
+          </DndProvider>
         </div>
       </div>
     </div>

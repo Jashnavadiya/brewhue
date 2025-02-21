@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import { Tabs, Tab, Card, CardBody, Button } from "@nextui-org/react";
 import {
   Outlet,
@@ -12,13 +12,11 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import LoadingScreen from "../../components/Loadingscreen";
 import "./ShopDetails.css";
-import AddShop from "../lasans/AddShop";
-import ShopHome from "./ShopHome";
-import ShopMenu from "./ShopMenu";
-import ShopAbout from "./ShopAbout";
-import ShopSocial from "./ShopSocial";
 import { useSelector } from "react-redux";
 
+const ShopHome = lazy(() => import("./ShopHome"));
+const ShopMenu = lazy(() => import("./ShopMenu"));
+const ShopSocial = lazy(() => import("./ShopSocial"));
 export default function App() {
   const [selected, setSelected] = useState("Home");
   const formData = useSelector((state) => state.formData);
@@ -37,11 +35,9 @@ export default function App() {
 
   return (
     <>
-    <div className="w-full bg-[#e4e3dd]">
-
-    
-      <div className="w-full max-w-[437px] min-h-[100vh] mx-auto relative border-sm bg-[#e4e3dd]">
-        {/* <div
+      <div className="w-full bg-[#e4e3dd]">
+        <div className="w-full max-w-[437px] min-h-[100vh] mx-auto relative border-sm bg-[#e4e3dd]">
+          {/* <div
         className="absolute top-0 left-0 w-full h-full bg-cover opacity-10 z-0"
         style={{
           backgroundImage:
@@ -57,15 +53,15 @@ export default function App() {
         }}
       ></div> */}
 
-        <div id="top">
-          <motion.img
-            src={`${process.env.REACT_APP_BASE_URL}${formData.home.logo}`}
-            className={`w-3/12 m-auto py-5 sm:w-5/12 lg:w-2/12 xl:w-2/12 2xl:w-[12%] transition-all duration-300`}
-            alt="Responsive Image"
-          />
-        </div>
+          <div id="top">
+            <motion.img
+              src={`${formData.home.logo}`}
+              className={`w-3/12 m-auto py-5 sm:w-5/12 lg:w-2/12 xl:w-2/12 2xl:w-[12%] transition-all duration-300`}
+              alt="Responsive Image"
+            />
+          </div>
 
-        {/* <div className="flex w-full flex-col">
+          {/* <div className="flex w-full flex-col">
         <Tabs
           fullWidth
           aria-label="Options"
@@ -99,94 +95,107 @@ export default function App() {
         </Tabs>
       </div> */}
 
-        <div className="flex w-full flex-col">
-          {/* Tabs Navigation */}
-          <Tabs
-            fullWidth
-            aria-label="Options"
-            className="m-auto w-[98%] px-1 "
-            selectedKey={selected}
-            onSelectionChange={(key) => setSelected(key)}
-          >
-            <Tab
-              key="Home"
-              title="Home"
-              className="shadow-none text-[14px] max-mobiles:text-[12px] max-mobilem:text-[13px] max-mobilel:text-[14px] [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:text-red-500 [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
-            />
-            <Tab
-              key="Menu"
-              title="Menu"
-              className="!shadow-none text-[14px] max-mobiles:text-[12px] max-mobilem:text-[13px] max-mobilel:text-[14px] [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
-            />
-            <Tab
-              key="Social"
-              title="Social"
-              className="!shadow-none text-[14px] max-mobiles:text-[12px] max-mobilem:text-[13px] max-mobilel:text-[14px] [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
-            />
-          </Tabs>
-
-          {/* Tab Content */}
-          <div className="m-auto w-[98%] px-1 mt-3">
-            {/* Render all components but only display the active one */}
-            <div style={{ display: selected === "Home" ? "block" : "none" }}>
-              <ShopHome />
-            </div>
-            <div style={{ display: selected === "Menu" ? "block" : "none" }}>
-              <ShopMenu />
-            </div>
-            <div style={{ display: selected === "Social" ? "block" : "none" }}>
-              <ShopSocial />
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-5 bg-black pt-16">
-          <div className="w-5/12 m-auto">
-            <div>
-              <div
-                className="text-white text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] "
-                style={{
-                  fontFamily: " 'Abril Fatface', serif",
-                  fontWeight: "400",
-                }}
-              >
-                Made With Love
-              </div>
-              <img
-                className="w-10/12 mx-auto mt-3"
-                src="/images/logo-dark.svg"
-                alt=""
-              />
-              <div
-                className="my-5 text-white"
-                style={{
-                  fontFamily: " 'Abril Fatface', serif",
-                  fontWeight: "400",
-                }}
-              >
-                X
-              </div>
-              <img
-                className="w-7/12 m-auto"
-                src={`${process.env.REACT_APP_BASE_URL}${formData.home.darkLogo}`}
-                alt=""
-              />
-            </div>
-            <pre
-              className="text-[10px] text-white opacity-45 mt-20"
-              style={{
-                fontFamily: " 'Inria Serif', serif",
-                fontWeight: "400",
-              }}
+          <div className="flex w-full flex-col">
+            {/* Tabs Navigation */}
+            <Tabs
+              fullWidth
+              aria-label="Options"
+              className="m-auto w-[98%] px-1 "
+              selectedKey={selected}
+              onSelectionChange={(key) => setSelected(key)}
             >
-              {
-                "BrewHue Cafe Networks. - Surat\n© CYPHER IT SOLUTIONS\n*T&C - Policy Page\n2025-27\n\n"
-              }
-            </pre>
+              <Tab
+                key="Home"
+                title="Home"
+                className="shadow-none text-[14px] max-mobiles:text-[12px] max-mobilem:text-[13px] max-mobilel:text-[14px] [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:text-red-500 [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
+              />
+              <Tab
+                key="Menu"
+                title="Menu"
+                className="!shadow-none text-[14px] max-mobiles:text-[12px] max-mobilem:text-[13px] max-mobilel:text-[14px] [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
+              />
+              <Tab
+                key="Social"
+                title="Social"
+                className="!shadow-none text-[14px] max-mobiles:text-[12px] max-mobilem:text-[13px] max-mobilel:text-[14px] [&_[data-slot='cursor']]:shadow-none [&_[data-slot='cursor']]:outline-none [&_[data-slot='cursor']]:bg-[#e4e3dc]"
+              />
+            </Tabs>
+
+            {/* Tab Content */}
+            <div className="m-auto w-[98%] px-1 mt-3">
+
+              <div className="m-auto w-[98%] px-1 mt-3">
+                {/* Render all components but only display the active one */}
+                <div
+                  style={{ display: selected === "Home" ? "block" : "none" }}
+                >
+                  <ShopHome />
+                </div>
+                <Suspense >
+                  <div
+                    style={{ display: selected === "Menu" ? "block" : "none" }}
+                  >
+                    <ShopMenu />
+                  </div>
+                  <div
+                    style={{
+                      display: selected === "Social" ? "block" : "none",
+                    }}
+                  >
+                    <ShopSocial />
+                  </div>
+                </Suspense>
+              </div>
+            </div>
           </div>
+
+          <div className="mt-5 bg-black pt-16">
+            <div className="w-5/12 m-auto">
+              <div>
+                <div
+                  className="text-white text-[12px] max-mobiles:text-[10px] max-mobilem:text-[11px] max-mobilel:text-[12px] "
+                  style={{
+                    fontFamily: " 'Abril Fatface', serif",
+                    fontWeight: "400",
+                  }}
+                >
+                  Made With Love
+                </div>
+                <img
+                  className="w-10/12 mx-auto mt-3"
+                  src="/images/logo-dark.svg"
+                  alt=""
+                />
+                <div
+                  className="my-5 text-white"
+                  style={{
+                    fontFamily: " 'Abril Fatface', serif",
+                    fontWeight: "400",
+                  }}
+                >
+                  X
+                </div>
+                <img
+                  className="w-7/12 m-auto"
+                  src={`${formData.home.darkLogo}`}
+                  alt=""
+                />
+              </div>
+              <pre
+                className="text-[10px] text-white opacity-45 mt-20"
+                style={{
+                  fontFamily: " 'Inria Serif', serif",
+                  fontWeight: "400",
+                }}
+              >
+                {
+                  "BrewHue Cafe Networks. - Surat\n© CYPHER IT SOLUTIONS\n*T&C - Policy Page\n2025-27\n\n"
+                }
+              </pre>
+            </div>
+          </div>
+          {/* <Outlet/> */}
         </div>
-        {/* <Outlet/> */}
-      </div>
       </div>
     </>
   );

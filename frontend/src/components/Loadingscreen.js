@@ -156,7 +156,6 @@ const LoadingScreen = ({ OgComponent }) => {
     } catch (err) {
       console.error(err);
       if (err.response && err.response.status === 404) {
-        console.log('Database does not exist.');
         nav("/notfound");
       }
     }
@@ -218,7 +217,6 @@ const LoadingScreen = ({ OgComponent }) => {
     axios
       .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/shopinfo/userpanel`)
       .then(async (res) => {
-        console.log("Data fetched:", res.data);
         dispatch(setFormData(res.data));
 
         try {
@@ -237,7 +235,6 @@ const LoadingScreen = ({ OgComponent }) => {
   }, [dispatch, shopName]);
 
   useEffect(() => {
-    console.log("Loading state:", loading); // Log to track loading state change
     if (loading) return;
     setTimeout(() => { setIsload(false); }, 2000)
 
@@ -265,7 +262,8 @@ const LoadingScreen = ({ OgComponent }) => {
               animate={{ scale: 1.2 }}
               exit={{ scale: 1.2 }}
               transition={{ duration: 2, ease: 'easeOut' }}
-              src={`${process.env.REACT_APP_BASE_URL}/uploads/shops/${shopName}.png`}
+              // src={`${process.env.REACT_APP_IMG_URL}/uploads/shops/${shopName}.webp`}
+              src={`https://storage.googleapis.com/rakshak-dev.appspot.com/uploads%2Fshops%2F${shopName}.webp`}
               className='w-1/2 fixed z-10 sm:w-1/2 md:w-1/3 lg:w-1/3 h-100'
               alt="Shop Logo"
             />

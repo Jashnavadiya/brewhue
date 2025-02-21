@@ -11,7 +11,7 @@ const UserPanelSchema = new mongoose.Schema({
     logo: String,
     darkLogo: String,
     section1Img: String,
-    section1Text: String,
+    section1Text: { type: String, default: 'Just You, Just Here!' },
     section2Heading: String,
     section2Info: [{
       img: String,

@@ -28,7 +28,8 @@ const ShopSocial = () => {
             </React.Fragment>
           ))}
         </pre>
-        <img src={`${process.env.REACT_APP_BASE_URL}${formData.social.social_img}`} className="w-[14%] " alt="" />
+     
+        <img src={`${formData.social.social_img}`} className="w-[14%] " alt="" />
       </div>
       <div className="space-y-6">
         <div className="flex flex-wrap justify-around">
@@ -41,7 +42,7 @@ const ShopSocial = () => {
               {/* Display the platform's icon */}
               <img
                 src={
-                  `${process.env.REACT_APP_BASE_URL}${link.icon}` ||
+                  `${link.icon}` ||
                   "default-icon.png"
                 } // Placeholder icon if no icon is provided
                 alt={link.name}

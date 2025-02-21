@@ -10,7 +10,7 @@ const SinglePageFlipBook = ({ url }) => {
   const renderTasks = useRef({});
 
   // Configure PDF.js worker
-  pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs/pdf.worker.min.mjs`;
+  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
 
   useEffect(() => {
     AOS.init({
@@ -24,7 +24,13 @@ const SinglePageFlipBook = ({ url }) => {
     const renderPDF = async () => {
       setIsRendering(true);
       try {
-        const pdf = await pdfjs.getDocument(url).promise;
+        const loadingTask = pdfjs.getDocument({
+          url: url,
+          withCredentials: false, // Ensure this is false for public files
+        });
+
+        const pdf = await loadingTask.promise;
+        console.log("PDF loaded successfully:", pdf);
         setNumPages(pdf.numPages);
 
         // Render each page sequentially to avoid sharing the canvas context
@@ -77,8 +83,8 @@ const SinglePageFlipBook = ({ url }) => {
           data-aos="zoom-in-up"
           data-aos-duration="1500"
           // data-aos-anchor-placement="top-bottom"// Ensures animation triggers both ways
-     
-          
+
+
           className="my-3"
           key={index}
           style={{ width: "100%", height: "100%" }}

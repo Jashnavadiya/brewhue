@@ -163,7 +163,7 @@ const ShopHome = () => {
                 <img
                   className="absolute top-0 left-0 w-full h-full object-cover rounded-large"
                   alt="Responsive Image"
-                  src={`${process.env.REACT_APP_BASE_URL}${formData.home.section1Img}`}
+                  src={`${formData.home.section1Img}`}
                 />
               </div>
               {/* Tinted overlay with blend mode */}
@@ -313,7 +313,7 @@ const ShopHome = () => {
                     >
                       <span className="text-sm w-[14px]">
                         <img
-                          src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[0].img}`}
+                          src={`${formData.home.section2Info[0].img}`}
                           alt=""
                         />
                       </span>
@@ -336,7 +336,7 @@ const ShopHome = () => {
                     >
                       <span className="text-lg w-[14px]">
                         <img
-                          src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[1].img}`}
+                          src={`${formData.home.section2Info[1].img}`}
                           alt=""
                         />
                       </span>
@@ -359,7 +359,7 @@ const ShopHome = () => {
                     >
                       <span className="text-sm w-[14px]">
                         <img
-                          src={`${process.env.REACT_APP_BASE_URL}${formData.home.section2Info[2].img}`}
+                          src={`${formData.home.section2Info[2].img}`}
                           alt=""
                         />
                       </span>
@@ -490,7 +490,7 @@ const ShopHome = () => {
                   <img
                     className="absolute top-0 left-0 w-full h-full object-cover rounded-large"
                     alt="Responsive Image"
-                    src={`${process.env.REACT_APP_BASE_URL}${formData.home.section3Img[0].img}`}
+                    src={`${formData.home.section3Img[0].img}`}
                   />
                 </div>
               </Card>
@@ -539,7 +539,7 @@ const ShopHome = () => {
                   <img
                     className="absolute top-0 left-0 w-full h-full object-cover rounded-large"
                     alt="Responsive Image"
-                    src={`${process.env.REACT_APP_BASE_URL}${formData.home.section3Img[1].img}`}
+                    src={`${formData.home.section3Img[1].img}`}
                   />
                 </div>
               </Card>
@@ -555,7 +555,7 @@ const ShopHome = () => {
                   <img
                     className="absolute top-0 left-0 w-full h-full object-cover rounded-large"
                     alt="Responsive Image"
-                    src={`${process.env.REACT_APP_BASE_URL}${formData.home.section3Img[2].img}`}
+                    src={`${formData.home.section3Img[2].img}`}
                   />
                 </div>
               </Card>
@@ -571,7 +571,7 @@ const ShopHome = () => {
                   <img
                     className="absolute top-0 left-0 w-full h-full object-cover rounded-large"
                     alt="Responsive Image"
-                    src={`${process.env.REACT_APP_BASE_URL}${formData.home.section3Img[3].img}`}
+                    src={`${formData.home.section3Img[3].img}`}
                   />
                 </div>
               </Card>
@@ -592,7 +592,7 @@ const ShopHome = () => {
                   <img
                     className="absolute top-0 left-0 w-full h-full object-cover rounded-large"
                     alt="Responsive Image"
-                    src={`${process.env.REACT_APP_BASE_URL}${formData.home.section3Img[4].img}`}
+                    src={`${formData.home.section3Img[4].img}`}
                   />
                 </div>
               </Card>
@@ -621,7 +621,7 @@ const ShopHome = () => {
           </div>
           <div style={{ width: "95%", padding: "auto", margin: "10px auto" }}>
             <SinglePageFlipBook
-              url={`${process.env.REACT_APP_BASE_URL}${formData.home.section4Pdf}`}
+              url={`${formData.home.section4Pdf}`}
             />
           </div>
         </div>
@@ -753,7 +753,7 @@ const ShopHome = () => {
           <div className="absolute top-[10px] right-[20px]">
             <img
               className="h-16"
-              src="https://s3-alpha-sig.figma.com/img/e0eb/44df/6e9a4c9eded31946fee416ae88a8b189?Expires=1737936000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=b8gBqURkXb8rsj5V-hNCES2~xFjuMcTI0MEwOeYE92n4E4JfG8JnsYpqEBq2NWevz7hyNjWypO7nGZkex~xFvvs5UuuGAN6cVVhN8qh718BboCVoRHNscHUm37QB9CgFtpfefAslB4NBnLzsad-JixGgHuUpSl9Dc771EbfcFnMVHg1eNJ15kB3Z~vjR3sBjOBh11gmZzCkJOyo-OWGbbUIJXhsbq6EFrzQolA1zCbtUIINrMWWZ-9cBdpv0toHNSycbpHonCYi2f4IUgjHOjxxu~KoriEb611DEcvuvIzF-bEUo6d73qBc8vUG6zRUnTyoGM69oUzcrO9Nn4wzVxA__"
+              src="https://firebasestorage.googleapis.com/v0/b/rakshak-dev.appspot.com/o/uploads%2Fzero's%20private%2Fimage%201.png?alt=media&token=bc3974b9-91a1-4e45-b652-ff7c81133ade"
               alt=""
             />
           </div>

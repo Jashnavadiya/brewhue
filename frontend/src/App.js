@@ -39,7 +39,7 @@ function App() {
   return (
     <NextUIProvider navigate={navigate} useHref={useHref}>
       <Routes>
-      
+
 
         <Route path="/:shopName" element={<ShopPage />}>
           {/* Nested Routes */}
@@ -47,17 +47,17 @@ function App() {
           <Route path="*" element={<Notfound404 />} />
 
         </Route>
-       
 
-        <Route path="/create-shop" element={<ShopForm />} />
+
+        {/* <Route path="/create-shop" element={<ShopForm />} /> */}
         <Route path="/lasan" element={<ShopDataFetcher />} />
         <Route path="/add-shop" element={<AddShop />} />
-        <Route path="/test" element={<LoadingZoomText />} />
+        {/* <Route path="/test" element={<LoadingZoomText />} /> */}
         <Route path="/privacy" element={<PrivacyPolicy />} />
 
-        <Route path="/:shopName" element={<ShopPage />}/>
-        <Route path="/:shopName/signup" element={<Signup />} />
-        <Route path="/:shopName/login" element={<Login />} />
+        <Route path="/:shopName" element={<ShopPage />} />
+        {/* <Route path="/:shopName/signup" element={<Signup />} /> */}
+        <Route path="/:shopName/arps" element={<Login />} />
         <Route path="/:shopName/dashboard" element={<Dashboard />}>
           {/* Nested Routes */}
           {/* <Route path="widgets" element={<Widgets />} /> */}
@@ -68,7 +68,7 @@ function App() {
           <Route path="*" element={<Notfound404 />} />
         </Route>
 
-    
+
         <Route path="/notfound" element={<Notfound404 />} />
         <Route path="/" element={<Notfound404 />} />
       </Routes>

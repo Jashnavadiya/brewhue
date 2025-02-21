@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Section3 from "./userpanel/Section3";
+import Section2 from "./userpanel/Section2";
 
 const UserPanel = () => {
     const { shopName } = useParams();
@@ -31,7 +33,7 @@ const UserPanel = () => {
             menu_img: "",
         },
         social: {
-            vcard:{},
+            vcard: {},
             social_info: "",
             social_img: "",
             links: [
@@ -55,14 +57,15 @@ const UserPanel = () => {
         axios
             .get(`${process.env.REACT_APP_BASE_URL}/api/${shopName}/shopinfo/userpanel`)
             .then((res) => {
-                console.log("Fetched data:", res.data); // Log the fetched data
+              
                 setFormData(res.data);
             })
             .catch((err) => console.error("Error fetching data:", err));
     }, []);
 
-    useEffect(()=>{console.log(formData);
-    },[formData])
+    useEffect(() => {
+   
+    }, [formData])
 
 
     const handleChange = (e, parentKey, childKey, nestedKey = null, index = null) => {
@@ -110,9 +113,19 @@ const UserPanel = () => {
 
 
     // Handle file upload
-    const handleFileUpload = async (e, section, key) => {
-        const file = e.target.files[0];
-        if (!file) return;
+    const handleFileUpload = async (e, section, key, acceptedFiles) => {
+        let file;
+
+        // Check if files were dropped using Dropzone
+        if (acceptedFiles && acceptedFiles.length > 0) {
+           
+
+            file = acceptedFiles[0]; // Use the first file from acceptedFiles
+        } else if (e.target.files) {
+            file = e.target.files[0]; // Fallback to file input if no files were dropped
+        }
+
+        if (!file) return; // If there's no file, exit
 
         const formData = new FormData();
         formData.append("file", file);
@@ -120,22 +133,30 @@ const UserPanel = () => {
         formData.append("key", key);
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/${shopName}/userpanel/home/upload`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
+            const response = await axios.post(
+                // `${process.env.REACT_APP_BASE_URL}/${shopName}/userpanel/home/upload`,
+                `${process.env.REACT_APP_BASE_URL}/api/v1/file/${shopName}/upload`,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
 
             const updatedUserPanel = response.data.updatedUserPanel[section];
-            console.log(updatedUserPanel);
+      
 
+            // Update only the section that was changed, and retain the rest of the form data
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                [section]: updatedUserPanel, // Update the home data with the latest response
+                [section]: {
+                    ...prevFormData[section], // Keep existing values for the section
+                    [key]: updatedUserPanel[key], // Only update the specific field
+                },
             }));
         } catch (error) {
             console.error("Error uploading file:", error);
             alert("Error uploading file. Please try again.");
         }
     };
+
 
     // Add a new link
     const handleAddLink = () => {
@@ -312,6 +333,10 @@ const UserPanel = () => {
             alert("Failed to update data.");
         }
     };
+
+    useEffect(() => {
+        
+    }, [formData])
     if (!formData || !formData.home || !formData.social) {
         // Optionally render a loading state or nothing until data is fetched
         return <div>Loading...</div>;
@@ -320,38 +345,63 @@ const UserPanel = () => {
         <div className="p-6 bg-gray-100 min-h-screen">
             <h1 className="text-3xl font-bold mb-6">Admin Panel</h1>
             <form onSubmit={handleSubmit} className="space-y-6">
-
                 {/* Logo */}
                 <div className="p-4 bg-white shadow-md rounded-md">
                     <h2 className="text-xl font-semibold mb-4">Logos</h2>
-                    <div className="space-y-4">
-                        <textarea
-                            type="text"
-                            name="logo"
-                            value={formData.home.logo || ""}
-                            onChange={(e) => handleChange(e, "home", "logo")}
-                            placeholder="Logo URL"
-                            className="w-full p-2 border rounded"
-                        />
-                        <input
-                            type="file"
-                            onChange={(e) => handleFileUpload(e, "home", "logo")}
-                            className="w-full p-2 border rounded"
-                        />
+                    <div className="space-y-4 flex">
+                        {/* Logo URL input */}
+                        {/* <div className="flex items-center space-x-4">
+                            <textarea
+                                type="text"
+                                name="logo"
+                                value={formData.home.logo || ""}
+                                onChange={(e) => handleChange(e, "home", "logo")}
+                                placeholder="Logo URL"
+                                className="w-full p-2 border rounded"
+                            />
+                            {formData.home.logo && (
+                                <img src={formData.home.logo} alt="Logo Preview" className="h-12 w-12 object-contain" />
+                            )}
+                        </div> */}
 
-                        <textarea
-                            type="text"
-                            name="darkLogo"
-                            value={formData.home.darkLogo || ""}
-                            onChange={(e) => handleChange(e, "home", "darkLogo")}
-                            placeholder="Dark Logo URL"
-                            className="w-full p-2 border rounded"
-                        />
-                        <input
-                            type="file"
-                            onChange={(e) => handleFileUpload(e, "home", "darkLogo")}
-                            className="w-full p-2 border rounded"
-                        />
+                        {/* Logo file input */}
+                        <div className="flex flex-col items-center space-x-4">
+                            {formData.home.logo && (
+                                <img src={`${formData.home.logo}`} alt="Logo Preview" className="h-28 w-28 object-contain" />
+                            )}
+                            <input
+                                type="file"
+                                onChange={(e) => handleFileUpload(e, "home", "logo")}
+                                className="w-full p-2 border rounded"
+                            />
+                        </div>
+
+                        {/* Dark Logo URL input */}
+                        {/* <div className="flex items-center space-x-4">
+                            <textarea
+                                type="text"
+                                name="darkLogo"
+                                value={formData.home.darkLogo || ""}
+                                onChange={(e) => handleChange(e, "home", "darkLogo")}
+                                placeholder="Dark Logo URL"
+                                className="w-full p-2 border rounded"
+                            />
+                            {formData.home.darkLogo && (
+                                <img src={formData.home.darkLogo} alt="Dark Logo Preview" className="h-12 w-12 object-contain" />
+                            )}
+                        </div> */}
+
+                        {/* Dark Logo file input */}
+                        <div className="flex flex-col items-center space-x-4">
+                            {formData.home.darkLogo && (
+                                <img src={`${formData.home.darkLogo}`} alt="Dark Logo Preview" className="h-28 w-28 object-contain" />
+                            )}
+                            <input
+                                type="file"
+                                onChange={(e) => handleFileUpload(e, "home", "darkLogo")}
+                                className="w-full p-2 border rounded"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -359,144 +409,58 @@ const UserPanel = () => {
                 <div className="p-4 bg-white shadow-md rounded-md">
                     <h2 className="text-xl font-semibold mb-4">Section 1</h2>
                     <div className="space-y-4">
-                        {console.log(formData.home)
-                        }
-                        <textarea
-                            type="text"
-                            name="section1Img"
-                            value={formData.home.section1Img || ""} // Fallback to empty string
-                            onChange={(e) => handleChange(e, "home", "section1Img")}
-                            placeholder="Section 1 Image URL"
-                            className="w-full p-2 border rounded"
-                        />
-                        <textarea
-                            name="section1Text"
-                            value={formData.home.section1Text || ""}
-                            onChange={(e) => handleChange(e, "home", "section1Text")}
-                            placeholder="Section 1 Text"
-                            className="w-full p-2 border rounded"
-                        ></textarea>
+                        {/* Section 1 Image URL input */}
+                        <div className="flex flex-col items-center space-x-4">
+                            {/* <textarea
+                                type="text"
+                                name="section1Img"
+                                value={formData.home.section1Img || ""} // Fallback to empty string
+                                onChange={(e) => handleChange(e, "home", "section1Img")}
+                                placeholder="Section 1 Image URL"
+                                className="w-full p-2 border rounded"
+                            /> */}
+                            {formData.home.section1Img && (
+                                <img src={`${formData.home.section1Img}`} alt="Section 1 Image Preview" className="h-28 w-28 object-contain" />
+                            )}
+                            <input
+                                type="file"
+                                onChange={(e) => handleFileUpload(e, "home", "section1Img")}
+                                className="w-full p-2 border rounded"
+                            />
+                        </div>
 
-                        <input
-                            type="file"
-                            onChange={(e) => handleFileUpload(e, "home", "section1Img")}
-                            className="w-full p-2 border rounded"
-                        />
-
+                        {/* Section 1 Text input */}
+                        <div className="flex items-center space-x-4">
+                            <textarea
+                                name="section1Text"
+                                value={formData.home.section1Text || ""}
+                                onChange={(e) => handleChange(e, "home", "section1Text")}
+                                placeholder="Section 1 Text"
+                                className="w-full p-2 border rounded"
+                            ></textarea>
+                        </div>
                     </div>
                 </div>
+
 
 
                 {/* Section 2 */}
-                <div className="p-4 bg-white shadow-md rounded-md">
-                    <h2 className="text-xl font-semibold mb-4">Section 2</h2>
-                    <div className="space-y-4">
-                        {/* Section 2 Heading */}
-                        <textarea
-                            type="text"
-                            name="section2Heading"
-                            value={formData.home.section2Heading}
-                            onChange={(e) => handleChange(e, "home", "section2Heading")}
-                            placeholder="Section 2 Heading"
-                            className="w-full p-2 border rounded"
-                        />
-                        {/* Section 2 Info */}
-                        {formData.home.section2Info.map((info, index) => (
-                            <div key={index} className="space-y-2 border p-2 rounded-md">
-                                <textarea
-                                    type="text"
-                                    name="img"
-                                    value={info.img || ""}
-                                    onChange={(e) => handleChange(e, "home", "section2Info", null, index)}
-                                    placeholder="Image URL"
-                                    className="w-full p-2 border rounded"
-                                />
-                                <input
-                                    type="file"
-                                    onChange={(e) => handleFileUpload(e, "home", "section2Info", null, index)}
-                                    className="w-full p-2 border rounded"
-                                />
-                                <textarea
-                                    type="text"
-                                    name="text"
-                                    value={info.text || ""}
-                                    onChange={(e) => handleChange(e, "home", "section2Info", null, index)}
-                                    placeholder="Text"
-                                    className="w-full p-2 border rounded"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => handleRemoveSection2Info(index)}
-                                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                                >
-                                    Remove
-                                </button>
-                            </div>
-                        ))}
-
-
-                        {/* Add Info Button */}
-                        <button
-                            type="button"
-                            onClick={handleAddSection2Info}
-                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                        >
-                            Add Info
-                        </button>
-                    </div>
-                </div>
-
+                <Section2
+                    formData={formData}
+                    handleChange={handleChange}
+                    handleFileUpload={handleFileUpload}
+                    handleAddSection2Info={handleAddSection2Info}
+                    handleRemoveSection2Info={handleRemoveSection2Info}
+                />
 
                 {/* Section 3 */}
-                <div className="p-4 bg-white shadow-md rounded-md">
-                    <h2 className="text-xl font-semibold mb-4">Section 3</h2>
-                    <div className="space-y-4">
-                        {/* Section 3 Heading */}
-                        <textarea
-                            type="text"
-                            name="section3Heading"
-                            value={formData.home.section3Heading}
-                            onChange={(e) => handleChange(e, "home", "section3Heading")}
-                            placeholder="Section 3 Heading"
-                            className="w-full p-2 border rounded"
-                        />
-
-                        {/* Section 3 Images */}
-                        {formData.home.section3Img.map((imgObj, index) => (
-                            <div key={index} className="space-y-2 border p-2 rounded-md">
-                                <textarea
-                                    type="text"
-                                    name="img"
-                                    value={imgObj.img}
-                                    onChange={(e) => handleChange(e, "home", "section3Img", index)}
-                                    placeholder="Image URL"
-                                    className="w-full p-2 border rounded"
-                                />
-                                <input
-                                    type="file"
-                                    onChange={(e) => handleFileUpload(e, "home", "section3Img", index)}
-                                    className="w-full p-2 border rounded"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => handleRemoveImage(index)}
-                                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                                >
-                                    Remove
-                                </button>
-                            </div>
-                        ))}
-
-                        {/* Add Image Button */}
-                        <button
-                            type="button"
-                            onClick={handleAddImage}
-                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                        >
-                            Add Image
-                        </button>
-                    </div>
-                </div>
+                <Section3
+                    formData={formData}
+                    handleChange={handleChange}
+                    handleFileUpload={handleFileUpload}
+                    setFormData={setFormData}
+                    shopName="shopName"
+                />
 
                 {/* Section 4 */}
                 <div className="p-4 bg-white shadow-md rounded-md">
@@ -660,8 +624,6 @@ const UserPanel = () => {
                     {/* Menu Info */}
                     <div className="space-y-4">
                         <label className="block text-lg font-medium text-gray-700">Menu Info</label>
-                        {console.log("hiiiiii",formData)
-                        }
                         <textarea
                             name="menu_info"
                             value={formData.menu.menu_info || ""}
@@ -770,7 +732,7 @@ const UserPanel = () => {
                             <input
                                 type="text"
                                 name="icon"
-                                value={link.icon}
+                                value={link.icon || ''}
                                 onChange={(e) => handleLinkChange(e, index, "icon")}
                                 placeholder="Icon URL"
                                 className="w-full p-2 border rounded"
@@ -789,8 +751,7 @@ const UserPanel = () => {
                             {/* File Upload for Icon */}
                             <input
                                 type="file"
-                                onChange={(e) => handleFileUpload(e, "social", `links.${index}.icon`)}
-
+                                onChange={(e) => handleFileUpload(e, "social", `links`)}
                                 className="w-full p-2 border rounded"
                             />
 
@@ -814,6 +775,8 @@ const UserPanel = () => {
                         Add Link
                     </button>
                 </div>
+
+
                 {/* Contact Section */}
                 <div className="p-4 bg-white shadow-md rounded-md">
                     <h2 className="text-xl font-semibold mb-4">Contact Section</h2>

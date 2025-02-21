@@ -8,7 +8,6 @@ const Turn = props => {
 
   useEffect(() => {
     if (fadeClass) {
-    	console.log( $(fadeClass).turn   )
       $(fadeClass).turn(Object.assign({}, props.options));
     }
     // 	//   document.addEventListener("keydown", handleKeyDown, false);

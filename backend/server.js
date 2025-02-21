@@ -1,3 +1,4 @@
+console.log("entered");
 
 // Import required packages
 const express = require('express');
@@ -7,15 +8,18 @@ const dotenv = require('dotenv')
 const fs = require('fs');
 const multer = require('multer');
 
-
+const sharp = require('sharp');
 const userRoutes = require('./routes/userRoutes.js');
 const userPanelRotes = require('./routes/UserPanel.routes.js');
 const userALLRoutes = require('./routes/user(All).routes.js');
-
+const UploadRoutes = require("./routes/UploadRoutes");
 
 
 const Menu = require('./models/Menu');
 
+const storageHelper = require("./utils/storageHelper");
+
+const storageHelperInstance = new storageHelper();
 
 const cors = require('cors');
 const path = require('path');
@@ -26,16 +30,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-dotenv.config()
-// app.use(
-//   cors({
-//       origin: "http://localhost:3000", // Allow requests from this origin
-//       methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
-//       credentials: true, // Allow cookies and credentials if needed
-//   })
-// );
+dotenv.config();
 
-// Function to dynamically connect to a database
 const connectToDatabase = async (dbName) => {
   const uri = `${process.env.MONGO_URI}${dbName}`;
   const connection = mongoose.createConnection(uri, {
@@ -46,25 +42,6 @@ const connectToDatabase = async (dbName) => {
 };
 
 
-
-
-// Endpoint to create or access a shop database
-// Endpoint to create a new database
-// app.post('/api/create-database/:shopName', async (req, res) => {
-//   const shopName = req.params.shopName;
-
-//   try {
-//     const shopDb = await connectToDatabase(shopName);
-//     loadModels(shopDb)
-//     // const SampleCollection = shopDb.collection('sampleCollection');
-//     // await SampleCollection.insertOne({ initialized: true });
-
-//     res.status(201).send(`Database "${shopName}" created successfully!`);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Error creating database');
-//   }
-// });
 
 // Endpoint to list all databases
 app.get('/api/databases', async (req, res) => {
@@ -109,167 +86,13 @@ app.get('/api/check-database/:shopName', async (req, res) => {
 });
 
 const bcrypt = require('bcryptjs');
-// app.post('/api/create-database/:shopName', async (req, res) => {
-  
-//   const shopName = req.params.shopName;
-//   const { email, password } = req.body; // Admin user credentials
-
-//   if (!email || !password) {
-//     return res.status(400).json({ error: 'Email and password are required' });
-//   }
-
-//   try {
-//     // Connect to the new shop database
-//     const shopDb = await connectToDatabase(shopName);
-
-//     // Load models into the database
-//     loadModels(shopDb);
-
-//     // Register the User model in the new database
-//     const User = shopDb.model('User');
-
-//     // Check if the user already exists in the shop database
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//       return res.status(400).json({ error: 'User already exists in the shop database' });
-//     }
-    
-  
-//     // Hash the password
-//     const hashedPassword = await bcrypt.hash(password, 10);
-
-//     // Create and save the new admin user
-//     const user = new User({ email, password: hashedPassword, role: 'admin' });
-//     const savedUser = await user.save();
-
-//     console.log("test2");
-
-//     res.status(201).json({
-//       message: `Database "${shopName}" created successfully!`,
-//       adminUser: savedUser,
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: 'Error creating database or user', details: err.message });
-//   }
-// });
 
 
 const loadModels = require('./models/dynamicModelLoader');  // Import the loader function
 const { log } = require('console');
 
 const connections = {};  // Store connections to reuse them
-
-// const dbMiddleware = async (req, res, next) => {
-//   const shopName = req.params.shopName;
-  
-//   const useUserDB = req.path.startsWith('/userall'); // Check if the route is user-related
-//   console.log(req.path,useUserDB);
-
-//   if (!shopName && !useUserDB) {
-//     return res.status(400).send('Shop name is required');
-//   }
-
-//   try {
-//     const dbName = useUserDB ? 'user' : shopName; // Use 'user' database for user-related operations
-//     console.log(dbName);
-    
-//     // Check if a connection to this database already exists
-//     if (!connections[dbName]) {
-//       const client = new MongoClient(`${process.env.MONGO_URI}`, { useUnifiedTopology: true });
-//       await client.connect();
-
-//       const adminDb = client.db().admin();
-//       const databases = await adminDb.listDatabases();
-
-//       const dbExists = databases.databases.some(db => db.name === dbName);
-
-//       if (!dbExists) {
-//         await client.close();
-//         return res.status(404).send(`Database "${dbName}" does not exist.`);
-//       }
-
-//       // Create a connection for the target database
-//       const uri = `${process.env.MONGO_URI}${dbName}?retryWrites=true&w=majority`;
-//       const connection = mongoose.createConnection(uri, {
-//         useNewUrlParser: true,
-//         useUnifiedTopology: true,
-//       });
-
-//       connections[dbName] = connection;
-//       console.log(`Connected to database: ${dbName}`);
-
-//       // Dynamically load all models and associate them with the current database
-//       loadModels(connections[dbName]);
-
-//       await client.close();
-//     }
-
-//     // Attach the connection to the request object
-//     req.db = connections[dbName];
-//     next();
-//   } catch (err) {
-//     console.error(`Error connecting to database: ${dbName}`, err);
-//     res.status(500).send('Error connecting to database');
-//   }
-// };
-
-const dbMiddleware = async (req, res, next) => {
-  // const shopName = req.params.shopName;
-  const useUserDB = req.path.endsWith('/userall'); // Check if the route is user-related
-  const hi= req.params.shopName
-  
-  const shopName = useUserDB ? 'user' :hi; // Use 'user' database for user-related operations
-  
-  if (!shopName) {
-    return res.status(400).send('Shop name is required');
-  }
-  
-  try {
-    // Check if a connection to this database already exists
-    if (!connections[shopName]) {
-      // Connect to the MongoDB server (without specifying a database)
-      const client = new MongoClient(`${process.env.MONGO_URI}`, { useUnifiedTopology: true });
-      await client.connect();
-
-      const adminDb = client.db().admin();
-      const databases = await adminDb.listDatabases();
-
-      const dbExists = databases.databases.some(db => db.name === shopName);
-
-      if (!dbExists) {
-        await client.close();
-        return res.status(404).send(`Database "${shopName}" does not exist.`);
-      }
-
-      // If the database exists, create the connection
-      const uri = `${process.env.MONGO_URI}${shopName}?retryWrites=true&w=majority`;
-      const connection = mongoose.createConnection(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
-
-      // Store the connection for reuse
-      connections[shopName] = connection;
-      console.log(`Connected to database: ${shopName}`);
-
-      // Dynamically load all models and associate them with the current database
-      loadModels(connections[shopName]); // This loads all models and associates them
-
-      await client.close();
-    }
-
-    // Attach the connection to the request object
-    req.db = connections[shopName];
-    next();
-  } catch (err) {
-    console.error(`Error connecting to database: ${shopName}`, err);
-    res.status(500).send('Error connecting to database');
-  }
-};
-
-
-
+const dbMiddleware = require("./middleware/dbMiddleware");
 
 // Middleware to check if the shop exists in the current database
 const checkShopExists = async (req, res, next) => {
@@ -348,185 +171,83 @@ app.use('/uploads', (req, res, next) => {
   next();
 }, express.static(path.join(__dirname, 'uploads')));
 
-// app.get('/uploads/:shopName/:fileName', (req, res) => {
-//   const filePath = path.join(__dirname, 'uploads', req.params.shopName, req.params.fileName);
-
-//   res.sendFile(filePath, (err) => {
-//     if (err) {
-//       console.error('Error serving file:', err.message);
-//       res.status(404).send('File not found!');
-//     }
-//   });
-// });
 
 
-// app.get('/uploads/:shopName/:fileName', (req, res) => {
-//   const filePath = path.join(__dirname, 'uploads', req.params.shopName, req.params.fileName);
-
-//   console.log('Serving file from:', filePath);
-
-//   res.sendFile(filePath, (err) => {
-//     if (err) {
-//       console.error('Error serving file:', err.message);
-//       res.status(404).send('File not found!');
-//     }
-//   });
-// });
-
-
-
-// Ensure the 'uploads' folder exists
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-  console.log('Uploads folder created!');
-}
-
-// Multer storage configuration
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const shopName = req.params.shopName;
-    const dir = path.join(__dirname, 'uploads', shopName);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true }); // Create directory if it doesn't exist
-    }
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${file.originalname}`;
-    cb(null, uniqueName);
-  },
-});
-
-
-
-// Multer upload setup
-const upload = multer({ storage });
-
-// File upload route
-app.post('/:shopName/userpanel/home/upload', dbMiddleware, upload.single('file'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).send({ message: 'No file uploaded!' });
-    }
-    const shopName = req.params.shopName;
-    const UserPanel = req.db.model('UserPanel');
-    const filePath = `/uploads/${shopName}/${req.file.filename}`;
-    const { section, key } = req.body;
-
-    // Determine the field type dynamically
-    const fieldType = UserPanel.schema.path(`${section}.${key}`).instance;
-
-    let updateObject;
-    if (fieldType === 'Array') {
-      updateObject = {
-        $push: {
-          [`${section}.${key}`]: { img: filePath },
-        },
-      };
-    } else if (fieldType === 'String') {
-      updateObject = {
-        [`${section}.${key}`]: filePath,
-      };
-    } else {
-      throw new Error('Unsupported field type');
-    }
-
-   
-    const updatedUserPanel = await UserPanel.findOneAndUpdate(
-      {},
-      updateObject,
-      { new: true }
-    );
-
-    res.status(200).send({
-      message: 'File uploaded and saved successfully!',
-      updatedUserPanel,
-    });
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    res.status(500).send({ error: error.message });
-  }
-});
-const uploadDir1 = path.join(__dirname, 'uploads', 'shops');
-if (!fs.existsSync(uploadDir1)) {
-  fs.mkdirSync(uploadDir1, { recursive: true });
-  console.log('Uploads/shops folder created!');
-}
-
-
-
-// Multer storage configuration
-const storage1 = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const shopName = req.params.shopName;
-    const dir = path.join(__dirname, 'uploads', 'shops'); // Save in the shops folder
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const shopName = req.params.shopName;
-    cb(null, `${shopName}.png`); // Save the image with the shop name as filename
-  },
-});
-const upload1 = multer({ storage: storage1 });
-
-app.post('/api/create-database/:shopName', upload1.single('image'), async (req, res) => {
-  const shopName = req.params.shopName;
-  const { email, password } = req.body; // Admin user credentials
-  console.log("file", req.file);
-
-  // Ensure the image URL follows the correct path
-  const imageUrl = req.file ? `/uploads/shops/${shopName}.png` : null;
-  console.log("file URL", imageUrl);
+const storage1 = multer.memoryStorage();
+const upload1 = multer({ storage1 }).single("image");
+app.post('/api/create-database/:shopName', upload1, async (req, res) => {
+  const shopName = req.params.shopName.trim();
+  const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required' });
   }
-
+  
   try {
-    // Connect to the new shop database
-    const shopDb = await connectToDatabase(shopName);
+    // Ensure upload directory exists
+    // const shopDir = path.join(__dirname, 'uploads', 'shops');
+    // ensureDirectoryExists(shopDir);
+    if (!req.file)
+      return res.status(400).json({
+          success: false,
+          status: "fail",
+          message: "No files found.",
+          data: null,
+      });
+    // Convert image to WebP format
+    if (req.file) {
 
-    // Load models into the database
-    loadModels(shopDb);
+      const webpBuffer = await sharp(req.file.buffer)
+      .webp() // Convert to WebP format
+      .toBuffer(); // Return the buffer
+      console.log("hi");
 
-    // Register the User model in the new database
+      // Upload the processed WebP image
+      file = await storageHelperInstance.uploadFile({
+        buffer: webpBuffer,
+        originalname: `${shopName}.webp`,// Update extension to .webp
+        mimetype: 'image/webp',
+      }, "shops");
+
+      console.log("File uploaded:", file);
+    }
+    const imageUrl = file.url
+
+    const shopDb = await connectToDatabase(shopName); // Replace with actual database connection logic
+    loadModels(shopDb); // Ensure models are loaded
+
     const User = shopDb.model('User');
-
-    // Check if the user already exists in the shop database
     const existingUser = await User.findOne({ email });
+
     if (existingUser) {
       return res.status(400).json({ error: 'User already exists in the shop database' });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create and save the new admin user
     const user = new User({ email, password: hashedPassword, role: 'admin', image: imageUrl });
     const savedUser = await user.save();
 
     res.status(201).json({
       message: `Database "${shopName}" created successfully!`,
       adminUser: savedUser,
-      imageUrl: imageUrl, // Return the image URL
+      imageUrl,
     });
   } catch (err) {
-    console.error(err);
+    console.error('Error:', err.message);
     res.status(500).json({ error: 'Error creating database or user', details: err.message });
   }
 });
 
 
+app.use("/api/v1/file", UploadRoutes);
 app.use('/api/:shopName/users', dbMiddleware, userRoutes);
 app.use('/api/:shopName/shopinfo', dbMiddleware, userPanelRotes);
-app.use('/api',dbMiddleware, userALLRoutes);
+app.use('/api', dbMiddleware, userALLRoutes);
 
-app.use(express.static(path.join(__dirname,"../frontend/build")));
+app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-app.get('*',(req,res)=>{
-    res.sendFile(path.join(__dirname,"../frontend","build","index.html"))
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend", "build", "index.html"))
 })
 
 

@@ -49,13 +49,13 @@ const ShopMenu = () => {
             ))}
           </pre>
           <img
-            src={`${process.env.REACT_APP_BASE_URL}${formData.menu.menu_img}`}
+            src={`${formData.menu.menu_img}`}
             className="w-12 max-mobiles:w-10 max-mobilem:w-11 max-mobilel:w-12"
             alt=""
           />
         </div>
         <PdfViewerMenu
-          url={`${process.env.REACT_APP_BASE_URL}${formData.home.section4Pdf}`}
+          url={`${formData.home.section4Pdf}`}
         />
       </div>
       <div className="relative">
